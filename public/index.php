@@ -1,6 +1,7 @@
 <?php
 // Định nghĩa đường dẫn gốc
 // Lấy tên thư mục project từ đường dẫn thực tế
+
 $projectFolder = basename(dirname(__DIR__));
 define('ROOT_PATH', dirname(__DIR__));
 
@@ -11,6 +12,7 @@ define('ASSETS_URL', PUBLIC_URL . '/assets');
 define('CSS_URL', ASSETS_URL . '/css');
 define('JS_URL', ASSETS_URL . '/js');
 define('IMAGES_URL', ASSETS_URL . '/images');
+define('REQUIRE_EMAIL_VERIFICATION', false);
 
 // Autoload classes từ Composer
 require_once ROOT_PATH . '/vendor/autoload.php';

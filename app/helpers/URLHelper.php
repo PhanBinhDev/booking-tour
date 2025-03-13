@@ -33,6 +33,6 @@ class UrlHelper {
      * Tạo URL đến route
      */
     public static function route($path = '') {
-        return BASE_URL . '/' . ltrim($path, '/');
+        return PUBLIC_URL . '/' . ltrim($path, '/');
     }
 }

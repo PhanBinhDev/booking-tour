@@ -7,7 +7,47 @@ module.exports = {
     './public/assets/css/**/*.css' // Added this line
   ],
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        sans: [
+          'Roboto',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif'
+        ],
+        heading: [
+          'Montserrat',
+          'Georgia',
+          'Cambria',
+          'Times New Roman',
+          'serif'
+        ],
+        mono: ['Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', 'monospace']
+      },
+      fontSize: {
+        xs: '.75rem',
+        sm: '.875rem',
+        base: '1rem',
+        lg: '1.125rem',
+        xl: '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
+        '4xl': '2.25rem',
+        '5xl': '3rem'
+      },
+      fontWeight: {
+        light: 300,
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700
+      }
+    }
   },
   plugins: []
 }

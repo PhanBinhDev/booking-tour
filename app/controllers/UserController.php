@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Helpers\UrlHelper;
 use App\Models\User;
 
 class UserController extends BaseController {
@@ -19,9 +20,9 @@ class UserController extends BaseController {
         
         // Chuyển hướng dựa vào vai trò
         if($currentUser['role_name'] === 'admin') {
-            $this->redirect('/admin/dashboard');
+            $this->redirect(UrlHelper::route('admin/dashboard'));
         } elseif($currentUser['role_name'] === 'moderator') {
-            $this->redirect('/moderator/dashboard');
+            $this->redirect(UrlHelper::route('moderator/dashboard'));
         }
         
         $this->view('user/dashboard', [
@@ -31,7 +32,7 @@ class UserController extends BaseController {
     
     public function profile() {
         if(!$this->isAuthenticated()) {
-            $this->redirect('/login');
+            $this->redirect(UrlHelper::route('auth/login'));
         }
         
         $currentUser = $this->getCurrentUser();
@@ -98,7 +99,7 @@ class UserController extends BaseController {
                 
                 if($this->userModel->update($currentUser['id'], $userData)) {
                     $_SESSION['username'] = $username;
-                    $this->redirect('/profile?success=1');
+                    $this->redirect(UrlHelper::route('user/profile?success=1'));
                 } else {
                     $errors['update'] = 'Failed to update profile';
                 }
@@ -114,5 +115,13 @@ class UserController extends BaseController {
                 'success' => isset($_GET['success'])
             ]);
         }
+    }
+
+    public function changePassword() {
+        if(!$this->isAuthenticated()) {
+            $this->redirect(UrlHelper::route('auth/login'));
+        }
+
+        $this->view('user/change-password');
     }
 }

@@ -1,8 +1,10 @@
 # Đảm bảo tất cả yêu cầu được chuyển hướng tới index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
-    
+    # RewriteBase /
+
+    RewriteRule ^public/ - [L]
+
     # Nếu không phải là file hoặc thư mục thực
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

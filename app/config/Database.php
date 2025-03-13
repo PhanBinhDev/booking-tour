@@ -13,6 +13,7 @@ class Database {
         $this->db_name = $_ENV['DB_NAME'];
         $this->username = $_ENV['DB_USER'];
         $this->password = $_ENV['DB_PASS'];
+
     }
     
     public function getConnection() {

@@ -1,17 +1,34 @@
 <?php
 namespace App\Controllers;
 
+use App\Helpers\LayoutHelper;
+
 class BaseController {
     public function view($view, $data = []) {
+        // Thiết lập layout mặc định nếu không được chỉ định
+        $layout = LayoutHelper::getLayoutByRole();
+
+        // Trích xuất dữ liệu thành các biến riêng lẻ
         extract($data);
         
         $viewPath = ROOT_PATH . '/app/views/' . $view . '.php';
-        
+
+        // Bắt đầu output buffering để capture nội dung view
+        ob_start();
         if(file_exists($viewPath)) {
-            require_once $viewPath;
+            require $viewPath;
         } else {
-            die("View {$view} not found");
+            // Nếu view không tồn tại, hiển thị trang not found
+            include ROOT_PATH . '/app/views/errors/404.php';
         }
+        $content = ob_get_clean();
+        
+        if(!file_exists($layout)) {
+            die("Layout not found at {$layout}");
+        }
+
+        // Load layout với nội dung từ view
+        require $layout;
     }
     
     public function redirect($url) {
@@ -33,7 +50,7 @@ class BaseController {
     public function getCurrentUser() {
         if(isset($_SESSION['user_id'])) {
             $userModel = new \App\Models\User();
-            return $userModel->getUserWithRole($_SESSION['user_id']);
+            // return $userModel->getUserWithRole($_SESSION['user_id']);
         }
         return null;
     }
@@ -44,6 +61,6 @@ class BaseController {
         }
         
         $userModel = new \App\Models\User();
-        return $userModel->hasPermission($_SESSION['user_id'], $permission);
+        // return $userModel->hasPermission($_SESSION['user_id'], $permission);
     }
 }

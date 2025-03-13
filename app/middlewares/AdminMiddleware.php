@@ -11,7 +11,7 @@ class AdminMiddleware {
         }
         
         $userModel = new User();
-        $user = $userModel->getUserWithRole($_SESSION['user_id']);
+        $user = '';
         
         if(!$user || $user['role_name'] !== 'admin') {
             header('Location: /dashboard');
