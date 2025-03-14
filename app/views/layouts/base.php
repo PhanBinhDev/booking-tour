@@ -1,7 +1,5 @@
 <?php
 use App\Helpers\UrlHelper;
-
-var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>

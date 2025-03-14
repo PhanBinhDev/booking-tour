@@ -3,8 +3,8 @@ namespace App\Controllers;
 
 use App\Helpers\UrlHelper;
 use App\Models\User;
-use App\Helpers\Validator;
 use App\Helpers\EmailHelper;
+use App\Helpers\SessionHelper;
 
 class AuthController extends BaseController {
     private $userModel;
@@ -18,7 +18,9 @@ class AuthController extends BaseController {
      */
     public function login() {
         if($this->isAuthenticated()) {
-            $this->redirect(UrlHelper::route('/dashboard'));
+            $route = $this->getRouteByRole();
+            echo($route);
+            $this->redirect(UrlHelper::route($route));
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,11 +54,12 @@ class AuthController extends BaseController {
                         }
                     } else {
                         // Đăng nhập thành công
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['username'] = $user['username'];
-                        $_SESSION['role'] = $user['role']['name'];
-                        $_SESSION['role_id'] = $user['role_id'];
-                        $_SESSION['permissions'] = $user['permissions'];
+                        SessionHelper::set('user_id', $user['id']);
+                        SessionHelper::set('username', $user['username']);
+                        SessionHelper::set('role', $user['role']['name']);
+                        SessionHelper::set('role_id', $user['role_id']);
+                        SessionHelper::set('permissions', $user['permissions']);
+
                         // Lưu cookie nếu chọn "Ghi nhớ đăng nhập"
                         if ($remember) {
                             $token = bin2hex(random_bytes(32));
@@ -73,7 +76,7 @@ class AuthController extends BaseController {
                         }
                         
                         // Chuyển hướng đến trang chủ hoặc trang được yêu cầu trước đó
-                        $redirect = $_SESSION['redirect_url'] ?? UrlHelper::route('admin/dashboard');
+                        $redirect = SessionHelper::get('redirect_url') ?? UrlHelper::route('admin/dashboard');
                         unset($_SESSION['redirect_url']);
                         
                         $this->redirect($redirect);
@@ -100,7 +103,8 @@ class AuthController extends BaseController {
         if($this->isAuthenticated()) {
             // Check role
             // TODO: write a function base on role and redirect
-            $this->redirect(UrlHelper::route('/dashboard'));
+            $route = $this->getRouteByRole();
+            $this->redirect(UrlHelper::route($route));
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -170,12 +174,10 @@ class AuthController extends BaseController {
                         $this->redirect(UrlHelper::route('auth/login'));
                     } else {
                         // Đăng nhập người dùng
-                        $_SESSION['user_id'] = $userId;
-                        $_SESSION['username'] = $username;
-                        $_SESSION['role_id'] = 4;
-                        $_SESSION['role'] = 'user';
-
-                        
+                        SessionHelper::set('user_id', $userId);
+                        SessionHelper::set('username', $username);
+                        SessionHelper::set('role', 'user');
+                        SessionHelper::set('role_id', 4);
                         $this->setFlashMessage('success', 'Đăng ký thành công!');
                         $this->redirect(UrlHelper::route(''));
                     }
@@ -348,4 +350,7 @@ class AuthController extends BaseController {
             'message' => $message
         ];
     }
+
+    // GET ROUTE BY ROLE
+    
 }

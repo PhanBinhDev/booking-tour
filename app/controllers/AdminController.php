@@ -13,8 +13,12 @@ class AdminController extends BaseController {
     
     public function __construct() {
         // Áp dụng middleware để kiểm tra quyền admin
-        $middleware = new AdminMiddleware();
-        $middleware->handle();
+        $route = $this->getRouteByRole();
+        $roleBase = 'admin';
+        $role = $this->getRole();
+        if ($role !== $roleBase) {
+            $this->redirect($route);
+        }
         
         $this->userModel = new User();
         $this->roleModel = new Role();
@@ -35,6 +39,7 @@ class AdminController extends BaseController {
         $images = $this->imageModel->getAll();
         $imageCount = count($images);
         
+        var_dump($imageCount);
         $this->view('admin/dashboard', [
             'user' => $currentUser,
             'userCount' => $userCount,
@@ -42,6 +47,10 @@ class AdminController extends BaseController {
             'imageCount' => $imageCount
         ]);
     }
+
+    // -------------
+    // Users
+    // -------------
     
     public function users() {
         $currentUser = $this->getCurrentUser();
@@ -169,5 +178,14 @@ class AdminController extends BaseController {
                 'deleteUser' => $user
             ]);
         }
+    }
+
+    // -------------
+    // Roles
+    // -------------
+    public function roles() {
+        $this->view('admin/roles',[
+            'roles' => []
+        ]);
     }
 }

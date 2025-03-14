@@ -1,7 +1,7 @@
 <?php
 namespace App\Helpers;
 
-class Session {
+class SessionHelper {
     public static function set($key, $value) {
         $_SESSION[$key] = $value;
     }

@@ -2,6 +2,8 @@
 namespace App\Controllers;
 
 use App\Helpers\LayoutHelper;
+use App\Helpers\SessionHelper;
+use App\Helpers\UrlHelper;
 
 class BaseController {
     public function view($view, $data = []) {
@@ -35,6 +37,24 @@ class BaseController {
         header('Location: ' . $url);
         exit;
     }
+
+    public function redirectByRole() {
+        $redirectUrl = $this->getRouteByRole();
+        $this->redirect($redirectUrl);
+    }
+
+    public function getRouteByRole() {
+        $role = SessionHelper::get('role') ?? 'user';
+        switch ($role) {
+            case 'admin':
+                return UrlHelper::route('admin/dashboard');
+            case 'moderator':
+                return UrlHelper::route('moderator/dashboard');
+            case 'user':
+            default:
+                return UrlHelper::route('');
+        }
+    }
     
     public function json($data, $statusCode = 200) {
         header('Content-Type: application/json');
@@ -62,5 +82,9 @@ class BaseController {
         
         $userModel = new \App\Models\User();
         // return $userModel->hasPermission($_SESSION['user_id'], $permission);
+    }
+
+    public function getRole() {
+        return SessionHelper::get('role') ?? 'user';
     }
 }
