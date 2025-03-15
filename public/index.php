@@ -1,4 +1,5 @@
 <?php
+
 // Định nghĩa đường dẫn gốc
 // Lấy tên thư mục project từ đường dẫn thực tế
 
@@ -6,7 +7,7 @@ $projectFolder = basename(dirname(__DIR__));
 define('ROOT_PATH', dirname(__DIR__));
 
 // Cấu hình đường dẫn cơ sở
-define('BASE_URL', '/'. $projectFolder);
+define('BASE_URL', '/' . $projectFolder);
 define('PUBLIC_URL', BASE_URL . '/public');
 define('ASSETS_URL', PUBLIC_URL . '/assets');
 define('CSS_URL', ASSETS_URL . '/css');
@@ -49,6 +50,11 @@ $router->get('/home/terms', 'HomeController@terms');
 $router->get('/home/activities', 'HomeController@activities');
 
 $router->get('/home/tours/{tourId}', 'HomeController@tourDetails');
+$router->get('/home/news', 'HomeController@news');
+$router->get('/home/tours', 'HomeController@tours');
+$router->get('/home/home', 'HomeController@home');
+
+
 
 // USERS
 $router->get('/user/profile', 'UserController@profile');

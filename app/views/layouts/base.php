@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\UrlHelper;
 ?>
 
@@ -29,7 +30,7 @@ use App\Helpers\UrlHelper;
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Trang chủ
           </a>
-          <a href="<?= UrlHelper::route('home/tours') ?>"
+          <a href="<?= UrlHelper::route('home/tours') ?>" <a href="<?= UrlHelper::route('home/tours') ?>"
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Tours
           </a>

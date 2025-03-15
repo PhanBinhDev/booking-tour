@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\UrlHelper;
 
 $title = 'Giới Thiệu - Di Travel';
@@ -8,7 +9,7 @@ $activePage = 'about';
 <div class="py-8 md:py-12">
   <!-- Hero Section -->
   <div class="relative mb-16">
-    <div class="w-full h-[300px] md:h-[400px] bg-cover bg-center"
+    <div class="w-full h-[300px] md:h-[400px] bg-cover bg-center bg-teal-500"
       style="background-image: url('<?= UrlHelper::image('about-hero.jpg') ?>')">
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="absolute inset-0 flex items-center justify-center">
@@ -21,7 +22,7 @@ $activePage = 'about';
   </div>
 
   <!-- Our Story Section -->
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-10">
     <div class="flex flex-col md:flex-row items-center gap-12">
       <div class="md:w-1/2">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">Câu Chuyện Của Chúng Tôi</h2>
@@ -47,8 +48,8 @@ $activePage = 'about';
         </div>
       </div>
       <div class="md:w-1/2">
-        <img src="<?= UrlHelper::image('about-story.jpg') ?>" alt="Đội ngũ Di Travel"
-          class="rounded-lg shadow-lg w-full h-auto object-cover" />
+        <img src="<?= UrlHelper::image('banner-auth.png') ?>" alt="Đội ngũ Di Travel"
+          class="rounded-lg shadow-lg w-full h-[400px] object-cover" />
       </div>
     </div>
   </div>
@@ -110,7 +111,7 @@ $activePage = 'about';
   </div>
 
   <!-- Why Choose Us Section -->
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Tại Sao Chọn Di Travel</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <!-- Reason 1 -->
@@ -179,7 +180,7 @@ $activePage = 'about';
   </div>
 
   <!-- Team Section -->
-  <div class="bg-gray-50 py-16">
+  <div class="bg-gray-50 py-10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Đội Ngũ Của Chúng Tôi</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

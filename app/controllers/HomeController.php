@@ -1,11 +1,15 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Models\Tour;
 
-class HomeController extends BaseController {
+class HomeController extends BaseController
+{
   private $tourModel;
 
-  function __construct() {
+  function __construct()
+  {
     $route = $this->getRouteByRole();
     $roleBase = 'user';
     $role = $this->getRole();
@@ -15,19 +19,24 @@ class HomeController extends BaseController {
 
     $this->tourModel = new Tour();
   }
-  function index() {
+  function index()
+  {
     $this->view('home/index');
   }
 
-  function about() {
+  function about()
+  {
+
     $this->view('home/about');
   }
 
-  function contact() {
+  function contact()
+  {
     $this->view('home/contact');
   }
 
-  function news() {
+  function news()
+  {
     $this->view('home/news');
   }
 
@@ -47,10 +56,15 @@ class HomeController extends BaseController {
     $this->view('home/activities');
   }
 
-  function tourDetails($tourId){
+  function tours()
+  {
+    $this->view('home/tours');
+  }
+
+
+  function tourDetails($tourId)
+  {
     // $tourDetails = $this->tourDetails($tourId);
     $this->view('home/tour-details', ['id' => $tourId]);
   }
 }
-
-?>
