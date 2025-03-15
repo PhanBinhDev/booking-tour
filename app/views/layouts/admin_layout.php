@@ -240,13 +240,7 @@ ob_start();
             </button>
             <ul class="sidebar-dropdown-content hidden pl-10 py-1 bg-gray-900">
               <li>
-                <a href="<?= UrlHelper::route('admin/settings') ?>"
-                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'settings' ? 'text-white' : '' ?>">
-                  Cài đặt Chung
-                </a>
-              </li>
-              <li>
-                <a href="<?= UrlHelper::route('admin/logs') ?>"
+                <a href="<?= UrlHelper::route('admin/system/activity-logs') ?>"
                   class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'logs' ? 'text-white' : '' ?>">
                   Nhật ký Hệ thống
                 </a>

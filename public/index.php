@@ -101,6 +101,11 @@ $router->get('/admin/payment/refunds/{id}', 'Admin\RefundController@show');
 
 
 
+// ADMIN/SYSTEM
+$router->get('/admin/system/activity-logs', 'Admin\DashboardController@activityLogs');
+
+
+
 
 
 

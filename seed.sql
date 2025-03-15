@@ -1,11 +1,13 @@
 -- -----------------------------------------------------
 -- Database schema for Di Travel
 -- -----------------------------------------------------
+CREATE DATABASE IF NOT EXISTS booking_travel;
 
+USE booking_travel;
 -- -----------------------------------------------------
 -- Table `roles`
 -- -----------------------------------------------------
-CREATE TABLE `roles`(
+CREATE TABLE IF NOT EXISTS `roles`(
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(50) NOT NULL UNIQUE,
   `description` TEXT,
@@ -15,7 +17,7 @@ CREATE TABLE `roles`(
 -- -----------------------------------------------------
 -- Table `permissions`
 -- -----------------------------------------------------
-CREATE TABLE `permissions` (
+CREATE TABLE IF NOT EXISTS `permissions` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL UNIQUE,
   `description` TEXT,
@@ -26,7 +28,7 @@ CREATE TABLE `permissions` (
 -- -----------------------------------------------------
 -- Table `role_permissions`
 -- -----------------------------------------------------
-CREATE TABLE `role_permissions` (
+CREATE TABLE IF NOT EXISTS `role_permissions` (
   `role_id` INT NOT NULL,
   `permission_id` INT NOT NULL,
   PRIMARY KEY (`role_id`, `permission_id`),
@@ -37,7 +39,7 @@ CREATE TABLE `role_permissions` (
 -- -----------------------------------------------------
 -- Table `users`
 -- -----------------------------------------------------
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `username` VARCHAR(50) NOT NULL UNIQUE,
   `email` VARCHAR(100) NOT NULL UNIQUE,
@@ -61,7 +63,7 @@ CREATE TABLE `users` (
 -- -----------------------------------------------------
 -- Table `user_profiles`
 -- -----------------------------------------------------
-CREATE TABLE `user_profiles` (
+CREATE TABLE IF NOT EXISTS `user_profiles` (
   `user_id` INT PRIMARY KEY,
   `bio` TEXT,
   `date_of_birth` DATE,
@@ -79,7 +81,7 @@ CREATE TABLE `user_profiles` (
 -- -----------------------------------------------------
 -- Table `tour_categories`
 -- -----------------------------------------------------
-CREATE TABLE `tour_categories` (
+CREATE TABLE IF NOT EXISTS `tour_categories` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL,
   `slug` VARCHAR(120) NOT NULL UNIQUE,
@@ -95,7 +97,7 @@ CREATE TABLE `tour_categories` (
 -- -----------------------------------------------------
 -- Table `locations`
 -- -----------------------------------------------------
-CREATE TABLE `locations` (
+CREATE TABLE IF NOT EXISTS `locations` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL,
   `slug` VARCHAR(120) NOT NULL UNIQUE,
@@ -110,11 +112,10 @@ CREATE TABLE `locations` (
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
 -- -----------------------------------------------------
 -- Table `images`
 -- -----------------------------------------------------
-CREATE TABLE `images` (
+CREATE TABLE IF NOT EXISTS `images` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `title` VARCHAR(255),
   `description` TEXT,
@@ -136,7 +137,7 @@ CREATE TABLE `images` (
 -- -----------------------------------------------------
 -- Table `tours`
 -- -----------------------------------------------------
-CREATE TABLE `tours` (
+CREATE TABLE IF NOT EXISTS `tours` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `title` VARCHAR(255) NOT NULL,
   `slug` VARCHAR(255) NOT NULL UNIQUE,
@@ -171,7 +172,7 @@ CREATE TABLE `tours` (
 -- -----------------------------------------------------
 -- Table `tour_images`
 -- -----------------------------------------------------
-CREATE TABLE `tour_images` (
+CREATE TABLE IF NOT EXISTS `tour_images` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `tour_id` INT NOT NULL,
   `image_id` INT NOT NULL,
@@ -181,10 +182,11 @@ CREATE TABLE `tour_images` (
   FOREIGN KEY (`tour_id`) REFERENCES `tours` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE
 );
+
 -- -----------------------------------------------------
 -- Table `tour_dates`
 -- -----------------------------------------------------
-CREATE TABLE `tour_dates` (
+CREATE TABLE IF NOT EXISTS `tour_dates` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `tour_id` INT NOT NULL,
   `start_date` DATE NOT NULL,
@@ -201,7 +203,7 @@ CREATE TABLE `tour_dates` (
 -- -----------------------------------------------------
 -- Table `bookings`
 -- -----------------------------------------------------
-CREATE TABLE `bookings` (
+CREATE TABLE IF NOT EXISTS `bookings` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `booking_number` VARCHAR(50) NOT NULL UNIQUE,
   `user_id` INT,
@@ -225,7 +227,7 @@ CREATE TABLE `bookings` (
 -- -----------------------------------------------------
 -- Table `booking_customers`
 -- -----------------------------------------------------
-CREATE TABLE `booking_customers` (
+CREATE TABLE IF NOT EXISTS `booking_customers` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `booking_id` INT NOT NULL,
   `full_name` VARCHAR(100) NOT NULL,
@@ -243,7 +245,7 @@ CREATE TABLE `booking_customers` (
 -- -----------------------------------------------------
 -- Table `tour_reviews`
 -- -----------------------------------------------------
-CREATE TABLE `tour_reviews` (
+CREATE TABLE IF NOT EXISTS `tour_reviews` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `tour_id` INT NOT NULL,
   `user_id` INT NOT NULL,
@@ -262,7 +264,7 @@ CREATE TABLE `tour_reviews` (
 -- -----------------------------------------------------
 -- Table `news_categories`
 -- -----------------------------------------------------
-CREATE TABLE `news_categories` (
+CREATE TABLE IF NOT EXISTS `news_categories` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL,
   `slug` VARCHAR(120) NOT NULL UNIQUE,
@@ -278,7 +280,7 @@ CREATE TABLE `news_categories` (
 -- -----------------------------------------------------
 -- Table `news`
 -- -----------------------------------------------------
-CREATE TABLE `news` (
+CREATE TABLE IF NOT EXISTS `news` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `title` VARCHAR(255) NOT NULL,
   `slug` VARCHAR(255) NOT NULL UNIQUE,
@@ -304,7 +306,7 @@ CREATE TABLE `news` (
 -- -----------------------------------------------------
 -- Table `news_tags`
 -- -----------------------------------------------------
-CREATE TABLE `news_tags` (
+CREATE TABLE IF NOT EXISTS `news_tags` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(50) NOT NULL UNIQUE,
   `slug` VARCHAR(60) NOT NULL UNIQUE,
@@ -314,7 +316,7 @@ CREATE TABLE `news_tags` (
 -- -----------------------------------------------------
 -- Table `news_tag_relations`
 -- -----------------------------------------------------
-CREATE TABLE `news_tag_relations` (
+CREATE TABLE IF NOT EXISTS `news_tag_relations` (
   `news_id` INT NOT NULL,
   `tag_id` INT NOT NULL,
   PRIMARY KEY (`news_id`, `tag_id`),
@@ -325,7 +327,7 @@ CREATE TABLE `news_tag_relations` (
 -- -----------------------------------------------------
 -- Table `comments`
 -- -----------------------------------------------------
-CREATE TABLE `comments` (
+CREATE TABLE IF NOT EXISTS `comments` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `content` TEXT NOT NULL,
   `user_id` INT,
@@ -339,12 +341,10 @@ CREATE TABLE `comments` (
   FOREIGN KEY (`parent_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE
 );
 
-
-
 -- -----------------------------------------------------
 -- Table `banners`
 -- -----------------------------------------------------
-CREATE TABLE `banners` (
+CREATE TABLE IF NOT EXISTS `banners` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT,
@@ -367,7 +367,7 @@ CREATE TABLE `banners` (
 -- -----------------------------------------------------
 -- Table `contacts`
 -- -----------------------------------------------------
-CREATE TABLE `contacts` (
+CREATE TABLE IF NOT EXISTS `contacts` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
@@ -384,7 +384,7 @@ CREATE TABLE `contacts` (
 -- -----------------------------------------------------
 -- Table `settings`
 -- -----------------------------------------------------
-CREATE TABLE `settings` (
+CREATE TABLE IF NOT EXISTS `settings` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `key` VARCHAR(100) NOT NULL UNIQUE,
   `value` TEXT,
@@ -397,7 +397,7 @@ CREATE TABLE `settings` (
 -- -----------------------------------------------------
 -- Table `activity_logs`
 -- -----------------------------------------------------
-CREATE TABLE `activity_logs` (
+CREATE TABLE IF NOT EXISTS `activity_logs` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT,
   `action` VARCHAR(255) NOT NULL,
@@ -410,11 +410,10 @@ CREATE TABLE `activity_logs` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 );
 
-
 -- -----------------------------------------------------
 -- Table `payment_methods`
 -- -----------------------------------------------------
-CREATE TABLE `payment_methods` (
+CREATE TABLE IF NOT EXISTS `payment_methods` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL,
   `code` VARCHAR(50) NOT NULL UNIQUE,
@@ -430,13 +429,57 @@ CREATE TABLE `payment_methods` (
 );
 
 -- -----------------------------------------------------
+-- Table `transactions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `transactions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `transaction_code` VARCHAR(50) NOT NULL UNIQUE,
+  `payment_id` INT,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(10) DEFAULT 'VND',
+  `status` ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending',
+  `payment_method` VARCHAR(50) NOT NULL,
+  `payment_data` JSON,
+  `notes` TEXT,
+  `customer_name` VARCHAR(100),
+  `customer_email` VARCHAR(100),
+  `customer_phone` VARCHAR(20),
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- -----------------------------------------------------
+-- Table `refunds`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `refunds` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `refund_code` VARCHAR(50) NOT NULL UNIQUE,
+  `payment_id` INT NOT NULL,
+  `transaction_id` INT,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(10) DEFAULT 'VND',
+  `status` ENUM('pending', 'processing', 'completed', 'rejected') DEFAULT 'pending',
+  `reason` TEXT NOT NULL,
+  `refund_data` JSON,
+  `notes` TEXT,
+  `refunded_by` INT,
+  `refund_date` DATETIME,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`refunded_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+);
+
+-- -----------------------------------------------------
 -- Table `payments`
 -- -----------------------------------------------------
-CREATE TABLE `payments` (
+CREATE TABLE IF NOT EXISTS `payments` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `booking_id` INT NOT NULL,
   `payment_method_id` INT NOT NULL,
   `transaction_id` VARCHAR(255),
+  `transaction_id_internal` INT,
+  `refund_id` INT,
   `amount` DECIMAL(10,2) NOT NULL,
   `currency` VARCHAR(10) DEFAULT 'VND',
   `status` ENUM('pending', 'processing', 'completed', 'failed', 'refunded', 'cancelled') DEFAULT 'pending',
@@ -449,13 +492,19 @@ CREATE TABLE `payments` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`payment_method_id`) REFERENCES `payment_methods` (`id`) ON DELETE RESTRICT
+  FOREIGN KEY (`payment_method_id`) REFERENCES `payment_methods` (`id`) ON DELETE RESTRICT,
+  FOREIGN KEY (`transaction_id_internal`) REFERENCES `transactions` (`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`refund_id`) REFERENCES `refunds` (`id`) ON DELETE SET NULL
 );
+
+-- Add missing foreign key to refunds table
+ALTER TABLE `refunds` 
+ADD FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE CASCADE;
 
 -- -----------------------------------------------------
 -- Table `payment_logs`
 -- -----------------------------------------------------
-CREATE TABLE `payment_logs` (
+CREATE TABLE IF NOT EXISTS `payment_logs` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `payment_id` INT,
   `booking_id` INT,
@@ -473,7 +522,7 @@ CREATE TABLE `payment_logs` (
 -- -----------------------------------------------------
 -- Table `invoices`
 -- -----------------------------------------------------
-CREATE TABLE `invoices` (
+CREATE TABLE IF NOT EXISTS `invoices` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `invoice_number` VARCHAR(50) NOT NULL UNIQUE,
   `booking_id` INT NOT NULL,
@@ -499,60 +548,10 @@ CREATE TABLE `invoices` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 );
 
-
--- -----------------------------------------------------
--- Table `transactions`
--- -----------------------------------------------------
-CREATE TABLE `transactions` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `transaction_code` VARCHAR(50) NOT NULL UNIQUE,
-  `payment_id` INT,
-  `amount` DECIMAL(10,2) NOT NULL,
-  `currency` VARCHAR(10) DEFAULT 'VND',
-  `status` ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending',
-  `payment_method` VARCHAR(50) NOT NULL,
-  `payment_data` JSON,
-  `notes` TEXT,
-  `customer_name` VARCHAR(100),
-  `customer_email` VARCHAR(100),
-  `customer_phone` VARCHAR(20),
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE SET NULL
-);
-
--- -----------------------------------------------------
--- Table `refunds`
--- -----------------------------------------------------
-CREATE TABLE `refunds` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `refund_code` VARCHAR(50) NOT NULL UNIQUE,
-  `payment_id` INT NOT NULL,
-  `transaction_id` INT,
-  `amount` DECIMAL(10,2) NOT NULL,
-  `currency` VARCHAR(10) DEFAULT 'VND',
-  `status` ENUM('pending', 'processing', 'completed', 'rejected') DEFAULT 'pending',
-  `reason` TEXT NOT NULL,
-  `refund_data` JSON,
-  `notes` TEXT,
-  `refunded_by` INT,
-  `refund_date` DATETIME,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE SET NULL,
-  FOREIGN KEY (`refunded_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
-);
-
--- Add transaction_id column to payments table if needed
-ALTER TABLE `payments` 
-ADD COLUMN `transaction_id_internal` INT AFTER `transaction_id`,
-ADD FOREIGN KEY (`transaction_id_internal`) REFERENCES `transactions` (`id`) ON DELETE SET NULL;
-
--- Add refund_id column to payments table
-ALTER TABLE `payments` 
-ADD COLUMN `refund_id` INT AFTER `transaction_id_internal`,
-ADD FOREIGN KEY (`refund_id`) REFERENCES `refunds` (`id`) ON DELETE SET NULL;
+-- Update transactions foreign key to reference payments
+UPDATE `transactions` SET `payment_id` = NULL;
+ALTER TABLE `transactions` 
+ADD FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE SET NULL;
 
 
 -- -----------------------------------------------------
@@ -879,3 +878,78 @@ INSERT INTO `payment_logs` (`payment_id`, `booking_id`, `event`, `status`, `mess
 (5, 6, 'payment_completed', 'completed', 'Thanh toán thành công', '{"transaction_code": "TRX-230506"}', '127.0.0.1', '2023-05-06 09:15:30'),
 (5, 6, 'refund_requested', 'completed', 'Yêu cầu hoàn tiền', '{"refund_code": "REF-230506", "amount": 2200000}', '127.0.0.1', '2023-05-07 10:15:30'),
 (5, 6, 'refund_completed', 'refunded', 'Hoàn tiền thành công', '{"refund_code": "REF-230506", "amount": 2200000}', '127.0.0.1', '2023-05-08 14:30:00');
+
+
+
+-- -----------------------------------------------------
+-- Mock data for locations (63 Vietnamese provinces/cities)
+-- -----------------------------------------------------
+INSERT INTO `locations` (`name`, `slug`, `description`, `country`, `region`, `latitude`, `longitude`, `image`, `status`) VALUES
+-- Northern Vietnam
+('Hà Nội', 'ha-noi', 'Thủ đô Hà Nội, trung tâm chính trị - văn hóa của cả nước với lịch sử nghìn năm văn hiến', 'Việt Nam', 'Miền Bắc', 21.0285, 105.8542, 'locations/ha-noi.jpg', 'active'),
+('Hải Phòng', 'hai-phong', 'Thành phố cảng lớn nhất miền Bắc với nhiều bãi biển và đảo đẹp như Đồ Sơn, Cát Bà', 'Việt Nam', 'Miền Bắc', 20.8449, 106.6881, 'locations/hai-phong.jpg', 'active'),
+('Quảng Ninh', 'quang-ninh', 'Tỉnh có Vịnh Hạ Long - di sản thiên nhiên thế giới với hàng nghìn đảo đá vôi độc đáo', 'Việt Nam', 'Miền Bắc', 21.0069, 107.2925, 'locations/quang-ninh.jpg', 'active'),
+('Bắc Ninh', 'bac-ninh', 'Vùng đất của quan họ - di sản văn hóa phi vật thể của nhân loại với nhiều làng nghề truyền thống', 'Việt Nam', 'Miền Bắc', 21.1214, 106.1151, 'locations/bac-ninh.jpg', 'active'),
+('Hải Dương', 'hai-duong', 'Tỉnh với nền văn hóa lâu đời, nổi tiếng với đền Kiếp Bạc, chùa Côn Sơn và nhiều làng nghề truyền thống', 'Việt Nam', 'Miền Bắc', 20.9373, 106.3145, 'locations/hai-duong.jpg', 'active'),
+('Hưng Yên', 'hung-yen', 'Vùng đất cổ với nhiều di tích lịch sử, văn hóa và nổi tiếng với đặc sản nhãn lồng', 'Việt Nam', 'Miền Bắc', 20.6464, 106.0511, 'locations/hung-yen.jpg', 'active'),
+('Thái Bình', 'thai-binh', 'Tỉnh thuần nông với cánh đồng bằng phì nhiêu và nhiều làng nghề truyền thống', 'Việt Nam', 'Miền Bắc', 20.4462, 106.3366, 'locations/thai-binh.jpg', 'active'),
+('Hà Nam', 'ha-nam', 'Tỉnh với nhiều di tích lịch sử, danh thắng nổi tiếng như chùa Tam Chúc, núi Ngọc', 'Việt Nam', 'Miền Bắc', 20.5835, 105.9229, 'locations/ha-nam.jpg', 'active'),
+('Nam Định', 'nam-dinh', 'Vùng đất văn hiến với nghề dệt, may truyền thống và nhiều di tích lịch sử - tôn giáo', 'Việt Nam', 'Miền Bắc', 20.4338, 106.1621, 'locations/nam-dinh.jpg', 'active'),
+('Ninh Bình', 'ninh-binh', 'Tỉnh có danh thắng Tràng An, Tam Cốc - Bích Động được mệnh danh là "Hạ Long trên cạn"', 'Việt Nam', 'Miền Bắc', 20.2543, 105.9753, 'locations/ninh-binh.jpg', 'active'),
+('Vĩnh Phúc', 'vinh-phuc', 'Tỉnh với cảnh quan đẹp như Tam Đảo, đền Hùng và nhiều khu công nghiệp phát triển', 'Việt Nam', 'Miền Bắc', 21.3608, 105.5474, 'locations/vinh-phuc.jpg', 'active'),
+('Phú Thọ', 'phu-tho', 'Đất Tổ Hùng Vương với Đền Hùng thiêng liêng và nhiều di tích lịch sử quan trọng', 'Việt Nam', 'Miền Bắc', 21.3227, 105.1249, 'locations/phu-tho.jpg', 'active'),
+('Bắc Giang', 'bac-giang', 'Tỉnh nổi tiếng với vải thiều Lục Ngạn và nhiều di tích lịch sử, văn hóa', 'Việt Nam', 'Miền Bắc', 21.2717, 106.1947, 'locations/bac-giang.jpg', 'active'),
+('Thái Nguyên', 'thai-nguyen', 'Trung tâm văn hóa, kinh tế vùng trung du và miền núi phía Bắc, nổi tiếng với chè Tân Cương', 'Việt Nam', 'Miền Bắc', 21.5942, 105.8480, 'locations/thai-nguyen.jpg', 'active'),
+('Lạng Sơn', 'lang-son', 'Tỉnh biên giới với nhiều cảnh quan đẹp, di tích lịch sử và cửa khẩu thương mại quan trọng', 'Việt Nam', 'Miền Bắc', 21.8564, 106.7615, 'locations/lang-son.jpg', 'active'),
+('Cao Bằng', 'cao-bang', 'Tỉnh miền núi biên giới với thác Bản Giốc hùng vĩ và Công viên địa chất toàn cầu UNESCO', 'Việt Nam', 'Miền Bắc', 22.6667, 106.2500, 'locations/cao-bang.jpg', 'active'),
+('Bắc Kạn', 'bac-kan', 'Tỉnh miền núi với hồ Ba Bể - hồ nước ngọt tự nhiên lớn nhất Việt Nam', 'Việt Nam', 'Miền Bắc', 22.1477, 105.8347, 'locations/bac-kan.jpg', 'active'),
+('Tuyên Quang', 'tuyen-quang', 'Tỉnh với nhiều thắng cảnh đẹp, lễ hội độc đáo và di tích lịch sử cách mạng quan trọng', 'Việt Nam', 'Miền Bắc', 21.7767, 105.2281, 'locations/tuyen-quang.jpg', 'active'),
+('Hà Giang', 'ha-giang', 'Tỉnh cực bắc với cao nguyên đá Đồng Văn - công viên địa chất toàn cầu UNESCO và cung đường Hạnh Phúc', 'Việt Nam', 'Miền Bắc', 22.8268, 104.9886, 'locations/ha-giang.jpg', 'active'),
+('Yên Bái', 'yen-bai', 'Tỉnh miền núi với ruộng bậc thang Mù Cang Chải tuyệt đẹp và hồ Thác Bà', 'Việt Nam', 'Miền Bắc', 21.7167, 104.9000, 'locations/yen-bai.jpg', 'active'),
+('Lào Cai', 'lao-cai', 'Tỉnh biên giới với Sa Pa - thiên đường du lịch và đỉnh Fansipan "nóc nhà Đông Dương"', 'Việt Nam', 'Miền Bắc', 22.4856, 103.9723, 'locations/lao-cai.jpg', 'active'),
+('Hòa Bình', 'hoa-binh', 'Tỉnh với hồ Hòa Bình lớn, văn hóa người Mường đặc sắc và nhiều cảnh quan thiên nhiên đẹp', 'Việt Nam', 'Miền Bắc', 20.8133, 105.3383, 'locations/hoa-binh.jpg', 'active'),
+('Sơn La', 'son-la', 'Tỉnh miền núi với cảnh quan hùng vĩ, thung lũng Mộc Châu và nhiều bản làng dân tộc thiểu số', 'Việt Nam', 'Miền Bắc', 21.1678, 103.9060, 'locations/son-la.jpg', 'active'),
+('Lai Châu', 'lai-chau', 'Tỉnh với địa hình núi cao hiểm trở, cảnh quan thiên nhiên hoang sơ và đẹp như tranh vẽ', 'Việt Nam', 'Miền Bắc', 22.3964, 103.4716, 'locations/lai-chau.jpg', 'active'),
+('Điện Biên', 'dien-bien', 'Tỉnh nổi tiếng với chiến thắng Điện Biên Phủ lừng lẫy và văn hóa các dân tộc thiểu số phong phú', 'Việt Nam', 'Miền Bắc', 21.3856, 103.0169, 'locations/dien-bien.jpg', 'active'),
+
+-- Central Vietnam
+('Thanh Hóa', 'thanh-hoa', 'Tỉnh với bề dày lịch sử, văn hóa và nhiều danh lam thắng cảnh như Pù Luông, Sầm Sơn', 'Việt Nam', 'Miền Trung', 19.8067, 105.7852, 'locations/thanh-hoa.jpg', 'active'),
+('Nghệ An', 'nghe-an', 'Quê hương Chủ tịch Hồ Chí Minh với nhiều di tích lịch sử và bãi biển đẹp như Cửa Lò', 'Việt Nam', 'Miền Trung', 19.2345, 104.9200, 'locations/nghe-an.jpg', 'active'),
+('Hà Tĩnh', 'ha-tinh', 'Tỉnh với bề dày lịch sử, văn hóa và nhiều bãi biển hoang sơ, đẹp như Thiên Cầm', 'Việt Nam', 'Miền Trung', 18.3333, 105.9000, 'locations/ha-tinh.jpg', 'active'),
+('Quảng Bình', 'quang-binh', 'Tỉnh nổi tiếng với Vườn quốc gia Phong Nha - Kẻ Bàng và hệ thống hang động kỳ vĩ', 'Việt Nam', 'Miền Trung', 17.5000, 106.3333, 'locations/quang-binh.jpg', 'active'),
+('Quảng Trị', 'quang-tri', 'Vùng đất lịch sử với nhiều di tích chiến tranh và Vĩ tuyến 17 nổi tiếng', 'Việt Nam', 'Miền Trung', 16.7500, 107.2000, 'locations/quang-tri.jpg', 'active'),
+('Thừa Thiên Huế', 'thua-thien-hue', 'Cố đô Huế với quần thể di tích Cố đô Huế được UNESCO công nhận di sản văn hóa thế giới', 'Việt Nam', 'Miền Trung', 16.4633, 107.5856, 'locations/thua-thien-hue.jpg', 'active'),
+('Đà Nẵng', 'da-nang', 'Thành phố biển hiện đại, năng động với Bà Nà Hills, bán đảo Sơn Trà và các bãi biển tuyệt đẹp', 'Việt Nam', 'Miền Trung', 16.0544, 108.2022, 'locations/da-nang.jpg', 'active'),
+('Quảng Nam', 'quang-nam', 'Tỉnh với hai di sản văn hóa thế giới: phố cổ Hội An và Thánh địa Mỹ Sơn', 'Việt Nam', 'Miền Trung', 15.5394, 108.0191, 'locations/quang-nam.jpg', 'active'),
+('Quảng Ngãi', 'quang-ngai', 'Tỉnh với di tích thảm sát Sơn Mỹ, đảo Lý Sơn và nhiều bãi biển hoang sơ', 'Việt Nam', 'Miền Trung', 15.1200, 108.8000, 'locations/quang-ngai.jpg', 'active'),
+('Bình Định', 'binh-dinh', 'Tỉnh nổi tiếng với nghệ thuật võ thuật, tháp Chăm cổ và biển Quy Nhơn xanh trong', 'Việt Nam', 'Miền Trung', 13.7756, 109.2239, 'locations/binh-dinh.jpg', 'active'),
+('Phú Yên', 'phu-yen', 'Tỉnh với Gành Đá Đĩa độc đáo, bãi biển Đại Lãnh và vịnh Vũng Rô nên thơ', 'Việt Nam', 'Miền Trung', 13.1628, 109.0946, 'locations/phu-yen.jpg', 'active'),
+('Khánh Hòa', 'khanh-hoa', 'Tỉnh với vịnh Nha Trang xinh đẹp, Vinpearl Land và nhiều đảo, bãi biển đẹp', 'Việt Nam', 'Miền Trung', 12.2500, 109.1833, 'locations/khanh-hoa.jpg', 'active'),
+('Ninh Thuận', 'ninh-thuan', 'Tỉnh với khí hậu khô nhất Việt Nam, vịnh Vĩnh Hy và văn hóa Chăm Pa đặc sắc', 'Việt Nam', 'Miền Trung', 11.6750, 108.8655, 'locations/ninh-thuan.jpg', 'active'),
+('Bình Thuận', 'binh-thuan', 'Tỉnh nổi tiếng với Mũi Né, đồi cát bay và nhiều khu nghỉ dưỡng cao cấp', 'Việt Nam', 'Miền Trung', 10.9377, 108.1428, 'locations/binh-thuan.jpg', 'active'),
+('Kon Tum', 'kon-tum', 'Tỉnh cao nguyên với nhiều dân tộc thiểu số, nhà rông, nhà sàn và văn hóa đặc sắc', 'Việt Nam', 'Tây Nguyên', 14.3500, 108.0000, 'locations/kon-tum.jpg', 'active'),
+('Gia Lai', 'gia-lai', 'Tỉnh với biển hồ T\'Nưng, thác Xung Khoeng và văn hóa cồng chiêng Tây Nguyên', 'Việt Nam', 'Tây Nguyên', 13.9833, 108.0000, 'locations/gia-lai.jpg', 'active'),
+('Đắk Lắk', 'dak-lak', 'Tỉnh với voi rừng, hồ Lắk và Festival cà phê Buôn Ma Thuột nổi tiếng', 'Việt Nam', 'Tây Nguyên', 12.7100, 108.2300, 'locations/dak-lak.jpg', 'active'),
+('Đắk Nông', 'dak-nong', 'Tỉnh với Công viên địa chất Đắk Nông - UNESCO và thác Đray Sáp hùng vĩ', 'Việt Nam', 'Tây Nguyên', 12.0042, 107.6867, 'locations/dak-nong.jpg', 'active'),
+('Lâm Đồng', 'lam-dong', 'Tỉnh với thành phố Đà Lạt mộng mơ, thác Pongour và nhiều đồi chè, rừng thông xanh mát', 'Việt Nam', 'Tây Nguyên', 11.9465, 108.4419, 'locations/lam-dong.jpg', 'active'),
+
+-- Southern Vietnam
+('Hồ Chí Minh', 'ho-chi-minh', 'Thành phố năng động nhất, trung tâm kinh tế và văn hóa lớn của cả nước', 'Việt Nam', 'Miền Nam', 10.8231, 106.6297, 'locations/ho-chi-minh.jpg', 'active'),
+('Bà Rịa - Vũng Tàu', 'ba-ria-vung-tau', 'Tỉnh với bãi biển Vũng Tàu nổi tiếng, núi Lớn - núi Nhỏ và nhiều khu du lịch nghỉ dưỡng', 'Việt Nam', 'Miền Nam', 10.3553, 107.0843, 'locations/ba-ria-vung-tau.jpg', 'active'),
+('Tây Ninh', 'tay-ninh', 'Tỉnh với núi Bà Đen, Tòa Thánh Cao Đài và là cửa khẩu quan trọng với Campuchia', 'Việt Nam', 'Miền Nam', 11.3151, 106.1028, 'locations/tay-ninh.jpg', 'active'),
+('Bình Dương', 'binh-duong', 'Tỉnh công nghiệp phát triển nhất miền Nam với nhiều khu công nghiệp hiện đại', 'Việt Nam', 'Miền Nam', 11.1254, 106.6514, 'locations/binh-duong.jpg', 'active'),
+('Bình Phước', 'binh-phuoc', 'Tỉnh với nhiều vườn cây ăn trái, vườn quốc gia và thác nước đẹp', 'Việt Nam', 'Miền Nam', 11.7511, 106.7135, 'locations/binh-phuoc.jpg', 'active'),
+('Đồng Nai', 'dong-nai', 'Tỉnh với Vườn quốc gia Nam Cát Tiên, hồ Trị An và nhiều khu công nghiệp lớn', 'Việt Nam', 'Miền Nam', 11.0686, 107.1678, 'locations/dong-nai.jpg', 'active'),
+('Long An', 'long-an', 'Tỉnh cửa ngõ miền Tây với đồng ruộng bạt ngàn và nhiều vườn trái cây', 'Việt Nam', 'Miền Nam', 10.5600, 106.4126, 'locations/long-an.jpg', 'active'),
+('Tiền Giang', 'tien-giang', 'Tỉnh miền Tây với cù lao Thới Sơn, làng cổ Đông Hòa Hiệp và vườn trái cây Cái Bè', 'Việt Nam', 'Miền Nam', 10.4493, 106.3421, 'locations/tien-giang.jpg', 'active'),
+('Bến Tre', 'ben-tre', 'Xứ dừa với nhiều kênh rạch, vườn trái cây và làng nghề truyền thống', 'Việt Nam', 'Miền Nam', 10.2433, 106.3756, 'locations/ben-tre.jpg', 'active'),
+('Trà Vinh', 'tra-vinh', 'Tỉnh với văn hóa Khmer đặc sắc, nhiều chùa Khmer cổ và vườn trái cây xanh mát', 'Việt Nam', 'Miền Nam', 9.9513, 106.3346, 'locations/tra-vinh.jpg', 'active'),
+('Vĩnh Long', 'vinh-long', 'Tỉnh với vườn trái cây, làng nghề truyền thống và homestay miệt vườn nổi tiếng', 'Việt Nam', 'Miền Nam', 10.2531, 105.9722, 'locations/vinh-long.jpg', 'active'),
+('Đồng Tháp', 'dong-thap', 'Tỉnh với đồng sen Tháp Mười, làng hoa Sa Đéc và khu di tích Xẻo Quýt', 'Việt Nam', 'Miền Nam', 10.4933, 105.6882, 'locations/dong-thap.jpg', 'active'),
+('An Giang', 'an-giang', 'Tỉnh với núi Cấm, núi Sam, khu du lịch Trà Sư và lễ hội đua bò Bảy Núi', 'Việt Nam', 'Miền Nam', 10.5216, 105.1256, 'locations/an-giang.jpg', 'active'),
+('Kiên Giang', 'kien-giang', 'Tỉnh với đảo Phú Quốc, Hà Tiên và quần đảo Nam Du tuyệt đẹp', 'Việt Nam', 'Miền Nam', 9.8246, 105.1256, 'locations/kien-giang.jpg', 'active'),
+('Cần Thơ', 'can-tho', 'Thành phố lớn nhất miền Tây với chợ nổi Cái Răng, vườn trái cây và ẩm thực phong phú', 'Việt Nam', 'Miền Nam', 10.0452, 105.7469, 'locations/can-tho.jpg', 'active'),
+('Hậu Giang', 'hau-giang', 'Tỉnh với cánh đồng lúa mênh mông, vườn trái cây và văn hóa sông nước miền Tây', 'Việt Nam', 'Miền Nam', 9.7579, 105.6413, 'locations/hau-giang.jpg', 'active'),
+('Sóc Trăng', 'soc-trang', 'Tỉnh với chùa Dơi, chùa Đất Sét và lễ hội Oóc Om Bóc - đua ghe ngo của người Khmer', 'Việt Nam', 'Miền Nam', 9.6037, 105.9812, 'locations/soc-trang.jpg', 'active'),
+('Bạc Liêu', 'bac-lieu', 'Tỉnh với nhà công tử Bạc Liêu, cánh đồng điện gió và khu du lịch Nhà Mát', 'Việt Nam', 'Miền Nam', 9.2940, 105.7216, 'locations/bac-lieu.jpg', 'active'),
+('Cà Mau', 'ca-mau', 'Tỉnh cực Nam với cánh đồng cỏ, rừng U Minh, Mũi Cà Mau - điểm cực nam của Tổ quốc và hệ sinh thái rừng ngập mặn độc đáo', 'Việt Nam', 'Miền Nam', 9.1769, 105.1527, 'locations/ca-mau.jpg', 'active');
