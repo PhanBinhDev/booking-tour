@@ -100,6 +100,7 @@ class Router extends BaseController
                     list($controller, $method) = explode('@', $route['callback']);
                     $controllerClass = '\\App\\Controllers\\' . $controller;
                     $controllerInstance = new $controllerClass();
+
                     return call_user_func_array([$controllerInstance, $method], $params);
                 }
             }

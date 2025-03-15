@@ -71,9 +71,11 @@ use App\Helpers\UrlHelper;
               <?= $user['last_login'] ? date('d/m/Y H:i', strtotime($user['last_login'])) : 'Chưa đăng nhập' ?>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <button class="edit-user-btn text-indigo-600 hover:text-indigo-900 mr-3" data-id="<?= $user['id'] ?>">
-                <i class="fas fa-edit"></i>
-              </button>
+              <a href="<?= UrlHelper::route('admin/users/edit/' . $user['id'])?>">
+                <button class="edit-user-btn text-indigo-600 hover:text-indigo-900 mr-3" data-id="<?= $user['id'] ?>">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </a>
               <?php if ($user['id'] != $_SESSION['user_id']): ?>
               <button class="delete-user-btn text-red-600 hover:text-red-900" data-id="<?= $user['id'] ?>"
                 data-name="<?= $user['username'] ?>">
@@ -324,45 +326,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   cancelAddBtn.addEventListener('click', function() {
     addUserModal.classList.add('hidden');
-  });
-
-  // Modal chỉnh sửa người dùng
-  const editUserBtns = document.querySelectorAll('.edit-user-btn');
-  const editUserModal = document.getElementById('editUserModal');
-  const closeEditModal = document.getElementById('closeEditModal');
-  const cancelEditBtn = document.getElementById('cancelEditBtn');
-  const editUserForm = document.getElementById('editUserForm');
-
-  editUserBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const userId = this.getAttribute('data-id');
-
-      // Gọi AJAX để lấy thông tin người dùng
-      fetch(`<?= ADMIN_URL ?>/users/${userId}/get`)
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('edit_user_id').value = data.id;
-          document.getElementById('edit_username').value = data.username;
-          document.getElementById('edit_email').value = data.email;
-          document.getElementById('edit_full_name').value = data.full_name || '';
-          document.getElementById('edit_role_id').value = data.role_id;
-          document.getElementById('edit_status').value = data.status;
-
-          editUserModal.classList.remove('hidden');
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Có lỗi xảy ra khi lấy thông tin người dùng');
-        });
-    });
-  });
-
-  closeEditModal.addEventListener('click', function() {
-    editUserModal.classList.add('hidden');
-  });
-
-  cancelEditBtn.addEventListener('click', function() {
-    editUserModal.classList.add('hidden');
   });
 
   // Modal xóa người dùng

@@ -44,6 +44,20 @@ class UserController extends BaseController {
             'roles' => $roles
         ]);
     }
+
+    public function edit($id) {
+        $currentUser = $this->userModel->findById($id);
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo 'EDIT';
+            // EDIT TRRONG NÀY
+        } else {
+            $this->view('admin/users/edit', [
+                'user' => $currentUser,
+            ]);
+        }
+
+    }
     
     public function deleteUser($id) {
         $currentUser = $this->getCurrentUser();

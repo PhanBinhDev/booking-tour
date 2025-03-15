@@ -223,8 +223,9 @@ class AuthController extends BaseController {
      * Hiển thị form quên mật khẩu
      */
     public function forgotPassword() {
+        // Đã Đăng nhập thì không có vào trang này nữa
         if($this->isAuthenticated()) {
-            $this->redirect(UrlHelper::route('/dashboard'));
+            $this->redirect(UrlHelper::route(''));
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -256,7 +257,7 @@ class AuthController extends BaseController {
                 'email' => $email
             ]);
         } else {
-            $this->view('auth/forgot-password');
+            $this->view('/auth/forgot-password');
         }
     }
     
@@ -265,7 +266,7 @@ class AuthController extends BaseController {
      */
     public function resetPassword() {
         if($this->isAuthenticated()) {
-            $this->redirect(UrlHelper::route('/dashboard'));
+            $this->redirect(UrlHelper::route(''));
         }
         
         $token = $_GET['token'] ?? '';
@@ -336,8 +337,6 @@ class AuthController extends BaseController {
     public function isAuthenticated() {
         return isset($_SESSION['user_id']);
     }
-    
-    
 
     // GET ROUTE BY ROLE
     

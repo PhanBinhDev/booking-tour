@@ -55,12 +55,10 @@ $router->get('/home/tours', 'HomeController@tours');
 $router->get('/home/home', 'HomeController@home');
 
 
-
 // USERS
 $router->get('/user/profile', 'UserController@profile');
 $router->get('/user/bookings', 'UserController@userBookings');
 $router->get('/user/change-password', 'UserController@changePassword');
-
 
 // AUTH
 $router->get('/auth/login', 'AuthController@login');
@@ -68,12 +66,15 @@ $router->post('/auth/login', 'AuthController@login');
 $router->get('/auth/register', 'AuthController@register');
 $router->post('/auth/register', 'AuthController@register');
 $router->get('/auth/logout', 'AuthController@logout');
+$router->get('/auth/forgot-password', 'AuthController@forgotPassword');
 
 // ADMIN
 $router->get('/admin/dashboard', 'Admin\DashboardController@dashboard');
 
 // ADMIN/USERS
 $router->get('/admin/users', 'Admin\UserController@index');
+$router->get('/admin/users/edit/{id}', 'Admin\UserController@edit');
+$router->post('/admin/users/edit/{id}', 'Admin\UserController@edit');
 
 // ADMIN/ROLES
 $router->get('/admin/roles', 'Admin\RoleController@index');

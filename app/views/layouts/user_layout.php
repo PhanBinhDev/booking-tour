@@ -209,7 +209,6 @@ use App\Helpers\UrlHelper;
         <div class="lg:col-span-2">
           <div class="flex items-center mb-4">
             <img src="<?= UrlHelper::image('logo.png') ?>" alt="Ditravel Logo" class="h-10 w-auto mr-2">
-            <span class="text-xl font-bold text-teal-600">Ditravel</span>
           </div>
           <p class="text-gray-600 mb-4 max-w-md">
             Khám phá thế giới cùng Ditravel - Đối tác du lịch đáng tin cậy của bạn với hàng nghìn tour hấp dẫn và dịch

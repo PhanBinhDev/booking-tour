@@ -67,6 +67,21 @@ class User extends BaseModel {
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Tìm người dùng theo email
+     * 
+     * @param string $email Email cần tìm
+     * @return array|false Thông tin người dùng hoặc false nếu không tìm thấy
+     */
+        public function findById($id) {
+            $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
     
     /**
      * Tìm người dùng theo username
