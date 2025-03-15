@@ -1,6 +1,8 @@
 <?php
 
 use App\Helpers\SessionHelper;
+use App\Helpers\UrlHelper;
+
 ?>
 <div class="container px-6 py-8 mx-auto">
   <!-- Tiêu đề trang -->
@@ -135,7 +137,7 @@ use App\Helpers\SessionHelper;
 
     <!-- Quản lý tour -->
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <a href="<?= PUBLIC_URL ?>/tours" class="block">
+      <a href="<?= UrlHelper::route('admin/tours') ?>" class="block">
         <div class="flex items-center">
           <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full">
             <i class="fas fa-map-marked-alt text-xl"></i>
@@ -150,7 +152,7 @@ use App\Helpers\SessionHelper;
 
     <!-- Quản lý đặt tour -->
     <div class="min-w-0 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <a href="<?= PUBLIC_URL ?>/admin/bookings" class="block">
+      <a href="<?= UrlHelper::route('admin/bookings') ?>" class="block">
         <div class="flex items-center">
           <div class="p-3 mr-4 text-purple-500 bg-purple-100 rounded-full">
             <i class="fas fa-calendar-check text-xl"></i>

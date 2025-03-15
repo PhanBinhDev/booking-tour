@@ -39,6 +39,19 @@ class BaseController {
         return true;
     }
 
+    /**
+     * Đặt thông báo flash
+     * 
+     * @param string $type Loại thông báo
+     * @param string $message Nội dung thông báo
+     */
+    function setFlashMessage($type, $message) {
+        $_SESSION['flash_message'] = [
+            'type' => $type,
+            'message' => $message
+        ];
+    }
+
     public function view($view, $data = []) {
         // Thiết lập layout mặc định nếu không được chỉ định
         $layout = LayoutHelper::getLayoutByRole();
@@ -103,7 +116,7 @@ class BaseController {
     public function getCurrentUser() {
         if(isset($_SESSION['user_id'])) {
             $userModel = new \App\Models\User();
-            // return $userModel->getUserWithRole($_SESSION['user_id']);
+            return $userModel->getUserWithRole($_SESSION['user_id']);
         }
         return null;
     }

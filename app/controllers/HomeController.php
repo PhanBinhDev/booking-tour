@@ -31,6 +31,22 @@ class HomeController extends BaseController {
     $this->view('home/news');
   }
 
+  function faq() {
+    $this->view('home/faq');
+  }
+
+  function terms() {
+    $this->view('home/terms');
+  }
+
+  function privacyPolicy() {
+    $this->view('home/privacy-policy');
+  }
+
+  function activities() {
+    $this->view('home/activities');
+  }
+
   function tourDetails($tourId){
     // $tourDetails = $this->tourDetails($tourId);
     $this->view('home/tour-details', ['id' => $tourId]);

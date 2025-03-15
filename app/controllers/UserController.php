@@ -124,4 +124,8 @@ class UserController extends BaseController {
 
         $this->view('user/change-password');
     }
+
+    public function userBookings() {
+        $this->view('user/user-bookings');
+    }
 }

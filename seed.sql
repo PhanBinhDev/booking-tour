@@ -499,6 +499,62 @@ CREATE TABLE `invoices` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 );
 
+
+-- -----------------------------------------------------
+-- Table `transactions`
+-- -----------------------------------------------------
+CREATE TABLE `transactions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `transaction_code` VARCHAR(50) NOT NULL UNIQUE,
+  `payment_id` INT,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(10) DEFAULT 'VND',
+  `status` ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending',
+  `payment_method` VARCHAR(50) NOT NULL,
+  `payment_data` JSON,
+  `notes` TEXT,
+  `customer_name` VARCHAR(100),
+  `customer_email` VARCHAR(100),
+  `customer_phone` VARCHAR(20),
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE SET NULL
+);
+
+-- -----------------------------------------------------
+-- Table `refunds`
+-- -----------------------------------------------------
+CREATE TABLE `refunds` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `refund_code` VARCHAR(50) NOT NULL UNIQUE,
+  `payment_id` INT NOT NULL,
+  `transaction_id` INT,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `currency` VARCHAR(10) DEFAULT 'VND',
+  `status` ENUM('pending', 'processing', 'completed', 'rejected') DEFAULT 'pending',
+  `reason` TEXT NOT NULL,
+  `refund_data` JSON,
+  `notes` TEXT,
+  `refunded_by` INT,
+  `refund_date` DATETIME,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`payment_id`) REFERENCES `payments` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`refunded_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+);
+
+-- Add transaction_id column to payments table if needed
+ALTER TABLE `payments` 
+ADD COLUMN `transaction_id_internal` INT AFTER `transaction_id`,
+ADD FOREIGN KEY (`transaction_id_internal`) REFERENCES `transactions` (`id`) ON DELETE SET NULL;
+
+-- Add refund_id column to payments table
+ALTER TABLE `payments` 
+ADD COLUMN `refund_id` INT AFTER `transaction_id_internal`,
+ADD FOREIGN KEY (`refund_id`) REFERENCES `refunds` (`id`) ON DELETE SET NULL;
+
+
 -- -----------------------------------------------------
 -- Dữ liệu mẫu cho phương thức thanh toán
 -- -----------------------------------------------------
@@ -654,3 +710,172 @@ INSERT INTO `settings` (`key`, `value`, `type`, `group`) VALUES
 INSERT INTO `users` (`username`, `email`, `password`, `full_name`, `role_id`, `status`, `email_verified`) 
 VALUES ('admin', 'admin@ditravel.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 1, 'active', TRUE);
 -- Password: password
+
+
+
+-- -----------------------------------------------------
+-- MOCK DATA
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Mock data for tour_categories
+-- -----------------------------------------------------
+INSERT INTO `tour_categories` (`name`, `slug`, `description`, `status`) VALUES
+('Tour trong nước', 'tour-trong-nuoc', 'Các tour du lịch trong nước Việt Nam', 'active'),
+('Tour nước ngoài', 'tour-nuoc-ngoai', 'Các tour du lịch quốc tế', 'active'),
+('Tour nghỉ dưỡng', 'tour-nghi-duong', 'Các tour nghỉ dưỡng cao cấp', 'active'),
+('Tour mạo hiểm', 'tour-mao-hiem', 'Các tour mạo hiểm và thể thao', 'active'),
+('Tour văn hóa', 'tour-van-hoa', 'Các tour khám phá văn hóa', 'active');
+
+-- -----------------------------------------------------
+-- Mock data for locations
+-- -----------------------------------------------------
+INSERT INTO `locations` (`name`, `slug`, `description`, `country`, `region`, `latitude`, `longitude`, `status`) VALUES
+('Hà Nội', 'ha-noi', 'Thủ đô Hà Nội', 'Việt Nam', 'Miền Bắc', 21.0285, 105.8542, 'active'),
+('Đà Nẵng', 'da-nang', 'Thành phố Đà Nẵng', 'Việt Nam', 'Miền Trung', 16.0544, 108.2022, 'active'),
+('Hồ Chí Minh', 'ho-chi-minh', 'Thành phố Hồ Chí Minh', 'Việt Nam', 'Miền Nam', 10.8231, 106.6297, 'active'),
+('Phú Quốc', 'phu-quoc', 'Đảo Phú Quốc', 'Việt Nam', 'Miền Nam', 10.2179, 103.9570, 'active'),
+('Nha Trang', 'nha-trang', 'Thành phố Nha Trang', 'Việt Nam', 'Miền Trung', 12.2388, 109.1967, 'active'),
+('Bangkok', 'bangkok', 'Thủ đô Bangkok', 'Thái Lan', 'Đông Nam Á', 13.7563, 100.5018, 'active'),
+('Singapore', 'singapore', 'Singapore', 'Singapore', 'Đông Nam Á', 1.3521, 103.8198, 'active'),
+('Tokyo', 'tokyo', 'Thủ đô Tokyo', 'Nhật Bản', 'Đông Á', 35.6762, 139.6503, 'active');
+
+-- -----------------------------------------------------
+-- Mock data for tours
+-- -----------------------------------------------------
+INSERT INTO `tours` (`title`, `slug`, `description`, `content`, `duration`, `group_size`, `price`, `sale_price`, `category_id`, `location_id`, `departure_location_id`, `status`, `featured`, `created_by`) VALUES
+('Khám phá Hà Nội 3 ngày 2 đêm', 'kham-pha-ha-noi-3-ngay-2-dem', 'Tour khám phá Hà Nội trong 3 ngày 2 đêm', 'Nội dung chi tiết về tour Hà Nội', '3 ngày 2 đêm', '10-20 người', 2500000, 2200000, 1, 1, 3, 'active', TRUE, 1),
+('Đà Nẵng - Hội An - Bà Nà Hills', 'da-nang-hoi-an-ba-na-hills', 'Tour Đà Nẵng - Hội An - Bà Nà Hills', 'Nội dung chi tiết về tour Đà Nẵng', '4 ngày 3 đêm', '15-25 người', 3500000, 3200000, 1, 2, 3, 'active', TRUE, 1),
+('Phú Quốc nghỉ dưỡng cao cấp', 'phu-quoc-nghi-duong-cao-cap', 'Tour nghỉ dưỡng cao cấp tại Phú Quốc', 'Nội dung chi tiết về tour Phú Quốc', '5 ngày 4 đêm', '2-10 người', 8500000, 7800000, 3, 4, 3, 'active', TRUE, 1),
+('Khám phá Tokyo - Osaka - Kyoto', 'kham-pha-tokyo-osaka-kyoto', 'Tour khám phá Nhật Bản', 'Nội dung chi tiết về tour Nhật Bản', '7 ngày 6 đêm', '10-20 người', 25000000, 23500000, 2, 8, 3, 'active', FALSE, 1),
+('Singapore - Malaysia 5 ngày', 'singapore-malaysia-5-ngay', 'Tour Singapore và Malaysia', 'Nội dung chi tiết về tour Singapore - Malaysia', '5 ngày 4 đêm', '15-25 người', 12000000, 11500000, 2, 7, 3, 'active', FALSE, 1);
+
+-- -----------------------------------------------------
+-- Mock data for tour_dates
+-- -----------------------------------------------------
+INSERT INTO `tour_dates` (`tour_id`, `start_date`, `end_date`, `price`, `sale_price`, `available_seats`, `status`) VALUES
+(1, '2023-06-15', '2023-06-17', 2500000, 2200000, 20, 'available'),
+(1, '2023-07-10', '2023-07-12', 2500000, 2200000, 20, 'available'),
+(1, '2023-08-05', '2023-08-07', 2700000, 2400000, 20, 'available'),
+(2, '2023-06-20', '2023-06-23', 3500000, 3200000, 25, 'available'),
+(2, '2023-07-15', '2023-07-18', 3500000, 3200000, 25, 'available'),
+(3, '2023-06-25', '2023-06-29', 8500000, 7800000, 10, 'available'),
+(3, '2023-07-20', '2023-07-24', 9000000, 8200000, 10, 'available'),
+(4, '2023-09-10', '2023-09-16', 25000000, 23500000, 20, 'available'),
+(5, '2023-08-15', '2023-08-19', 12000000, 11500000, 25, 'available');
+
+-- -----------------------------------------------------
+-- Mock data for bookings
+-- -----------------------------------------------------
+INSERT INTO `bookings` (`booking_number`, `user_id`, `tour_id`, `tour_date_id`, `adults`, `children`, `total_price`, `status`, `payment_status`, `payment_method`, `special_requirements`, `created_at`) VALUES
+('BK-230501', 1, 1, 1, 2, 0, 4400000, 'confirmed', 'paid', 'bank_transfer', 'Không có yêu cầu đặc biệt', '2023-05-01 10:15:30'),
+('BK-230502', NULL, 2, 4, 2, 1, 6400000, 'confirmed', 'paid', 'vnpay', 'Cần phòng không hút thuốc', '2023-05-02 14:22:45'),
+('BK-230503', NULL, 3, 6, 2, 0, 15600000, 'confirmed', 'paid', 'momo', 'Yêu cầu phòng view biển', '2023-05-03 09:45:12'),
+('BK-230504', 1, 4, 8, 2, 0, 47000000, 'pending', 'pending', NULL, 'Cần hỗ trợ visa', '2023-05-04 16:30:00'),
+('BK-230505', NULL, 5, 9, 4, 2, 46000000, 'confirmed', 'paid', 'paypal', 'Cần xe đón sân bay', '2023-05-05 11:20:15'),
+('BK-230506', NULL, 1, 2, 1, 0, 2200000, 'cancelled', 'refunded', 'bank_transfer', NULL, '2023-05-06 08:45:30'),
+('BK-230507', 1, 2, 5, 3, 1, 9600000, 'confirmed', 'paid', 'vnpay', NULL, '2023-05-07 13:10:22'),
+('BK-230508', NULL, 3, 7, 2, 0, 16400000, 'pending', 'pending', NULL, NULL, '2023-05-08 15:30:45');
+
+-- -----------------------------------------------------
+-- Mock data for booking_customers
+-- -----------------------------------------------------
+INSERT INTO `booking_customers` (`booking_id`, `full_name`, `email`, `phone`, `address`, `type`) VALUES
+(1, 'Nguyễn Văn An', 'nguyenvanan@example.com', '0901234567', 'Quận 1, TP.HCM', 'adult'),
+(1, 'Trần Thị Bình', 'tranthib@example.com', '0901234568', 'Quận 1, TP.HCM', 'adult'),
+(2, 'Lê Văn Cường', 'levc@example.com', '0901234569', 'Quận 7, TP.HCM', 'adult'),
+(2, 'Phạm Thị Dung', 'phamtd@example.com', '0901234570', 'Quận 7, TP.HCM', 'adult'),
+(2, 'Lê An Nhiên', NULL, NULL, NULL, 'child'),
+(3, 'Hoàng Văn Minh', 'hoangvm@example.com', '0901234571', 'Quận Cầu Giấy, Hà Nội', 'adult'),
+(3, 'Nguyễn Thị Lan', 'nguyentl@example.com', '0901234572', 'Quận Cầu Giấy, Hà Nội', 'adult'),
+(4, 'Trần Văn Hùng', 'tranvh@example.com', '0901234573', 'Quận 2, TP.HCM', 'adult'),
+(4, 'Lê Thị Mai', 'letm@example.com', '0901234574', 'Quận 2, TP.HCM', 'adult'),
+(5, 'Phạm Văn Nam', 'phamvn@example.com', '0901234575', 'Quận Đống Đa, Hà Nội', 'adult'),
+(5, 'Vũ Thị Oanh', 'vuto@example.com', '0901234576', 'Quận Đống Đa, Hà Nội', 'adult'),
+(5, 'Phạm Minh Đức', NULL, NULL, NULL, 'adult'),
+(5, 'Phạm Thị Hoa', NULL, NULL, NULL, 'adult'),
+(5, 'Phạm An Nhiên', NULL, NULL, NULL, 'child'),
+(5, 'Phạm Minh Anh', NULL, NULL, NULL, 'child');
+
+-- -----------------------------------------------------
+-- Mock data for payments
+-- -----------------------------------------------------
+INSERT INTO `payments` (`booking_id`, `payment_method_id`, `transaction_id`, `amount`, `currency`, `status`, `payment_data`, `notes`, `payer_name`, `payer_email`, `payer_phone`, `payment_date`, `created_at`) VALUES
+(1, 1, 'BT-230501', 4400000, 'VND', 'completed', '{"bank": "Vietcombank", "account_number": "0123456789"}', 'Thanh toán đầy đủ', 'Nguyễn Văn An', 'nguyenvanan@example.com', '0901234567', '2023-05-01 10:30:45', '2023-05-01 10:15:30'),
+(2, 3, 'VNP-230502', 6400000, 'VND', 'completed', '{"vnp_TransactionNo": "13349337", "vnp_BankCode": "NCB"}', NULL, 'Lê Văn Cường', 'levc@example.com', '0901234569', '2023-05-02 14:30:22', '2023-05-02 14:22:45'),
+(3, 4, 'MOMO-230503', 15600000, 'VND', 'completed', '{"partnerCode": "MOMO", "orderId": "MM230503", "transId": 2345678}', NULL, 'Hoàng Văn Minh', 'hoangvm@example.com', '0901234571', '2023-05-03 09:55:30', '2023-05-03 09:45:12'),
+(5, 5, 'PP-230505', 46000000, 'VND', 'completed', '{"paymentId": "PAY-1AB23456CD789012EF34GHIJ", "payerId": "PAYERID123"}', NULL, 'Phạm Văn Nam', 'phamvn@example.com', '0901234575', '2023-05-05 11:35:42', '2023-05-05 11:20:15'),
+(6, 1, 'BT-230506', 2200000, 'VND', 'refunded', '{"bank": "BIDV", "account_number": "9876543210"}', 'Đã hoàn tiền do khách hủy tour', 'Trần Minh Tuấn', 'tranmt@example.com', '0909876543', '2023-05-06 09:15:30', '2023-05-06 08:45:30'),
+(7, 3, 'VNP-230507', 9600000, 'VND', 'completed', '{"vnp_TransactionNo": "13350142", "vnp_BankCode": "VNPAY"}', NULL, 'Nguyễn Văn An', 'nguyenvanan@example.com', '0901234567', '2023-05-07 13:25:18', '2023-05-07 13:10:22');
+
+-- -----------------------------------------------------
+-- Mock data for transactions
+-- -----------------------------------------------------
+INSERT INTO `transactions` (`transaction_code`, `payment_id`, `amount`, `currency`, `status`, `payment_method`, `payment_data`, `notes`, `customer_name`, `customer_email`, `customer_phone`, `created_at`) VALUES
+('TRX-230501', 1, 4400000, 'VND', 'completed', 'bank_transfer', '{"bank": "Vietcombank", "account_number": "0123456789"}', 'Giao dịch thành công', 'Nguyễn Văn An', 'nguyenvanan@example.com', '0901234567', '2023-05-01 10:30:45'),
+('TRX-230502', 2, 6400000, 'VND', 'completed', 'vnpay', '{"vnp_TransactionNo": "13349337", "vnp_BankCode": "NCB"}', 'Giao dịch thành công', 'Lê Văn Cường', 'levc@example.com', '0901234569', '2023-05-02 14:30:22'),
+('TRX-230503', 3, 15600000, 'VND', 'completed', 'momo', '{"partnerCode": "MOMO", "orderId": "MM230503", "transId": 2345678}', 'Giao dịch thành công', 'Hoàng Văn Minh', 'hoangvm@example.com', '0901234571', '2023-05-03 09:55:30'),
+('TRX-230505', 4, 46000000, 'VND', 'completed', 'paypal', '{"paymentId": "PAY-1AB23456CD789012EF34GHIJ", "payerId": "PAYERID123"}', 'Giao dịch thành công', 'Phạm Văn Nam', 'phamvn@example.com', '0901234575', '2023-05-05 11:35:42'),
+('TRX-230506', 5, 2200000, 'VND', 'refunded', 'bank_transfer', '{"bank": "BIDV", "account_number": "9876543210"}', 'Giao dịch đã hoàn tiền', 'Trần Minh Tuấn', 'tranmt@example.com', '0909876543', '2023-05-06 09:15:30'),
+('TRX-230507', 6, 9600000, 'VND', 'completed', 'vnpay', '{"vnp_TransactionNo": "13350142", "vnp_BankCode": "VNPAY"}', 'Giao dịch thành công', 'Nguyễn Văn An', 'nguyenvanan@example.com', '0901234567', '2023-05-07 13:25:18');
+
+-- Update payments with transaction_id_internal
+UPDATE `payments` SET `transaction_id_internal` = 1 WHERE `id` = 1;
+UPDATE `payments` SET `transaction_id_internal` = 2 WHERE `id` = 2;
+UPDATE `payments` SET `transaction_id_internal` = 3 WHERE `id` = 3;
+UPDATE `payments` SET `transaction_id_internal` = 4 WHERE `id` = 4;
+UPDATE `payments` SET `transaction_id_internal` = 5 WHERE `id` = 5;
+UPDATE `payments` SET `transaction_id_internal` = 6 WHERE `id` = 6;
+
+-- -----------------------------------------------------
+-- Mock data for refunds
+-- -----------------------------------------------------
+INSERT INTO `refunds` (`refund_code`, `payment_id`, `transaction_id`, `amount`, `currency`, `status`, `reason`, `refund_data`, `notes`, `refunded_by`, `refund_date`, `created_at`) VALUES
+('REF-230506', 5, 5, 2200000, 'VND', 'completed', 'Khách hàng hủy tour trước 7 ngày', '{"method": "bank_transfer", "account": "9876543210", "bank": "BIDV"}', 'Hoàn tiền 100% do hủy sớm', 1, '2023-05-08 14:30:00', '2023-05-07 10:15:30');
+
+-- Update payments with refund_id
+UPDATE `payments` SET `refund_id` = 1 WHERE `id` = 5;
+
+-- -----------------------------------------------------
+-- Mock data for invoices
+-- -----------------------------------------------------
+INSERT INTO `invoices` (`invoice_number`, `booking_id`, `payment_id`, `user_id`, `amount`, `tax_amount`, `total_amount`, `status`, `issue_date`, `due_date`, `paid_date`, `notes`, `billing_name`, `billing_address`, `billing_email`, `billing_phone`) VALUES
+('INV-230501', 1, 1, 1, 4000000, 400000, 4400000, 'paid', '2023-05-01', '2023-05-08', '2023-05-01', NULL, 'Nguyễn Văn An', 'Quận 1, TP.HCM', 'nguyenvanan@example.com', '0901234567'),
+('INV-230502', 2, 2, NULL, 5818182, 581818, 6400000, 'paid', '2023-05-02', '2023-05-09', '2023-05-02', NULL, 'Lê Văn Cường', 'Quận 7, TP.HCM', 'levc@example.com', '0901234569'),
+('INV-230503', 3, 3, NULL, 14181818, 1418182, 15600000, 'paid', '2023-05-03', '2023-05-10', '2023-05-03', NULL, 'Hoàng Văn Minh', 'Quận Cầu Giấy, Hà Nội', 'hoangvm@example.com', '0901234571'),
+('INV-230505', 5, 4, NULL, 41818182, 4181818, 46000000, 'paid', '2023-05-05', '2023-05-12', '2023-05-05', NULL, 'Phạm Văn Nam', 'Quận Đống Đa, Hà Nội', 'phamvn@example.com', '0901234575'),
+('INV-230506', 6, 5, NULL, 2000000, 200000, 2200000, 'refunded', '2023-05-06', '2023-05-13', '2023-05-06', 'Đã hoàn tiền', 'Trần Minh Tuấn', 'Quận 3, TP.HCM', 'tranmt@example.com', '0909876543'),
+('INV-230507', 7, 6, 1, 8727273, 872727, 9600000, 'paid', '2023-05-07', '2023-05-14', '2023-05-07', NULL, 'Nguyễn Văn An', 'Quận 1, TP.HCM', 'nguyenvanan@example.com', '0901234567'),
+('INV-230508', 8, NULL, NULL, 14909091, 1490909, 16400000, 'draft', '2023-05-08', '2023-05-15', NULL, NULL, 'Lê Thị Hương', 'Quận 5, TP.HCM', 'leth@example.com', '0901234580');
+
+-- -----------------------------------------------------
+-- Mock data for activity_logs
+-- -----------------------------------------------------
+INSERT INTO `activity_logs` (`user_id`, `action`, `entity_type`, `entity_id`, `description`, `ip_address`, `created_at`) VALUES
+(1, 'create', 'booking', 1, 'Tạo đơn đặt tour mới #BK-230501', '127.0.0.1', '2023-05-01 10:15:30'),
+(1, 'create', 'payment', 1, 'Ghi nhận thanh toán cho đơn đặt tour #BK-230501', '127.0.0.1', '2023-05-01 10:30:45'),
+(1, 'update', 'booking', 1, 'Cập nhật trạng thái đơn đặt tour #BK-230501 thành "confirmed"', '127.0.0.1', '2023-05-01 10:31:00'),
+(1, 'create', 'invoice', 1, 'Tạo hóa đơn #INV-230501 cho đơn đặt tour #BK-230501', '127.0.0.1', '2023-05-01 10:35:15'),
+(1, 'create', 'booking', 2, 'Tạo đơn đặt tour mới #BK-230502', '127.0.0.1', '2023-05-02 14:22:45'),
+(1, 'create', 'payment', 2, 'Ghi nhận thanh toán cho đơn đặt tour #BK-230502', '127.0.0.1', '2023-05-02 14:30:22'),
+(1, 'update', 'booking', 2, 'Cập nhật trạng thái đơn đặt tour #BK-230502 thành "confirmed"', '127.0.0.1', '2023-05-02 14:31:00'),
+(1, 'create', 'invoice', 2, 'Tạo hóa đơn #INV-230502 cho đơn đặt tour #BK-230502', '127.0.0.1', '2023-05-02 14:35:15'),
+(1, 'create', 'refund', 1, 'Tạo yêu cầu hoàn tiền cho đơn đặt tour #BK-230506', '127.0.0.1', '2023-05-07 10:15:30'),
+(1, 'update', 'refund', 1, 'Cập nhật trạng thái hoàn tiền #REF-230506 thành "completed"', '127.0.0.1', '2023-05-08 14:30:00'),
+(1, 'update', 'payment', 5, 'Cập nhật trạng thái thanh toán cho đơn đặt tour #BK-230506 thành "refunded"', '127.0.0.1', '2023-05-08 14:31:00'),
+(1, 'update', 'invoice', 5, 'Cập nhật trạng thái hóa đơn #INV-230506 thành "refunded"', '127.0.0.1', '2023-05-08 14:32:15');
+
+-- -----------------------------------------------------
+-- Mock data for payment_logs
+-- -----------------------------------------------------
+INSERT INTO `payment_logs` (`payment_id`, `booking_id`, `event`, `status`, `message`, `data`, `ip_address`, `created_at`) VALUES
+(1, 1, 'payment_created', 'pending', 'Tạo thanh toán mới', '{"method": "bank_transfer", "amount": 4400000}', '127.0.0.1', '2023-05-01 10:15:30'),
+(1, 1, 'payment_completed', 'completed', 'Thanh toán thành công', '{"transaction_code": "TRX-230501"}', '127.0.0.1', '2023-05-01 10:30:45'),
+(2, 2, 'payment_created', 'pending', 'Tạo thanh toán mới', '{"method": "vnpay", "amount": 6400000}', '127.0.0.1', '2023-05-02 14:22:45'),
+(2, 2, 'payment_completed', 'completed', 'Thanh toán thành công', '{"transaction_code": "TRX-230502"}', '127.0.0.1', '2023-05-02 14:30:22'),
+(3, 3, 'payment_created', 'pending', 'Tạo thanh toán mới', '{"method": "momo", "amount": 15600000}', '127.0.0.1', '2023-05-03 09:45:12'),
+(3, 3, 'payment_completed', 'completed', 'Thanh toán thành công', '{"transaction_code": "TRX-230503"}', '127.0.0.1', '2023-05-03 09:55:30'),
+(5, 6, 'payment_created', 'pending', 'Tạo thanh toán mới', '{"method": "bank_transfer", "amount": 2200000}', '127.0.0.1', '2023-05-06 08:45:30'),
+(5, 6, 'payment_completed', 'completed', 'Thanh toán thành công', '{"transaction_code": "TRX-230506"}', '127.0.0.1', '2023-05-06 09:15:30'),
+(5, 6, 'refund_requested', 'completed', 'Yêu cầu hoàn tiền', '{"refund_code": "REF-230506", "amount": 2200000}', '127.0.0.1', '2023-05-07 10:15:30'),
+(5, 6, 'refund_completed', 'refunded', 'Hoàn tiền thành công', '{"refund_code": "REF-230506", "amount": 2200000}', '127.0.0.1', '2023-05-08 14:30:00');

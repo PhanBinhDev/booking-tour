@@ -2,6 +2,7 @@
 namespace App\Config;
 
 use App\Controllers\BaseController;
+use App\Helpers\UrlHelper;
 
 class Router extends BaseController{
     protected $routes = [];
@@ -100,7 +101,8 @@ class Router extends BaseController{
         if ($this->notFoundCallback) {
             return call_user_func($this->notFoundCallback);
         }
-        $this->view('error/404');
+
+        $this->redirect(UrlHelper::route('/errors/404'));
     }
     
     /**

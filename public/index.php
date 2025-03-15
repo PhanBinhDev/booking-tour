@@ -13,6 +13,7 @@ define('CSS_URL', ASSETS_URL . '/css');
 define('JS_URL', ASSETS_URL . '/js');
 define('IMAGES_URL', ASSETS_URL . '/images');
 define('ADMIN_URL', PUBLIC_URL . '/admin');
+define('DEBUG', true);
 
 define('REQUIRE_EMAIL_VERIFICATION', false);
 
@@ -42,10 +43,18 @@ $router = new Router();
 $router->get('/', 'HomeController@index');
 $router->get('/home/about', 'HomeController@about');
 $router->get('/home/contact', 'HomeController@contact');
+$router->get('/home/faq', 'HomeController@faq');
+$router->get('/home/privacy-policy', 'HomeController@privacyPolicy');
+$router->get('/home/terms', 'HomeController@terms');
+$router->get('/home/activities', 'HomeController@activities');
+
 $router->get('/home/tours/{tourId}', 'HomeController@tourDetails');
 
-// ERROR
-$router->get('/error/404', 'ErrorController@notFound');
+// USERS
+$router->get('/user/profile', 'UserController@profile');
+$router->get('/user/bookings', 'UserController@userBookings');
+$router->get('/user/change-password', 'UserController@changePassword');
+
 
 // AUTH
 $router->get('/auth/login', 'AuthController@login');
@@ -67,5 +76,35 @@ $router->get('/admin/roles/{id}/permissions', 'Admin\RoleController@permissions'
 $router->post('/admin/roles/{id}/permissions', 'Admin\RoleController@updatePermissions');
 $router->get('/admin/roles/{id}/edit', 'Admin\RoleController@edit');
 
+// ADMIN/PAYMENT/METHODS
+$router->get('/admin/payment/methods', 'Admin\PaymentController@methods');
+$router->get('/admin/payment/methods/create', 'Admin\PaymentController@createMethod');
+$router->post('/admin/payment/methods/create', 'Admin\PaymentController@createMethod');
+$router->get('/admin/payment/methods/edit/{id}', 'Admin\PaymentController@editMethod');
+$router->post('/admin/payment/methods/edit/{id}', 'Admin\PaymentController@editMethod');
+$router->post('/admin/payment/methods/toggle/{id}', 'Admin\PaymentController@toggleMethod');
+
+
+// ADMIN/PAYMENT/TRANSACTIONS
+$router->get('/admin/payment/transactions', 'Admin\TransactionController@index');
+$router->get('/admin/payment/transactions/{id}', 'Admin\TransactionController@show');
+
+// ADMIN/PAYMENT/INVOICES
+$router->get('/admin/payment/invoices', 'Admin\InvoiceController@index');
+$router->get('/admin/payment/invoices/{id}', 'Admin\InvoiceController@show');
+$router->get('/admin/payment/invoices/print/{id}', 'Admin\InvoiceController@printInvoice');
+
+
+// ADMIN/PAYMENTS/REFUNDS
+$router->get('/admin/payment/refunds', 'Admin\RefundController@index');
+$router->get('/admin/payment/refunds/{id}', 'Admin\RefundController@show');
+
+
+
+
+
+
+// ERROR
+$router->get('/errors/404', 'ErrorController@notFound');
 // Xử lý request
 $router->dispatch();

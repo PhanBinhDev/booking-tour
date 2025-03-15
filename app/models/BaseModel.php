@@ -189,4 +189,47 @@ abstract class BaseModel {
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+
+    /**
+ * Tạo bản ghi mới
+ * 
+ * @param array $data Dữ liệu của bản ghi mới
+ * @return int|bool ID của bản ghi mới hoặc false nếu thất bại
+ */
+public function create($data) {
+    // Tạo câu lệnh SQL
+    $columns = array_keys($data);
+    $placeholders = array_map(function($item) {
+        return ":$item";
+    }, $columns);
+    
+    $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
+            VALUES (" . implode(', ', $placeholders) . ")";
+    
+    $stmt = $this->db->prepare($sql);
+    
+    // Bind các giá trị
+    foreach ($data as $key => $value) {
+        $paramType = null;
+        if (is_int($value)) {
+            $paramType = PDO::PARAM_INT;
+        } elseif (is_bool($value)) {
+            $paramType = PDO::PARAM_BOOL;
+        } elseif (is_null($value)) {
+            $paramType = PDO::PARAM_NULL;
+        } else {
+            $paramType = PDO::PARAM_STR;
+        }
+        
+        $stmt->bindValue(":$key", $value, $paramType);
+    }
+    
+    // Thực thi và trả về kết quả
+    if ($stmt->execute()) {
+        return $this->db->lastInsertId();
+    }
+    
+    return false;
+}
 }

@@ -4,7 +4,6 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\User;
 use App\Models\Role;
-use App\Models\Image;
 
 class UserController extends BaseController {
     private $userModel;

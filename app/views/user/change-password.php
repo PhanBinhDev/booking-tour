@@ -8,10 +8,10 @@ $title = 'Đổi mật khẩu';
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <h1 class="text-2xl font-bold text-gray-900 mb-6">Thông tin cá nhân</h1>
 
-    <?php if (isset($_SESSION['flash'])): ?>
+    <?php if (isset($_SESSION['flash_message'])): ?>
     <div
-      class="mb-6 p-4 rounded-md <?= $_SESSION['flash']['type'] === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' ?>">
-      <?= $_SESSION['flash']['message'] ?>
+      class="mb-6 p-4 rounded-md <?= $_SESSION['flash_message']['type'] === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' ?>">
+      <?= $_SESSION['flash_message']['message'] ?>
     </div>
     <?php endif; ?>
 
@@ -23,14 +23,14 @@ $title = 'Đổi mật khẩu';
             class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
             Thông tin cá nhân
           </a>
-          <a href="<?= UrlHelper::route('user/changePassword') ?>"
+          <a href="<?= UrlHelper::route('user/change-password') ?>"
             class="border-teal-500 text-teal-600 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
             Đổi mật khẩu
           </a>
         </nav>
       </div>
 
-      <form action="<?= UrlHelper::route('user/changePassword') ?>" method="POST" class="p-6">
+      <form action="<?= UrlHelper::route('user/change-password') ?>" method="POST" class="p-6">
         <div class="max-w-md mx-auto space-y-6">
           <div>
             <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">

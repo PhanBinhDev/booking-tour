@@ -1,6 +1,5 @@
 <?php
 use App\Helpers\UrlHelper;
-
 // Prepare sidebar content for admins
 ob_start();
 ?>
@@ -69,6 +68,13 @@ ob_start();
                 <a href="<?= UrlHelper::route('admin/tour-categories') ?>"
                   class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'tour-categories' ? 'text-white' : '' ?>">
                   Danh mục Tour
+                </a>
+              </li>
+
+              <li>
+                <a href="<?= UrlHelper::route('admin/tour-categories') ?>"
+                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'tour-categories' ? 'text-white' : '' ?>">
+                  Bookings
                 </a>
               </li>
             </ul>
@@ -173,6 +179,46 @@ ob_start();
             </ul>
           </li>
 
+          <!-- Payment Management -->
+          <li>
+            <button type="button"
+              class="sidebar-dropdown-btn flex items-center justify-between w-full px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors <?= in_array($activePage, ['news', 'news-create', 'news-categories']) ? 'bg-gray-700 text-white' : '' ?>">
+              <div class="flex items-center">
+                <!-- <i class="fas fa-newspaper w-5 h-5 mr-3"></i> -->
+                <i class="fas fa-coins w-5 h-5 mr-3"></i>
+                <span>Quản lý Thanh toán</span>
+              </div>
+              <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+            <ul class="sidebar-dropdown-content hidden pl-10 py-1 bg-gray-900">
+              <!-- Thanh Toán -->
+              <li>
+                <a href="<?= UrlHelper::route('admin/payment/methods') ?>"
+                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'news' ? 'text-white' : '' ?>">
+                  Phương thức thanh toán
+                </a>
+              </li>
+              <li>
+                <a href="<?= UrlHelper::route('admin/payment/transactions') ?>"
+                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'transactions' ? 'text-white' : '' ?>">
+                  Lịch sử giao dịch
+                </a>
+              </li>
+              <li>
+                <a href="<?= UrlHelper::route('admin/payment/invoices') ?>"
+                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'invoices' ? 'text-white' : '' ?>">
+                  Hóa đơn & Biên lai
+                </a>
+              </li>
+              <li>
+                <a href="<?= UrlHelper::route('admin/payment/refunds') ?>"
+                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'refunds' ? 'text-white' : '' ?>">
+                  Hoàn tiền & Hủy tour
+                </a>
+              </li>
+            </ul>
+          </li>
+
           <!-- Comments Management -->
           <li>
             <a href="<?= UrlHelper::route('admin/comments') ?>"
@@ -235,6 +281,104 @@ ob_start();
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
+      <?php 
+        // Check if flash message exists AND has the required keys
+        if(isset($_SESSION['flash_message']) && 
+          isset($_SESSION['flash_message']['message']) && 
+          isset($_SESSION['flash_message']['type'])): 
+            $type = $_SESSION['flash_message']['type'];
+            $message = $_SESSION['flash_message']['message'];
+            $bgColor = ($type === 'error') ? 'bg-red-100' : 'bg-green-100';
+            $borderColor = ($type === 'error') ? 'border-red-400' : 'border-green-400';
+            $textColor = ($type === 'error') ? 'text-red-700' : 'text-green-700';
+            $iconColor = ($type === 'error') ? 'text-red-500' : 'text-green-500';
+            $icon = ($type === 'error') ? 'fa-circle-exclamation' : 'fa-circle-check';
+        ?>
+      <div id="flash-message"
+        class="fixed z-[100] top-4 right-4 w-80 rounded-lg border <?= $borderColor ?> <?= $bgColor ?> p-4 shadow-lg animate-fade-in flex items-start">
+        <div class="flex-shrink-0 mr-3">
+          <i class="fas <?= $icon ?> <?= $iconColor ?>"></i>
+        </div>
+        <div class="flex-grow <?= $textColor ?>">
+          <?= $message ?>
+        </div>
+        <button type="button" onclick="closeFlashMessage()"
+          class="ml-2 -mt-1 flex-shrink-0 <?= $textColor ?> hover:<?= $textColor ?> focus:outline-none">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Progress bar -->
+        <div class="absolute bottom-0 left-0 h-1 bg-gray-300 w-full rounded-b-lg">
+          <div id="flash-progress" class="h-1 <?= ($type === 'error') ? 'bg-red-500' : 'bg-green-500' ?> rounded-b-lg">
+          </div>
+        </div>
+      </div>
+
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const flashMessage = document.getElementById('flash-message');
+        const progressBar = document.getElementById('flash-progress');
+
+        if (flashMessage) {
+          // Animate progress bar
+          let width = 100;
+          const duration = 5000; // 5 seconds before auto-dismiss
+          const interval = 50; // Update every 50ms
+          const step = 100 / (duration / interval);
+
+          const timer = setInterval(() => {
+            width -= step;
+            progressBar.style.width = width + '%';
+
+            if (width <= 0) {
+              clearInterval(timer);
+              closeFlashMessage();
+            }
+          }, interval);
+
+          // Allow hovering to pause the timer
+          flashMessage.addEventListener('mouseenter', () => {
+            clearInterval(timer);
+          });
+
+          flashMessage.addEventListener('mouseleave', () => {
+            // Restart timer with remaining time
+            const remainingPercentage = parseFloat(progressBar.style.width) || 100;
+            const remainingTime = (remainingPercentage / 100) * duration;
+
+            width = remainingPercentage;
+            const newTimer = setInterval(() => {
+              width -= step;
+              progressBar.style.width = width + '%';
+
+              if (width <= 0) {
+                clearInterval(newTimer);
+                closeFlashMessage();
+              }
+            }, interval);
+          });
+        }
+      });
+
+      function closeFlashMessage() {
+        const flashMessage = document.getElementById('flash-message');
+
+        if (flashMessage) {
+          // Add slide-out animation
+          flashMessage.classList.add('animate-slide-out-right');
+
+          // Remove element after animation completes
+          setTimeout(() => {
+            flashMessage.remove();
+          }, 500); // 500ms matches animation duration
+        }
+      }
+      </script>
+      <?php 
+        // Unset the entire flash message array
+        unset($_SESSION['flash_message']); 
+        endif; 
+      ?>
       <!-- Top Header -->
       <header class="bg-white shadow-sm z-10">
         <div class="flex items-center justify-between h-16 px-6">

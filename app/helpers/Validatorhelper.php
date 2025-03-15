@@ -60,4 +60,30 @@ class Validator {
     public function getError($field) {
         return $this->errors[$field] ?? null;
     }
+    /**
+ * Validates that the specified fields contain numeric values
+ * 
+ * @param string|array $fields Field(s) to validate
+ * @param string|null $message Custom error message
+ * @return $this Returns validator instance for method chaining
+ */
+public function numeric($fields, $message = null) {
+    // Convert single field to array
+    if (!is_array($fields)) {
+        $fields = [$fields];
+    }
+    
+    foreach ($fields as $field) {
+        // Skip if field is empty (empty values should be caught by required())
+        if (empty($this->data[$field])) {
+            continue;
+        }
+        
+        if (!is_numeric($this->data[$field])) {
+            $this->errors[$field] = $message ?? "Trường {$field} phải là số";
+        }
+    }
+    
+    return $this;
+}
 }

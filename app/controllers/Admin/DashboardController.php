@@ -13,12 +13,12 @@ class DashboardController extends BaseController {
     
     public function __construct() {
         // // Áp dụng middleware để kiểm tra quyền admin
-        // $route = $this->getRouteByRole();
-        // $roleBase = 'admin';
-        // $role = $this->getRole();
-        // if ($role !== $roleBase) {
-        //     $this->redirect($route);
-        // }
+        $route = $this->getRouteByRole();
+        $roleBase = 'admin';
+        $role = $this->getRole();
+        if ($role !== $roleBase) {
+            $this->redirect($route);
+        }
 
         $this->userModel = new User();
         $this->roleModel = new Role();

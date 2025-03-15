@@ -337,18 +337,7 @@ class AuthController extends BaseController {
         return isset($_SESSION['user_id']);
     }
     
-    /**
-     * Đặt thông báo flash
-     * 
-     * @param string $type Loại thông báo
-     * @param string $message Nội dung thông báo
-     */
-    private function setFlashMessage($type, $message) {
-        $_SESSION['flash_message'] = [
-            'type' => $type,
-            'message' => $message
-        ];
-    }
+    
 
     // GET ROUTE BY ROLE
     
