@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\UrlHelper;
 ?>
 
@@ -29,7 +30,7 @@ use App\Helpers\UrlHelper;
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Trang chủ
           </a>
-          <a href="<?= UrlHelper::route('tours') ?>"
+          <a href="<?= UrlHelper::route('home/tours') ?>"
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Tours
           </a>
@@ -102,12 +103,12 @@ use App\Helpers\UrlHelper;
   </header>
   <main class="container mx-auto flex-grow flex flex-col">
     <!-- Flash messages -->
-    <?php if(isset($_SESSION['flash'])): ?>
-    <div
-      class="mb-4 p-4 rounded <?= $_SESSION['flash']['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
-      <?= $_SESSION['flash']['message'] ?>
-    </div>
-    <?php unset($_SESSION['flash']['message'], $_SESSION['flash']['type']); ?>
+    <?php if (isset($_SESSION['flash'])): ?>
+      <div
+        class="mb-4 p-4 rounded <?= $_SESSION['flash']['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
+        <?= $_SESSION['flash']['message'] ?>
+      </div>
+      <?php unset($_SESSION['flash']['message'], $_SESSION['flash']['type']); ?>
     <?php endif; ?>
 
     <!-- Content will be inserted here -->
@@ -124,18 +125,18 @@ use App\Helpers\UrlHelper;
   </footer>
   <!-- Add JavaScript for mobile menu toggle -->
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.querySelector('button[aria-expanded]');
-    const mobileMenu = document.querySelector('.md\\:hidden.hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.querySelector('button[aria-expanded]');
+      const mobileMenu = document.querySelector('.md\\:hidden.hidden');
 
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', function() {
-        const expanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', !expanded);
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
-  });
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
   </script>
 </body>
 

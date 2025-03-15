@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\UrlHelper;
 
 $title = 'Liên Hệ - Di Travel';
@@ -8,7 +9,7 @@ $activePage = 'contact';
 <div class="py-8 md:py-12">
   <!-- Hero Section -->
   <div class="relative mb-16">
-    <div class="w-full h-[300px] md:h-[400px] bg-cover bg-center"
+    <div class="w-full h-[300px] md:h-[400px] bg-cover bg-center bg-teal-500"
       style="background-image: url('<?= UrlHelper::image('contact-hero.jpg') ?>')">
       <div class="absolute inset-0 bg-black opacity-50"></div>
       <div class="absolute inset-0 flex items-center justify-center">
@@ -215,8 +216,8 @@ $activePage = 'contact';
   </div>
 
   <!-- Map Section -->
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Vị Trí Của Chúng Tôi</h2>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 ">Vị Trí Của Chúng Tôi</h2>
     <div class="bg-gray-200 rounded-lg overflow-hidden shadow-md h-[400px] w-full">
       <div class="w-full h-full flex items-center justify-center bg-gray-100">
         <iframe
@@ -230,9 +231,9 @@ $activePage = 'contact';
   <!-- FAQ Section -->
   <div class="bg-gray-50 py-16">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Câu Hỏi Thường Gặp</h2>
+      <h2 class="text-3xl font-bold text-gray-800 mb-5">Câu Hỏi Thường Gặp</h2>
 
-      <div class="max-w-3xl mx-auto space-y-6">
+      <div class="space-y-6">
         <!-- FAQ Item 1 -->
         <div class="bg-white p-6 rounded-lg shadow-md">
           <h3 class="text-xl font-semibold text-gray-800 mb-3">Làm thế nào để đặt tour du lịch?</h3>
@@ -284,7 +285,7 @@ $activePage = 'contact';
   </div>
 
   <!-- CTA Section -->
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-teal-600 rounded-lg shadow-xl overflow-hidden">
       <div class="px-6 py-12 md:p-12 text-center md:text-left md:flex md:items-center md:justify-between">
         <div class="mb-6 md:mb-0 md:w-2/3">
