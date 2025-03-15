@@ -6,6 +6,39 @@ use App\Helpers\SessionHelper;
 use App\Helpers\UrlHelper;
 
 class BaseController {
+    /**
+     * Tạo CSRF token và lưu vào session
+     * 
+     * @return string CSRF token
+     */
+    protected function createCSRFToken() {
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        
+        echo '<input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">';
+        return $_SESSION['csrf_token'];
+    }
+    
+    /**
+     * Xác thực CSRF token
+     * 
+     * @param bool $redirect Có chuyển hướng nếu token không hợp lệ hay không
+     * @return bool Trả về true nếu token hợp lệ, ngược lại trả về false
+     */
+    protected function validateCSRFToken($redirect = true) {
+        if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            if ($redirect) {
+                $this->redirect($_SERVER['HTTP_REFERER'] ?? '/', 'Phiên làm việc đã hết hạn hoặc yêu cầu không hợp lệ', 'error');
+            }
+            return false;
+        }
+        
+        // Tạo token mới sau khi xác thực thành công để ngăn chặn tấn công CSRF kiểu replay
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        return true;
+    }
+
     public function view($view, $data = []) {
         // Thiết lập layout mặc định nếu không được chỉ định
         $layout = LayoutHelper::getLayoutByRole();
@@ -81,7 +114,7 @@ class BaseController {
         }
         
         $userModel = new \App\Models\User();
-        // return $userModel->hasPermission($_SESSION['user_id'], $permission);
+        return $userModel->hasPermission($_SESSION['user_id'], $permission);
     }
 
     public function getRole() {

@@ -19,7 +19,6 @@ class AuthController extends BaseController {
     public function login() {
         if($this->isAuthenticated()) {
             $route = $this->getRouteByRole();
-            echo($route);
             $this->redirect(UrlHelper::route($route));
         }
         
@@ -66,9 +65,9 @@ class AuthController extends BaseController {
                             $expires = time() + (30 * 24 * 60 * 60); // 30 ngày
                             
                             // Lưu token vào cơ sở dữ liệu
-                            $this->userModel->update($user['id'], [
-                                'remember_token' => $token
-                            ]);
+                            // $this->userModel->update($user['id'], [
+                            //     'remember_token' => $token
+                            // ]);
                             
                             // Đặt cookie
                             setcookie('remember_token', $token, $expires, '/', '', false, true);
@@ -78,7 +77,7 @@ class AuthController extends BaseController {
                         // Chuyển hướng đến trang chủ hoặc trang được yêu cầu trước đó
                         $redirect = SessionHelper::get('redirect_url') ?? UrlHelper::route('admin/dashboard');
                         unset($_SESSION['redirect_url']);
-                        
+
                         $this->redirect($redirect);
                     }
                 } else {

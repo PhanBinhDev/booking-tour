@@ -9,8 +9,12 @@ class ModeratorController extends BaseController {
     
     public function __construct() {
         // Áp dụng middleware để kiểm tra quyền moderator
-        $middleware = new ModeratorMiddleware();
-        $middleware->handle();
+        $route = $this->getRouteByRole();
+        $roleBase = 'moderator';
+        $role = $this->getRole();
+        if ($role !== $roleBase) {
+            $this->redirect($route);
+        }
         
         $this->imageModel = new Image();
     }

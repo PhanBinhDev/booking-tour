@@ -1,7 +1,10 @@
 <?php
 namespace App\Controllers;
+use App\Models\Tour;
 
 class HomeController extends BaseController {
+  private $tourModel;
+
   function __construct() {
     $route = $this->getRouteByRole();
     $roleBase = 'user';
@@ -9,6 +12,8 @@ class HomeController extends BaseController {
     if ($role !== $roleBase) {
       $this->redirect($route);
     }
+
+    $this->tourModel = new Tour();
   }
   function index() {
     $this->view('home/index');
@@ -22,7 +27,14 @@ class HomeController extends BaseController {
     $this->view('home/contact');
   }
 
-  // function payment 
+  function news() {
+    $this->view('home/news');
+  }
+
+  function tourDetails($tourId){
+    // $tourDetails = $this->tourDetails($tourId);
+    $this->view('home/tour-details', ['id' => $tourId]);
+  }
 }
 
 ?>

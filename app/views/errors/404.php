@@ -14,17 +14,19 @@
       </p>
 
       <?php
-            // Lấy thông tin về lỗi cho debug
-            $requestedView = isset($view) ? $view : 'Unknown';
-            ?>
-
+        use App\Helpers\UrlHelper;
+        
+        // Lấy thông tin về lỗi cho debug
+        $requestedView = isset($view) ? $view : 'Unknown';
+      ?>
       <div class="bg-gray-50 p-4 rounded-md mb-6 text-sm flex items-center gap-2">
         <div class="text-gray-500">Trang được yêu cầu:</div>
         <div class="font-mono text-red-600"><?= htmlspecialchars($requestedView) ?></div>
       </div>
 
       <div class="flex justify-center">
-        <a href="/" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
+        <a href="<?= UrlHelper::route('')?>"
+          class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
           Về trang chủ
         </a>
       </div>

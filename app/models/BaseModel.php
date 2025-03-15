@@ -134,33 +134,59 @@ abstract class BaseModel {
      * Đếm số bản ghi
      * 
      * @param array $conditions Điều kiện lọc
+     * @param array $params Tham số cho câu truy vấn
      * @return int Số bản ghi
      */
-    public function count($conditions = []) {
+    public function count($conditions = [], $params = []) {
         $sql = "SELECT COUNT(*) FROM {$this->table}";
         
-        // Thêm điều kiện WHERE nếu có
         if (!empty($conditions)) {
-            $sql .= " WHERE ";
-            $whereClauses = [];
-            
-            foreach ($conditions as $key => $value) {
-                $whereClauses[] = "$key = :$key";
-            }
-            
-            $sql .= implode(' AND ', $whereClauses);
+            $sql .= " WHERE $conditions";
         }
         
         $stmt = $this->db->prepare($sql);
         
-        // Bind các tham số
-        if (!empty($conditions)) {
-            foreach ($conditions as $key => $value) {
+        if (!empty($params)) {
+            foreach ($params as $key => $value) {
                 $stmt->bindValue(":$key", $value);
             }
         }
         
         $stmt->execute();
         return $stmt->fetchColumn();
+    }
+
+    /**
+     * Lấy danh sách bản ghi có phân trang
+     * 
+     * @param int $offset Vị trí bắt đầu
+     * @param int $limit Số bản ghi cần lấy
+     * @param string $orderBy Sắp xếp theo trường nào
+     * @param string $orderDir Hướng sắp xếp (ASC hoặc DESC)
+     * @param string $conditions Điều kiện WHERE (không bao gồm từ khóa WHERE)
+     * @param array $params Tham số cho câu truy vấn
+     * @return array Danh sách bản ghi
+     */
+    public function paginate($offset = 0, $limit = 10, $orderBy = 'id', $orderDir = 'DESC', $conditions = '', $params = []) {
+        $sql = "SELECT * FROM {$this->table}";
+        
+        if (!empty($conditions)) {
+            $sql .= " WHERE $conditions";
+        }
+        
+        $sql .= " ORDER BY $orderBy $orderDir LIMIT :offset, :limit";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        
+        if (!empty($params)) {
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+        }
+        
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

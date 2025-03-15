@@ -33,6 +33,25 @@ class User extends BaseModel {
         
         return false;
     }
+
+    /**
+     * Lấy thông tin người dùng kèm theo vai trò
+     * 
+     * @param int $userId ID người dùng
+     * @return array Thông tin người dùng kèm vai trò
+     */
+    public function getUserWithRole($userId) {
+        $sql = "SELECT u.*, r.name as role_name, r.id as role_id 
+                FROM {$this->table} u 
+                LEFT JOIN roles r ON u.role_id = r.id 
+                WHERE u.id = :user_id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
     
     /**
      * Tìm người dùng theo email
@@ -148,14 +167,50 @@ class User extends BaseModel {
         return $permissions;
     }
 
+
+    /**
+     * Kiểm tra xem người dùng có quyền cụ thể hay không
+     * 
+     * @param int $userId ID của người dùng
+     * @param string $permission Tên quyền cần kiểm tra
+     * @return bool Trả về true nếu người dùng có quyền, ngược lại trả về false
+     */
+    public function hasPermission($userId, $permission) {
+        // Lấy role_id của người dùng
+        $sql = "SELECT u.role_id FROM users u WHERE u.id = :userId";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':userId', $userId, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        if (!$user) {
+            return false;
+        }
+        
+        $roleId = $user['role_id'];
+        
+        // Kiểm tra xem role có quyền này không
+        $sql = "SELECT COUNT(*) FROM role_permissions rp 
+                JOIN permissions p ON rp.permission_id = p.id 
+                WHERE rp.role_id = :roleId AND p.name = :permission";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':roleId', $roleId, \PDO::PARAM_INT);
+        $stmt->bindValue(':permission', $permission, \PDO::PARAM_STR);
+        $stmt->execute();
+        
+        return $stmt->fetchColumn() > 0;
+    }
+
     public function getUserRole($roleId) {
-    $sql = "SELECT * FROM roles WHERE id = :role_id";
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':role_id', $roleId);
-    $stmt->execute();
-    
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        $sql = "SELECT * FROM roles WHERE id = :role_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':role_id', $roleId);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
     /**
      * Tạo token xác thực email

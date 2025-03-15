@@ -33,9 +33,9 @@ use App\Helpers\UrlHelper;
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Tours
           </a>
-          <a href="<?= UrlHelper::route('destinations') ?>"
+          <a href="<?= UrlHelper::route('home/news') ?>"
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
-            Điểm đến
+            Tin tức
           </a>
           <a href="<?= UrlHelper::route('home/about') ?>"
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
@@ -84,9 +84,9 @@ use App\Helpers\UrlHelper;
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             Tours
           </a>
-          <a href="<?= UrlHelper::route('destinations') ?>"
+          <a href="<?= UrlHelper::route('news') ?>"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
-            Điểm đến
+            Tin tức
           </a>
           <a href="<?= UrlHelper::route('about') ?>"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">

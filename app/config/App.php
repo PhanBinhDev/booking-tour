@@ -2,8 +2,8 @@
 namespace App\Config;
 
 class App {
-    protected $controller = 'HomeController';
-    protected $method = 'index';
+    protected $controller = 'HomeController'; // controller -> home/about
+    protected $method = 'index'; // method
     protected $params = [];
 
     public function __construct() {
@@ -30,7 +30,9 @@ class App {
     }
     
     public function run() {
-        call_user_func_array([$this->controller, $this->method], $this->params);
+        call_user_func_array([$this->controller, $this->method], [
+            'params' => $this->params
+        ]);
     }
     
     protected function parseUrl() {
