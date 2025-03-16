@@ -16,6 +16,20 @@ class Payment extends BaseModel {
     public function findById($id) {
         return $this->getById($id);
     }
+
+    /**
+     * Retrieve payments by their status.
+     *
+     * This function fetches all payments with a specific status from the database,
+     * ordered by creation date in descending order.
+     *
+     * @param string $status The status of the payments to retrieve (e.g., 'pending', 'completed', 'failed')
+     * @return array An array of payment records matching the specified status
+     */
+    public function getByStatus($status) {
+        return $this->getAll(['status' => $status], 'created_at DESC');
+    }
+
     
     /**
      * Get payment with all related information
@@ -267,7 +281,132 @@ class Payment extends BaseModel {
         
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+
+    /**
+     * Get the total revenue for a specific month and year.
+     *
+     * This function calculates the sum of all completed payments for the given month and year.
+     * It only considers payments with a 'completed' status.
+     *
+     * @param int $year The year for which to calculate the revenue (e.g., 2023)
+     * @param int $month The month for which to calculate the revenue (1-12)
+     * @return float The total revenue for the specified month and year. Returns 0 if no revenue is found.
+     */
+    public function getMonthlyRevenue($year, $month) {
+        $sql = "
+            SELECT 
+                COALESCE(SUM(amount), 0) as total_revenue
+            FROM 
+                {$this->table}
+            WHERE 
+                status = 'completed'
+                AND YEAR(payment_date) = :year
+                AND MONTH(payment_date) = :month
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':year', $year);
+        $stmt->bindParam(':month', $month);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['total_revenue'] ?? 0;
+    }
+
+
+    /**
+     * Get the yearly revenue breakdown by month for a specific year.
+     *
+     * This function retrieves the total revenue for each month of the specified year,
+     * considering only completed payments. It provides a monthly breakdown of revenue
+     * for the entire year.
+     *
+     * @param int $year The year for which to retrieve the revenue breakdown (e.g., 2023)
+     * @return array An array of associative arrays, each containing:
+     *               - 'month': The month number (1-12)
+     *               - 'total_revenue': The total revenue for that month
+     *               The array is sorted by month in ascending order.
+     */
+    public function getYearlyRevenue($year) {
+        $sql = "
+            SELECT 
+                MONTH(payment_date) as month,
+                COALESCE(SUM(amount), 0) as total_revenue
+            FROM 
+                {$this->table}
+            WHERE 
+                status = 'completed'
+                AND YEAR(payment_date) = :year
+            GROUP BY 
+                MONTH(payment_date)
+            ORDER BY 
+                month
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':year', $year);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     
+    /**
+     * Get the total revenue from all completed payments.
+     *
+     * This function calculates the sum of all payment amounts where the status is 'completed'.
+     * If no completed payments are found, it returns 0.
+     *
+     * @return float The total revenue from all completed payments.
+     */
+    public function getTotalRevenue() {
+        $sql = "
+            SELECT 
+                COALESCE(SUM(amount), 0) as total_revenue
+            FROM 
+                {$this->table}
+            WHERE 
+                status = 'completed'
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['total_revenue'] ?? 0;
+    }
+
+    
+
+    /**
+     * Get total revenue grouped by payment method.
+     *
+     * This function retrieves the total revenue for each payment method,
+     * including those with no completed payments (zero revenue).
+     *
+     * @return array An associative array containing payment method names and their total revenue.
+     *               Each element has 'payment_method' and 'total_revenue' keys.
+     *               The results are sorted in descending order of total revenue.
+     */
+    public function getRevenueByPaymentMethod() {
+        $sql = "
+            SELECT 
+                pm.name as payment_method,
+                COALESCE(SUM(p.amount), 0) as total_revenue
+            FROM 
+                payment_methods pm
+            LEFT JOIN 
+                {$this->table} p ON pm.id = p.payment_method_id AND p.status = 'completed'
+            GROUP BY 
+                pm.id
+            ORDER BY 
+                total_revenue DESC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
     /**
      * Create payment log
      * 

@@ -28,6 +28,26 @@ class Booking extends BaseModel {
         'updated_at'
     ];
 
+
+    /**
+     * Count bookings by status
+     *
+     * This function retrieves the count of bookings with a specific status.
+     *
+     * @param string $status The status to count bookings for
+     *
+     * @return int The number of bookings with the specified status
+     */
+    public function countByStatus($status) {
+        $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE status = :status";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $status);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+
+
     /**
      * Get booking by ID
      * 
@@ -35,32 +55,32 @@ class Booking extends BaseModel {
      * @return array|null Booking data or null if not found
      */
     public function getById($id) {
-    $sql = "SELECT b.*, 
-            t.title as tour_name, 
-            t.slug as tour_slug,
-            t.duration,
-            t.price as tour_price,
-            t.sale_price as tour_sale_price,
-            tc.name as tour_category,
-            l.name as tour_location,
-            dl.name as departure_location,
-            (SELECT img.file_path FROM tour_images ti 
-             JOIN images img ON ti.image_id = img.id 
-             WHERE ti.tour_id = t.id AND ti.is_featured = 1 
-             LIMIT 1) as tour_image
-        FROM {$this->table} b
-        LEFT JOIN tours t ON b.tour_id = t.id
-        LEFT JOIN tour_categories tc ON t.category_id = tc.id
-        LEFT JOIN locations l ON t.location_id = l.id
-        LEFT JOIN locations dl ON t.departure_location_id = dl.id
-        WHERE b.id = :id";
-    
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-    $stmt->execute();
-    
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
-}
+        $sql = "SELECT b.*, 
+                t.title as tour_name, 
+                t.slug as tour_slug,
+                t.duration,
+                t.price as tour_price,
+                t.sale_price as tour_sale_price,
+                tc.name as tour_category,
+                l.name as tour_location,
+                dl.name as departure_location,
+                (SELECT img.file_path FROM tour_images ti 
+                JOIN images img ON ti.image_id = img.id 
+                WHERE ti.tour_id = t.id AND ti.is_featured = 1 
+                LIMIT 1) as tour_image
+            FROM {$this->table} b
+            LEFT JOIN tours t ON b.tour_id = t.id
+            LEFT JOIN tour_categories tc ON t.category_id = tc.id
+            LEFT JOIN locations l ON t.location_id = l.id
+            LEFT JOIN locations dl ON t.departure_location_id = dl.id
+            WHERE b.id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
 
     /**
      * Get booking by booking number
@@ -391,4 +411,91 @@ class Booking extends BaseModel {
             'top_tours' => $topTours
         ];
     }
+
+
+    // 
+    /**
+     * Get recent bookings.
+     * 
+     * Fetches the most recent bookings based on the created_at column in descending order.
+     * 
+     * @param int $limit The maximum number of bookings to retrieve. Default is 5.
+     * 
+     * @return array An array of recent bookings, each represented as an associative array.
+     * 
+     * Each booking array will contain the following keys:
+     * - id: The booking ID.
+     * - booking_number: The booking number.
+     * - status: The booking status.
+     * - created_at: The date and time when the booking was created.
+     * - tour_title: The title of the tour associated with the booking.
+     * - customer_name: The name of the customer associated with the booking.
+     */
+    public function getRecent($limit = 5) {
+        $sql = "
+            SELECT DISTINCT
+                b.id, 
+                b.booking_number, 
+                b.status, 
+                b.created_at,
+                t.title as tour_title,
+                COALESCE(u.full_name, bc.full_name) as customer_name
+            FROM 
+                {$this->table} b
+            LEFT JOIN 
+                tours t ON b.tour_id = t.id
+            LEFT JOIN 
+                users u ON b.user_id = u.id
+            LEFT JOIN 
+                (SELECT booking_id, MIN(full_name) as full_name, MIN(id) as min_id
+                FROM booking_customers 
+                WHERE type = 'adult' 
+                GROUP BY booking_id) bc ON bc.booking_id = b.id
+            ORDER BY 
+                b.created_at DESC
+            LIMIT :limit
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+    /**
+     * Get booking statistics.
+     *
+     * This function retrieves various statistics about bookings, including total bookings,
+     * counts of bookings in different statuses, and total revenue.
+     *
+     * @return array An associative array containing the following statistics:
+     *               - total_bookings: The total number of bookings.
+     *               - pending_bookings: The number of bookings with 'pending' status.
+     *               - confirmed_bookings: The number of bookings with 'confirmed' status.
+     *               - paid_bookings: The number of bookings with 'paid' status.
+     *               - cancelled_bookings: The number of bookings with 'cancelled' status.
+     *               - completed_bookings: The number of bookings with 'completed' status.
+     *               - total_revenue: The sum of total_price for all bookings.
+     */
+    public function getBookingStatistics() {
+        $sql = "
+            SELECT 
+                COUNT(*) as total_bookings,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_bookings,
+                SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) as confirmed_bookings,
+                SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid_bookings,
+                SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_bookings,
+                SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_bookings,
+                SUM(total_price) as total_revenue
+            FROM 
+                {$this->table}
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+
 }

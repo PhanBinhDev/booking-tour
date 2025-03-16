@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS `images` (
   `alt_text` VARCHAR(255),
   `cloudinary_id` VARCHAR(255),
   `cloudinary_url` VARCHAR(255),
+  `category` VARCHAR(50) DEFAULT 'general',
   `user_id` INT NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -953,3 +954,15 @@ INSERT INTO `locations` (`name`, `slug`, `description`, `country`, `region`, `la
 ('Sóc Trăng', 'soc-trang', 'Tỉnh với chùa Dơi, chùa Đất Sét và lễ hội Oóc Om Bóc - đua ghe ngo của người Khmer', 'Việt Nam', 'Miền Nam', 9.6037, 105.9812, 'locations/soc-trang.jpg', 'active'),
 ('Bạc Liêu', 'bac-lieu', 'Tỉnh với nhà công tử Bạc Liêu, cánh đồng điện gió và khu du lịch Nhà Mát', 'Việt Nam', 'Miền Nam', 9.2940, 105.7216, 'locations/bac-lieu.jpg', 'active'),
 ('Cà Mau', 'ca-mau', 'Tỉnh cực Nam với cánh đồng cỏ, rừng U Minh, Mũi Cà Mau - điểm cực nam của Tổ quốc và hệ sinh thái rừng ngập mặn độc đáo', 'Việt Nam', 'Miền Nam', 9.1769, 105.1527, 'locations/ca-mau.jpg', 'active');
+
+INSERT INTO `locations` (`name`, `slug`, `description`, `country`, `region`, `latitude`, `longitude`, `image`, `status`) VALUES
+('France', 'france', 'Known for the Eiffel Tower, fine cuisine, and art museums like the Louvre.', 'France', 'Europe', 46.603354, 1.888334, '/locations/france', 'active'),
+('Japan', 'japan', 'An island nation known for its unique blend of ancient traditions and cutting-edge technology.', 'Japan', 'Asia', 36.204824, 138.252924, '/locations/japan', 'active'),
+('Australia', 'australia', 'Famous for its natural wonders, beaches, deserts, and unique wildlife like kangaroos and koalas.', 'Australia', 'Oceania', -25.274398, 133.775136, '/locations/australia', 'active'),
+('Brazil', 'brazil', 'Home to the Amazon rainforest, vibrant culture, and famous for its annual Carnival celebration.', 'Brazil', 'South America', -14.235004, -51.92528, '/locations/brazil', 'active'),
+('Italy', 'italy', 'Known for its art, architecture, food, and historical landmarks like the Colosseum and Venice canals.', 'Italy', 'Europe', 41.87194, 12.56738, '/locations/italy', 'active'),
+('Egypt', 'egypt', 'Famous for ancient monuments like the Great Pyramids of Giza and the Sphinx.', 'Egypt', 'Africa', 26.820553, 30.802498, '/locations/egypt', 'active'),
+('United Kingdom', 'united-kingdom', 'Known for its royal family, historical landmarks like Big Ben, and cultural influence.', 'United Kingdom', 'Europe', 55.378051, -3.435973, '/locations/united-kingdom', 'active'),
+('Canada', 'canada', 'Famous for its stunning natural landscapes, including the Rocky Mountains and Niagara Falls.', 'Canada', 'North America', 56.130366, -106.346771, '/locations/canada', 'active'),
+('Thailand', 'thailand', 'Known for tropical beaches, ornate temples, and vibrant street life.', 'Thailand', 'Asia', 15.870032, 100.992541, '/locations/thailand', 'active'),
+('South Africa', 'south-africa', 'Famous for its diverse wildlife, natural landscapes, and cultural diversity.', 'South Africa', 'Africa', -30.559482, 22.937506, '/locations/south-africa', 'active');

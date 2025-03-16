@@ -83,6 +83,9 @@ $router->get('/admin/roles/{id}/permissions', 'Admin\RoleController@permissions'
 $router->post('/admin/roles/{id}/permissions', 'Admin\RoleController@updatePermissions');
 $router->get('/admin/roles/{id}/edit', 'Admin\RoleController@edit');
 
+// ADMIN/GALLERY
+$router->get('/admin/images', 'Admin\ImageController@index');
+
 // ADMIN/PAYMENT/METHODS
 $router->get('/admin/payment/methods', 'Admin\PaymentController@methods');
 $router->get('/admin/payment/methods/create', 'Admin\PaymentController@createMethod');

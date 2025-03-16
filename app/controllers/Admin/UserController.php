@@ -2,6 +2,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Helpers\UrlHelper;
 use App\Models\User;
 use App\Models\Role;
 
@@ -64,20 +65,20 @@ class UserController extends BaseController {
         
         // Không cho phép xóa chính mình
         if($id == $currentUser['id']) {
-            $this->redirect('/admin/users?error=cannot_delete_self');
+            $this->redirect(UrlHelper::route('/admin/users?error=cannot_delete_self'));
         }
         
         $user = $this->userModel->getById($id);
         
         if(!$user) {
-            $this->redirect('/admin/users');
+            $this->redirect(UrlHelper::route('/admin/users?error=user_not_found'));
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             if($this->userModel->delete($id)) {
-                $this->redirect('/admin/users?success=2');
+                $this->redirect(UrlHelper::route('/admin/users?success=delete_success'));
             } else {
-                $this->redirect('/admin/users?error=delete_failed');
+                $this->redirect(UrlHelper::route('/admin/users?error=delete_failed'));
             }
         } else {
             $this->view('admin/delete_user', [

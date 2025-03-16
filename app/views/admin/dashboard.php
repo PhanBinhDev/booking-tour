@@ -1,245 +1,388 @@
 <?php
-
 use App\Helpers\SessionHelper;
 use App\Helpers\UrlHelper;
-
+use App\Helpers\FormatHelper;
 ?>
+
 <div class="container px-6 py-8 mx-auto">
-  <!-- Tiêu đề trang -->
-  <h3 class="text-3xl font-bold text-gray-700">Dashboard</h3>
-  <p class="mb-8 text-gray-500">Xin chào, <?= SessionHelper::get('username') ?>! Đây là tổng quan hệ thống của
-    bạn.</p>
-
-  <!-- Thẻ thống kê -->
-  <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-    <!-- Thẻ tổng số người dùng -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-      <div class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full">
-        <i class="fas fa-users text-xl"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Tổng người dùng</p>
-        <p class="text-lg font-semibold text-gray-700"><?= $userCount ?></p>
-      </div>
+  <!-- Page Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+        <span class="w-2 h-8 bg-teal-500 rounded-full mr-3"></span>
+        Dashboard
+      </h1>
+      <p class="mt-1 text-gray-600">Xin chào, <?= SessionHelper::get('username') ?>! Đây là tổng quan hệ thống của bạn.
+      </p>
     </div>
 
-    <!-- Thẻ tổng số vai trò -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-      <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full">
-        <i class="fas fa-user-shield text-xl"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Tổng vai trò</p>
-        <p class="text-lg font-semibold text-gray-700"><?= count($roles) ?></p>
-      </div>
-    </div>
-
-    <!-- Thẻ tổng số hình ảnh -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-      <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full">
-        <i class="fas fa-images text-xl"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Tổng hình ảnh</p>
-        <p class="text-lg font-semibold text-gray-700"><?= $imageCount ?></p>
-      </div>
-    </div>
-
-    <!-- Thẻ thông tin hệ thống -->
-    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-      <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full">
-        <i class="fas fa-server text-xl"></i>
-      </div>
-      <div>
-        <p class="mb-2 text-sm font-medium text-gray-600">Phiên bản</p>
-        <p class="text-lg font-semibold text-gray-700">Di Travel 1.0</p>
+    <div class="mt-4 md:mt-0">
+      <div class="flex items-center space-x-2 text-sm text-gray-600">
+        <i class="fas fa-calendar-day"></i>
+        <span><?= date('d/m/Y') ?></span>
       </div>
     </div>
   </div>
 
-  <!-- Phần chính của dashboard -->
-  <div class="grid gap-6 mb-8 md:grid-cols-2">
-    <!-- Biểu đồ phân phối vai trò -->
-    <div class="min-w-0 p-4 bg-white rounded-lg shadow-md">
-      <h4 class="mb-4 font-semibold text-gray-800">Phân phối vai trò</h4>
-      <div class="h-64 px-4">
-        <canvas id="roleDistributionChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Danh sách vai trò và quyền -->
-    <div class="min-w-0 p-4 bg-white rounded-lg shadow-md">
-      <h4 class="mb-4 font-semibold text-gray-800">Vai trò và quyền</h4>
-      <div class="w-full overflow-hidden rounded-lg shadow-xs">
-        <div class="w-full overflow-x-auto">
-          <table class="w-full whitespace-no-wrap">
-            <thead>
-              <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                <th class="px-4 py-3">Vai trò</th>
-                <th class="px-4 py-3">Số quyền</th>
-                <th class="px-4 py-3">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y">
-              <?php foreach ($roles as $role): ?>
-              <tr class="text-gray-700">
-                <td class="px-4 py-3">
-                  <div class="flex items-center text-sm">
-                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                      <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                      <div
-                        class="flex items-center justify-center w-8 h-8 rounded-full bg-<?= getRoleColor($role['name']) ?>-100 text-<?= getRoleColor($role['name']) ?>-500">
-                        <i class="fas fa-<?= getRoleIcon($role['name']) ?>"></i>
-                      </div>
-                    </div>
-                    <div>
-                      <p class="font-semibold"><?= $role['name'] ?></p>
-                      <p class="text-xs text-gray-600"><?= $role['description'] ?? 'Không có mô tả' ?></p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-4 py-3 text-sm">
-                  <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full">
-                    <?= $role['permission_count'] ?> quyền
-                  </span>
-                </td>
-                <td class="px-4 py-3 text-sm">
-                  <a href="<?= PUBLIC_URL ?>/admin/roles/<?= $role['id'] ?>/permissions"
-                    class="text-indigo-600 hover:text-indigo-900">
-                    <i class="fas fa-key mr-1"></i> Phân quyền
-                  </a>
-                </td>
-              </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+  <!-- Stats Overview -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Users Stats -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 p-3 rounded-full bg-blue-100 text-blue-500">
+            <i class="fas fa-users text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Người dùng</h3>
+            <p class="text-2xl font-semibold text-gray-800"><?= number_format($userCount) ?></p>
+          </div>
+        </div>
+        <div class="mt-4">
+          <a href="<?= UrlHelper::route('admin/users') ?>"
+            class="text-sm text-blue-600 hover:text-blue-800 flex items-center">
+            <span>Quản lý người dùng</span>
+            <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
         </div>
       </div>
+      <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-1"></div>
     </div>
-  </div>
 
-  <!-- Liên kết nhanh -->
-  <div class="grid gap-6 mb-8 md:grid-cols-3">
-    <!-- Quản lý người dùng -->
-    <div class="min-w-0 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <a href="<?= PUBLIC_URL ?>/admin/users" class="block">
+    <!-- Tours Stats -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5">
         <div class="flex items-center">
-          <div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full">
-            <i class="fas fa-user-cog text-xl"></i>
+          <div class="flex-shrink-0 p-3 rounded-full bg-green-100 text-green-500">
+            <i class="fas fa-route text-xl"></i>
           </div>
-          <div>
-            <h4 class="mb-1 text-xl font-semibold text-gray-700">Quản lý người dùng</h4>
-            <p class="text-sm text-gray-600">Thêm, sửa, xóa người dùng</p>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Tour du lịch</h3>
+            <p class="text-2xl font-semibold text-gray-800"><?= number_format($tourCount) ?></p>
           </div>
         </div>
-      </a>
-    </div>
-
-    <!-- Quản lý tour -->
-    <div class="min-w-0 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <a href="<?= UrlHelper::route('admin/tours') ?>" class="block">
-        <div class="flex items-center">
-          <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full">
-            <i class="fas fa-map-marked-alt text-xl"></i>
-          </div>
-          <div>
-            <h4 class="mb-1 text-xl font-semibold text-gray-700">Quản lý tour</h4>
-            <p class="text-sm text-gray-600">Thêm, sửa, xóa tour du lịch</p>
-          </div>
+        <div class="mt-4">
+          <a href="<?= UrlHelper::route('admin/tours') ?>"
+            class="text-sm text-green-600 hover:text-green-800 flex items-center">
+            <span>Quản lý tour</span>
+            <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
         </div>
-      </a>
+      </div>
+      <div class="bg-gradient-to-r from-green-500 to-green-600 h-1"></div>
     </div>
 
-    <!-- Quản lý đặt tour -->
-    <div class="min-w-0 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <a href="<?= UrlHelper::route('admin/bookings') ?>" class="block">
+    <!-- Bookings Stats -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5">
         <div class="flex items-center">
-          <div class="p-3 mr-4 text-purple-500 bg-purple-100 rounded-full">
+          <div class="flex-shrink-0 p-3 rounded-full bg-purple-100 text-purple-500">
             <i class="fas fa-calendar-check text-xl"></i>
           </div>
-          <div>
-            <h4 class="mb-1 text-xl font-semibold text-gray-700">Quản lý đặt tour</h4>
-            <p class="text-sm text-gray-600">Xem và xử lý đơn đặt tour</p>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Đặt tour</h3>
+            <p class="text-2xl font-semibold text-gray-800"><?= number_format($bookingCount) ?></p>
           </div>
         </div>
-      </a>
+        <div class="mt-4">
+          <a href="<?= UrlHelper::route('admin/bookings') ?>"
+            class="text-sm text-purple-600 hover:text-purple-800 flex items-center">
+            <span>Quản lý đặt tour</span>
+            <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      </div>
+      <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-1"></div>
+    </div>
+
+    <!-- Revenue Stats -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 p-3 rounded-full bg-amber-100 text-amber-500">
+            <i class="fas fa-coins text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Doanh thu</h3>
+            <p class="text-2xl font-semibold text-gray-800"><?= FormatHelper::formatCurrency($totalRevenue) ?></p>
+          </div>
+        </div>
+        <div class="mt-4">
+          <a href="<?= UrlHelper::route('admin/payment/transactions') ?>"
+            class="text-sm text-amber-600 hover:text-amber-800 flex items-center">
+            <span>Xem giao dịch</span>
+            <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      </div>
+      <div class="bg-gradient-to-r from-amber-500 to-amber-600 h-1"></div>
+    </div>
+  </div>
+
+  <!-- Charts & Data Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Booking Status Chart -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Trạng thái đặt tour</h3>
+        <div class="text-sm text-gray-500">Tổng: <?= number_format($bookingCount) ?></div>
+      </div>
+      <div class="h-64">
+        <canvas id="bookingStatusChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Doanh thu theo tháng</h3>
+        <div class="text-sm text-gray-500"><?= date('Y') ?></div>
+      </div>
+      <div class="h-64">
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activities & Quick Access -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Recent Bookings -->
+    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Đặt tour gần đây</h3>
+        <a href="<?= UrlHelper::route('admin/bookings') ?>" class="text-sm text-teal-600 hover:text-teal-800">Xem tất
+          cả</a>
+      </div>
+
+      <?php if (empty($recentBookings)): ?>
+      <div class="text-center py-8 text-gray-500">
+        <i class="fas fa-calendar-times text-3xl mb-2"></i>
+        <p>Chưa có đơn đặt tour nào</p>
+      </div>
+      <?php else: ?>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-gray-500 border-b">
+              <th class="pb-3 font-medium">Mã đặt tour</th>
+              <th class="pb-3 font-medium">Khách hàng</th>
+              <th class="pb-3 font-medium">Tour</th>
+              <th class="pb-3 font-medium">Trạng thái</th>
+              <th class="pb-3 font-medium">Ngày đặt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($recentBookings as $booking): ?>
+            <tr class="border-b border-gray-100 hover:bg-gray-50">
+              <td class="py-3 font-medium"><?= $booking['booking_number'] ?></td>
+              <td class="py-3"><?= $booking['customer_name'] ?></td>
+              <td class="py-3 max-w-[200px] truncate"><?= $booking['tour_title'] ?></td>
+              <td class="py-3">
+                <span class="px-2 py-1 text-xs rounded-full <?= getStatusClass($booking['status']) ?>">
+                  <?= getStatusLabel($booking['status']) ?>
+                </span>
+              </td>
+              <td class="py-3"><?= date('d/m/Y', strtotime($booking['created_at'])) ?></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <?php endif; ?>
+    </div>
+
+    <!-- Quick Access -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Truy cập nhanh</h3>
+
+      <div class="grid grid-cols-1 gap-4">
+        <!-- Tour Management -->
+        <a href="<?= UrlHelper::route('admin/tours/create') ?>"
+          class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="p-2 rounded-md bg-green-100 text-green-600 flex items-center justify-center">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-gray-800">Thêm tour mới</h4>
+            <p class="text-xs text-gray-500">Tạo tour du lịch mới</p>
+          </div>
+        </a>
+
+        <!-- Location Management -->
+        <a href="<?= UrlHelper::route('admin/locations') ?>"
+          class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="p-2 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-gray-800">Địa điểm</h4>
+            <p class="text-xs text-gray-500">Quản lý địa điểm du lịch</p>
+          </div>
+        </a>
+
+        <!-- Media Management -->
+        <a href="<?= UrlHelper::route('admin/images') ?>"
+          class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="p-2 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center">
+            <i class="fas fa-images"></i>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-gray-800">Thư viện ảnh</h4>
+            <p class="text-xs text-gray-500">Quản lý hình ảnh</p>
+          </div>
+        </a>
+
+        <!-- Payment Management -->
+        <a href="<?= UrlHelper::route('admin/payment/transactions') ?>"
+          class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="p-2 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-gray-800">Thanh toán</h4>
+            <p class="text-xs text-gray-500">Quản lý giao dịch</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popular Tours & Locations -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Popular Tours -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Tour phổ biến</h3>
+        <a href="<?= UrlHelper::route('admin/tours') ?>" class="text-sm text-teal-600 hover:text-teal-800">Xem tất
+          cả</a>
+      </div>
+
+      <?php if (empty($popularTours)): ?>
+      <div class="text-center py-8 text-gray-500">
+        <i class="fas fa-route text-3xl mb-2"></i>
+        <p>Chưa có dữ liệu tour</p>
+      </div>
+      <?php else: ?>
+      <div class="space-y-4">
+        <?php foreach ($popularTours as $tour): ?>
+        <div class="flex items-center border-b border-gray-100 pb-4">
+          <div class="w-16 h-16 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+            <?php if (!empty($tour['image'])): ?>
+            <img src="<?= $tour['image'] ?>" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover">
+            <?php else: ?>
+            <div class="w-full h-full flex items-center justify-center text-gray-400">
+              <i class="fas fa-image"></i>
+            </div>
+            <?php endif; ?>
+          </div>
+          <div class="ml-4 flex-grow">
+            <h4 class="text-sm font-medium text-gray-800"><?= $tour['title'] ?></h4>
+            <div class="flex items-center mt-1">
+              <div class="flex items-center text-amber-500 text-xs">
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                <?php if ($i <= round($tour['rating'])): ?>
+                <i class="fas fa-star"></i>
+                <?php else: ?>
+                <i class="far fa-star"></i>
+                <?php endif; ?>
+                <?php endfor; ?>
+                <span class="ml-1 text-gray-500">(<?= $tour['reviews'] ?>)</span>
+              </div>
+              <span class="mx-2 text-gray-300">|</span>
+              <span class="text-xs text-gray-500"><?= $tour['bookings'] ?> đặt tour</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm font-semibold text-gray-800"><?= FormatHelper::formatCurrency($tour['price']) ?></div>
+            <div class="text-xs text-gray-500"><?= $tour['duration'] ?></div>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+    </div>
+
+    <!-- Popular Locations -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Địa điểm phổ biến</h3>
+        <a href="<?= UrlHelper::route('admin/locations') ?>" class="text-sm text-teal-600 hover:text-teal-800">Xem tất
+          cả</a>
+      </div>
+
+      <?php if (empty($popularLocations)): ?>
+      <div class="text-center py-8 text-gray-500">
+        <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
+        <p>Chưa có dữ liệu địa điểm</p>
+      </div>
+      <?php else: ?>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <?php foreach ($popularLocations as $location): ?>
+        <div class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+            <?php if (!empty($location['image'])): ?>
+            <img src="<?= $location['image'] ?>" alt="<?= $location['name'] ?>" class="w-full h-full object-cover">
+            <?php else: ?>
+            <div class="w-full h-full flex items-center justify-center text-gray-400">
+              <i class="fas fa-map"></i>
+            </div>
+            <?php endif; ?>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-gray-800"><?= $location['name'] ?></h4>
+            <div class="flex items-center mt-1 text-xs text-gray-500">
+              <i class="fas fa-route mr-1"></i>
+              <span><?= $location['tour_count'] ?> tour</span>
+            </div>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>
 
-<!-- Hàm helper cho màu sắc và biểu tượng vai trò -->
 <?php
-function getRoleColor($roleName) {
-    $colors = [
-        'admin' => 'red',
-        'moderator' => 'yellow',
-        'editor' => 'blue',
-        'user' => 'green',
-    ];
-    
-    return $colors[strtolower($roleName)] ?? 'gray';
+// Helper functions for status labels and classes
+function getStatusLabel($status) {
+  $labels = [
+      'pending' => 'Chờ xác nhận',
+      'confirmed' => 'Đã xác nhận',
+      'paid' => 'Đã thanh toán',
+      'cancelled' => 'Đã hủy',
+      'completed' => 'Hoàn thành'
+  ];
+  
+  return $labels[$status] ?? $status;
 }
 
-function getRoleIcon($roleName) {
-    $icons = [
-        'admin' => 'crown',
-        'moderator' => 'shield-alt',
-        'editor' => 'edit',
-        'user' => 'user',
-    ];
-    
-    return $icons[strtolower($roleName)] ?? 'user';
+function getStatusClass($status) {
+  $classes = [
+      'pending' => 'bg-yellow-100 text-yellow-800',
+      'confirmed' => 'bg-blue-100 text-blue-800',
+      'paid' => 'bg-green-100 text-green-800',
+      'cancelled' => 'bg-red-100 text-red-800',
+      'completed' => 'bg-purple-100 text-purple-800'
+  ];
+  
+  return $classes[$status] ?? 'bg-gray-100 text-gray-800';
 }
 ?>
 
-<!-- Script cho biểu đồ -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Dữ liệu cho biểu đồ phân phối vai trò
-  const roleLabels = <?= json_encode(array_column($roles, 'name')) ?>;
-  const permissionCounts = <?= json_encode(array_column($roles, 'permission_count')) ?>;
-  const roleColors = roleLabels.map(role => {
-    const colors = {
-      'admin': 'rgba(239, 68, 68, 0.7)',
-      'moderator': 'rgba(245, 158, 11, 0.7)',
-      'editor': 'rgba(59, 130, 246, 0.7)',
-      'user': 'rgba(16, 185, 129, 0.7)'
-    };
-    return colors[role.toLowerCase()] || 'rgba(107, 114, 128, 0.7)';
-  });
 
-  // Tạo biểu đồ phân phối vai trò
-  const roleCtx = document.getElementById('roleDistributionChart').getContext('2d');
-  new Chart(roleCtx, {
-    type: 'bar',
-    data: {
-      labels: roleLabels,
-      datasets: [{
-        label: 'Số quyền',
-        data: permissionCounts,
-        backgroundColor: roleColors,
-        borderColor: roleColors.map(color => color.replace('0.7', '1')),
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            precision: 0
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
-        }
-      }
-    }
-  });
-});
+<!-- Truyền dữ liệu từ PHP sang JavaScript -->
+<script>
+// Truyền dữ liệu từ PHP sang JavaScript
+const dashboardData = {
+  bookingStatusLabels: <?= json_encode(array_keys($bookingStatusData)) ?>,
+  bookingStatusValues: <?= json_encode(array_values($bookingStatusData)) ?>,
+  monthlyRevenueLabels: <?= json_encode(array_keys($monthlyRevenueData)) ?>,
+  monthlyRevenueValues: <?= json_encode(array_values($monthlyRevenueData)) ?>
+};
 </script>
+
+<!-- Dashboard JS -->
+<script src="<?= UrlHelper::js('admin/dashboard.js') ?>"></script>

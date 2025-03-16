@@ -33,7 +33,7 @@ class BaseController
     {
         if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
             if ($redirect) {
-                $this->redirect($_SERVER['HTTP_REFERER'] ?? '/', 'Phiên làm việc đã hết hạn hoặc yêu cầu không hợp lệ', 'error');
+                $this->redirect($_SERVER['HTTP_REFERER'] ?? UrlHelper::route(''), 'Phiên làm việc đã hết hạn hoặc yêu cầu không hợp lệ', 'error');
             }
             return false;
         }

@@ -4,15 +4,25 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Helpers\UrlHelper;
 use App\Models\ActivityLog;
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Image;
+use App\Models\Location;
+use App\Models\Payment;
+use App\Models\Tour;
 
 class DashboardController extends BaseController {
     private $userModel;
     private $roleModel;
     protected $activityLogModel;
     private $imageModel;
+    protected $paymentModel;
+    protected $tourModel;
+    protected $bookingModel;
+    protected $locationModel;
+
+
     
     
     public function __construct() {
@@ -28,11 +38,21 @@ class DashboardController extends BaseController {
         $this->roleModel = new Role();
         $this->imageModel = new Image();
         $this->activityLogModel = new ActivityLog();
+        $this->paymentModel = new Payment();
+        $this->tourModel = new Tour();
+        $this->bookingModel = new Booking();
+        $this->locationModel = new Location();
     }
 
     public function dashboard() {
+        if(!$this->checkPermission(PERM_VIEW_DASHBOARD)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
+            $this->view('error/403');
+            return; // Không tiếp tục thực hiện các bước sau nếu quyền truy cập không đúng. �� đây, nếu truy cập không h��p lệ, ta s�� chuyển hướng về trang quản trị. �� trang thông tin chi tiết, đây chỉ là một ví dụ, bạn có thể thêm các check và xử lý khác theo cách tùy chỉnh.
+        }
+
         $currentUser = $this->getCurrentUser();
-        
+    
         // Lấy tổng số người dùng
         $users = $this->userModel->getAll();
         $userCount = count($users);
@@ -44,11 +64,67 @@ class DashboardController extends BaseController {
         $images = $this->imageModel->getAll();
         $imageCount = count($images);
         
+        // Lấy tổng số tour
+        $tours = $this->tourModel->getAll();
+        $tourCount = count($tours);
+        
+        // Lấy tổng số đặt tour
+        $bookings = $this->bookingModel->getAll();
+        $bookingCount = count($bookings);
+        
+        // Tính tổng doanh thu
+        $totalRevenue = 0;
+        $completedPayments = $this->paymentModel->getByStatus('completed');
+        foreach ($completedPayments as $payment) {
+            $totalRevenue += $payment['amount'];
+        }
+    
+        // Lấy dữ liệu trạng thái đặt tour cho biểu đồ
+        $bookingStatusData = [
+            'Chờ xác nhận' => $this->bookingModel->countByStatus('pending'),
+            'Đã xác nhận' => $this->bookingModel->countByStatus('confirmed'),
+            'Đã thanh toán' => $this->bookingModel->countByStatus('paid'),
+            'Đã hủy' => $this->bookingModel->countByStatus('cancelled'),
+            'Hoàn thành' => $this->bookingModel->countByStatus('completed')
+        ];
+        
+        // Lấy dữ liệu doanh thu theo tháng cho biểu đồ
+        $currentYear = date('Y');
+        $monthlyRevenueData = [];
+        $vietnameseMonths = [
+            '1' => 'Tháng 1', '2' => 'Tháng 2', '3' => 'Tháng 3', 
+            '4' => 'Tháng 4', '5' => 'Tháng 5', '6' => 'Tháng 6',
+            '7' => 'Tháng 7', '8' => 'Tháng 8', '9' => 'Tháng 9',
+            '10' => 'Tháng 10', '11' => 'Tháng 11', '12' => 'Tháng 12'
+        ];
+        
+        for ($month = 1; $month <= 12; $month++) {
+            $monthlyRevenue = $this->paymentModel->getMonthlyRevenue($currentYear, $month);
+            $monthlyRevenueData[$vietnameseMonths[$month]] = $monthlyRevenue;
+        }
+        
+        // Lấy đơn đặt tour gần đây
+        $recentBookings = $this->bookingModel->getRecent(5);
+        
+        // Lấy tour phổ biến (dựa trên số lượng đặt tour)
+        $popularTours = $this->tourModel->getPopular(5);
+        
+        // Lấy địa điểm phổ biến (dựa trên số lượng tour)
+        $popularLocations = $this->locationModel->getPopular(6);
+        
         $this->view('admin/dashboard', [
             'user' => $currentUser,
             'userCount' => $userCount,
             'roles' => $roles,
-            'imageCount' => $imageCount
+            'imageCount' => $imageCount,
+            'tourCount' => $tourCount,
+            'bookingCount' => $bookingCount,
+            'totalRevenue' => $totalRevenue,
+            'bookingStatusData' => $bookingStatusData,
+            'monthlyRevenueData' => $monthlyRevenueData,
+            'recentBookings' => $recentBookings,
+            'popularTours' => $popularTours,
+            'popularLocations' => $popularLocations
         ]);
     }
 

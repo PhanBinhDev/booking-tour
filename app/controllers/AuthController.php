@@ -205,7 +205,7 @@ class AuthController extends BaseController {
         
         if (empty($token)) {
             $this->setFlashMessage('error', 'Token xác thực không hợp lệ');
-            $this->redirect(UrlHelper::route('/login'));
+            $this->redirect(UrlHelper::route('auth/login'));
         }
         
         $result = $this->userModel->verifyEmail($token);
@@ -249,7 +249,7 @@ class AuthController extends BaseController {
                 
                 // Luôn hiển thị thông báo thành công để tránh tiết lộ thông tin tài khoản
                 $this->setFlashMessage('success', 'Nếu email tồn tại trong hệ thống, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu.');
-                $this->redirect(UrlHelper::route('/login'));
+                $this->redirect(UrlHelper::route('auth/login'));
             }
             
             $this->view('auth/forgot-password', [
@@ -273,7 +273,7 @@ class AuthController extends BaseController {
         
         if (empty($token)) {
             $this->setFlashMessage('error', 'Token đặt lại mật khẩu không hợp lệ');
-            $this->redirect(UrlHelper::route('/login'));
+            $this->redirect(UrlHelper::route('auth/login'));
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -295,7 +295,7 @@ class AuthController extends BaseController {
                 
                 if($result) {
                     $this->setFlashMessage('success', 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.');
-                    $this->redirect(UrlHelper::route('/login'));
+                    $this->redirect(UrlHelper::route('auth/login'));
                 } else {
                     $errors['reset'] = 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn';
                 }

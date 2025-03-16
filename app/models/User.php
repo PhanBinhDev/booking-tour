@@ -192,6 +192,7 @@ class User extends BaseModel {
      */
     public function hasPermission($userId, $permission) {
         // Lấy role_id của người dùng
+
         $sql = "SELECT u.role_id FROM users u WHERE u.id = :userId";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':userId', $userId, \PDO::PARAM_INT);

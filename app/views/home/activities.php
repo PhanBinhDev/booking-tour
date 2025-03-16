@@ -123,7 +123,7 @@ use App\Helpers\UrlHelper;
             Trong bối cảnh đại dịch COVID-19, Ditravel đã nhanh chóng chuyển hướng và mở rộng các dịch vụ du lịch trong
             nước, góp phần thúc đẩy ngành du lịch nội địa phát triển.
           </p>
-          <img src="<?= UrlHelper::image('company/timeline-2020.jpg') ?>" alt="Mở rộng dịch vụ du lịch trong nước"
+          <img src="<?= UrlHelper::image('company/timeline-2020.png') ?>" alt="Mở rộng dịch vụ du lịch trong nước"
             class="rounded-lg w-full md:w-2/3 h-64 object-cover">
         </div>
 
@@ -137,7 +137,7 @@ use App\Helpers\UrlHelper;
             Ditravel được thành lập với sứ mệnh mang đến những trải nghiệm du lịch chất lượng và đáng nhớ cho khách
             hàng, đồng thời góp phần phát triển ngành du lịch Việt Nam.
           </p>
-          <img src="<?= UrlHelper::image('company/timeline-2018.jpg') ?>" alt="Thành lập công ty Ditravel"
+          <img src="<?= UrlHelper::image('company/timeline-2018.png') ?>" alt="Thành lập công ty Ditravel"
             class="rounded-lg w-full md:w-2/3 h-64 object-cover">
         </div>
       </div>

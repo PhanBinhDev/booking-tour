@@ -13,7 +13,7 @@ class UserController extends BaseController {
     
     public function dashboard() {
         if(!$this->isAuthenticated()) {
-            $this->redirect('/login');
+            $this->redirect(UrlHelper::route('auth/login'));
         }
         
         $currentUser = $this->getCurrentUser();

@@ -1,29 +1,268 @@
 <?php
 namespace App\Models;
 
+/**
+ * Image Model
+ */
 class Image extends BaseModel {
     protected $table = 'images';
+    protected $primaryKey = 'id';
     
-    public function __construct() {
-        parent::__construct();
+    /**
+     * Get all images with user information
+     * 
+     * @return array List of images with user details
+     */
+    public function getAllWithUsers() {
+        $sql = "SELECT i.*, u.full_name as user_name, u.email as user_email 
+                FROM {$this->table} i 
+                LEFT JOIN users u ON i.user_id = u.id 
+                ORDER BY i.created_at DESC";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Get images by user ID
+     * 
+     * @param int $userId User ID
+     * @return array List of user's images
+     */
     public function getUserImages($userId) {
-        $query = "SELECT * FROM " . $this->table . " WHERE user_id = :user_id ORDER BY created_at DESC";
-        $stmt = $this->db->prepare($query);
+        $sql = "SELECT i.* 
+                FROM {$this->table} i 
+                WHERE i.user_id = :user_id 
+                ORDER BY i.created_at DESC";
+                
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':user_id', $userId);
         $stmt->execute();
+        
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
     
-    public function getAllWithUsers() {
-        $query = "SELECT i.*, u.username as username
-                 FROM " . $this->table . " i
-                 JOIN users u ON i.user_id = u.id
-                 ORDER BY i.created_at DESC";
+    /**
+     * Create new image record
+     * 
+     * @param array $data Image data
+     * @return int|bool New image ID or false on failure
+     */
+    public function create($data) {
+        $sql = "INSERT INTO {$this->table} (
+                    title, 
+                    description,
+                    file_name,
+                    file_path,
+                    file_size,
+                    file_type,
+                    width,
+                    height,
+                    alt_text,
+                    cloudinary_id,
+                    cloudinary_url,
+                    user_id,
+                    created_at,
+                    updated_at
+                ) VALUES (
+                    :title,
+                    :description,
+                    :file_name,
+                    :file_path,
+                    :file_size,
+                    :file_type,
+                    :width,
+                    :height,
+                    :alt_text,
+                    :cloudinary_id,
+                    :cloudinary_url,
+                    :user_id,
+                    NOW(),
+                    NOW()
+                )";
+                
+        $stmt = $this->db->prepare($sql);
         
-        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':title', $data['title'] ?? null);
+        $stmt->bindParam(':description', $data['description'] ?? null);
+        $stmt->bindParam(':file_name', $data['file_name']);
+        $stmt->bindParam(':file_path', $data['file_path']);
+        $stmt->bindParam(':file_size', $data['file_size'] ?? null);
+        $stmt->bindParam(':file_type', $data['file_type'] ?? null);
+        $stmt->bindParam(':width', $data['width'] ?? null);
+        $stmt->bindParam(':height', $data['height'] ?? null);
+        $stmt->bindParam(':alt_text', $data['alt_text'] ?? null);
+        $stmt->bindParam(':cloudinary_id', $data['cloudinary_id'] ?? null);
+        $stmt->bindParam(':cloudinary_url', $data['cloudinary_url'] ?? null);
+        $stmt->bindParam(':user_id', $data['user_id']);
+        
+        $stmt->execute();
+        return $this->db->lastInsertId();
+    }
+    
+    /**
+     * Update image record
+     * 
+     * @param int $id Image ID
+     * @param array $data Updated image data
+     * @return bool Success status
+     */
+    public function update($id, $data) {
+        $sql = "UPDATE {$this->table} SET 
+                title = :title,
+                description = :description,
+                alt_text = :alt_text,
+                updated_at = NOW()
+                WHERE id = :id";
+                
+        $stmt = $this->db->prepare($sql);
+        
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':title', $data['title'] ?? null);
+        $stmt->bindParam(':description', $data['description'] ?? null);
+        $stmt->bindParam(':alt_text', $data['alt_text'] ?? null);
+        
+        return $stmt->execute();
+    }
+    
+    /**
+     * Delete image record
+     * 
+     * @param int $id Image ID
+     * @return bool Success status
+     */
+    public function delete($id) {
+        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        
+        return $stmt->execute();
+    }
+    
+    /**
+     * Get image by ID
+     * 
+     * @param int $id Image ID
+     * @return array|false Image data or false if not found
+     */
+    public function getById($id) {
+        $sql = "SELECT i.*, u.full_name as user_name 
+                FROM {$this->table} i 
+                LEFT JOIN users u ON i.user_id = u.id 
+                WHERE i.id = :id";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Get images by IDs
+     * 
+     * @param array $ids Array of image IDs
+     * @return array List of images
+     */
+    public function getByIds($ids) {
+        if (empty($ids)) {
+            return [];
+        }
+        
+        // Create placeholders for the IN clause
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "SELECT * FROM {$this->table} WHERE id IN ($placeholders)";
+        
+        $stmt = $this->db->prepare($sql);
+        
+        // Bind each ID as a separate parameter
+        foreach ($ids as $index => $id) {
+            $stmt->bindValue($index + 1, $id);
+        }
+        
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Get featured images 
+     * 
+     * @param int $limit Maximum number of images to return
+     * @return array List of featured images
+     */
+    public function getFeatured($limit = 10) {
+        $sql = "SELECT * FROM {$this->table} 
+                ORDER BY created_at DESC 
+                LIMIT :limit";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Search images
+     * 
+     * @param string $keyword Search keyword
+     * @param array $filters Additional filters
+     * @return array Search results
+     */
+    public function search($keyword, $filters = []) {
+        $sql = "SELECT i.*, u.full_name as user_name 
+                FROM {$this->table} i 
+                LEFT JOIN users u ON i.user_id = u.id 
+                WHERE (i.title LIKE :keyword OR i.description LIKE :keyword OR i.alt_text LIKE :keyword)";
+        
+        $keywordParam = "%$keyword%";
+        
+        // Add filters
+        if (!empty($filters['user_id'])) {
+            $sql .= " AND i.user_id = :user_id";
+        }
+        
+        $sql .= " ORDER BY i.created_at DESC";
+        
+        if (!empty($filters['limit'])) {
+            $sql .= " LIMIT :limit";
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        
+        // Bind parameters
+        $stmt->bindParam(':keyword', $keywordParam);
+        
+        if (!empty($filters['user_id'])) {
+            $stmt->bindParam(':user_id', $filters['user_id']);
+        }
+        
+        if (!empty($filters['limit'])) {
+            $stmt->bindParam(':limit', $filters['limit'], \PDO::PARAM_INT);
+        }
+        
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Get image statistics
+     * 
+     * @return array Image statistics
+     */
+    public function getStats() {
+        $sql = "SELECT 
+                COUNT(*) as total_images,
+                COUNT(DISTINCT user_id) as total_users,
+                SUM(file_size) as total_size
+                FROM {$this->table}";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }
