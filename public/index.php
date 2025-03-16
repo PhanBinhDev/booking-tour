@@ -53,6 +53,7 @@ $router->get('/home/tours/{tourId}', 'HomeController@tourDetails');
 $router->get('/home/news', 'HomeController@news');
 $router->get('/home/tours', 'HomeController@tours');
 $router->get('/home/home', 'HomeController@home');
+$router->get('/home/tour-details/{id}', 'HomeController@tourDetail');
 
 
 // USERS
@@ -107,13 +108,28 @@ $router->get('/admin/payment/refunds', 'Admin\RefundController@index');
 $router->get('/admin/payment/refunds/{id}', 'Admin\RefundController@show');
 
 
+// ADMIN/TOURS/
+$router->get('/admin/tours', 'Admin\ToursController@index');
+$router->get('/admin/tours/createTour', 'Admin\ToursController@createTour');
+// $router->post('/admin/tours/createTour', 'Admin\ToursController@createTour');
+$router->get('/admin/tours/editTour/{id}', 'Admin\ToursController@editTour');
+$router->post('/admin/payment/methods/edit/{id}', 'Admin\PaymentController@editMethod');
+
+//ADMIN/CATEGORIES/
+$router->get('/admin/tours/createCategory', 'Admin\ToursController@createCategory');
+$router->post('/admin/tours/createCategory', 'Admin\ToursController@createCategory');
+
+//ADMIN/BOOKINGS
+$router->get('/admin/bookings', 'Admin\ToursController@bookings');
+$router->delete('/admin/bookings/deleteBooking/{id}', 'Admin\ToursController@deleteBooking');
+
+
+$router->get('/admin/tours/categories', 'Admin\ToursController@categories');
+
+
 
 // ADMIN/SYSTEM
 $router->get('/admin/system/activity-logs', 'Admin\DashboardController@activityLogs');
-
-
-
-
 
 
 // ERROR

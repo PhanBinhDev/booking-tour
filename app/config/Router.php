@@ -29,6 +29,15 @@ class Router extends BaseController
     }
 
     /**
+     * Thêm route DELETE
+     */
+    public function delete($path, $callback)
+    {
+        $this->addRoute('DELETE', $path, $callback);
+        return $this;
+    }
+
+    /**
      * Thêm route với method bất kỳ
      */
     public function addRoute($method, $path, $callback)

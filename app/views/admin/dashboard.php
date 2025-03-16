@@ -82,34 +82,34 @@ use App\Helpers\UrlHelper;
             </thead>
             <tbody class="bg-white divide-y">
               <?php foreach ($roles as $role): ?>
-              <tr class="text-gray-700">
-                <td class="px-4 py-3">
-                  <div class="flex items-center text-sm">
-                    <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                      <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                      <div
-                        class="flex items-center justify-center w-8 h-8 rounded-full bg-<?= getRoleColor($role['name']) ?>-100 text-<?= getRoleColor($role['name']) ?>-500">
-                        <i class="fas fa-<?= getRoleIcon($role['name']) ?>"></i>
+                <tr class="text-gray-700">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center text-sm">
+                      <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                        <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                        <div
+                          class="flex items-center justify-center w-8 h-8 rounded-full bg-<?= getRoleColor($role['name']) ?>-100 text-<?= getRoleColor($role['name']) ?>-500">
+                          <i class="fas fa-<?= getRoleIcon($role['name']) ?>"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <p class="font-semibold"><?= $role['name'] ?></p>
+                        <p class="text-xs text-gray-600"><?= $role['description'] ?? 'Không có mô tả' ?></p>
                       </div>
                     </div>
-                    <div>
-                      <p class="font-semibold"><?= $role['name'] ?></p>
-                      <p class="text-xs text-gray-600"><?= $role['description'] ?? 'Không có mô tả' ?></p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-4 py-3 text-sm">
-                  <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full">
-                    <?= $role['permission_count'] ?> quyền
-                  </span>
-                </td>
-                <td class="px-4 py-3 text-sm">
-                  <a href="<?= PUBLIC_URL ?>/admin/roles/<?= $role['id'] ?>/permissions"
-                    class="text-indigo-600 hover:text-indigo-900">
-                    <i class="fas fa-key mr-1"></i> Phân quyền
-                  </a>
-                </td>
-              </tr>
+                  </td>
+                  <td class="px-4 py-3 text-sm">
+                    <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full">
+                      <?= $role['permission_count'] ?> quyền
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 text-sm">
+                    <a href="<?= PUBLIC_URL ?>/admin/roles/<?= $role['id'] ?>/permissions"
+                      class="text-indigo-600 hover:text-indigo-900">
+                      <i class="fas fa-key mr-1"></i> Phân quyền
+                    </a>
+                  </td>
+                </tr>
               <?php endforeach; ?>
             </tbody>
           </table>
@@ -169,77 +169,79 @@ use App\Helpers\UrlHelper;
 
 <!-- Hàm helper cho màu sắc và biểu tượng vai trò -->
 <?php
-function getRoleColor($roleName) {
-    $colors = [
-        'admin' => 'red',
-        'moderator' => 'yellow',
-        'editor' => 'blue',
-        'user' => 'green',
-    ];
-    
-    return $colors[strtolower($roleName)] ?? 'gray';
+function getRoleColor($roleName)
+{
+  $colors = [
+    'admin' => 'red',
+    'moderator' => 'yellow',
+    'editor' => 'blue',
+    'user' => 'green',
+  ];
+
+  return $colors[strtolower($roleName)] ?? 'gray';
 }
 
-function getRoleIcon($roleName) {
-    $icons = [
-        'admin' => 'crown',
-        'moderator' => 'shield-alt',
-        'editor' => 'edit',
-        'user' => 'user',
-    ];
-    
-    return $icons[strtolower($roleName)] ?? 'user';
+function getRoleIcon($roleName)
+{
+  $icons = [
+    'admin' => 'crown',
+    'moderator' => 'shield-alt',
+    'editor' => 'edit',
+    'user' => 'user',
+  ];
+
+  return $icons[strtolower($roleName)] ?? 'user';
 }
 ?>
 
 <!-- Script cho biểu đồ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Dữ liệu cho biểu đồ phân phối vai trò
-  const roleLabels = <?= json_encode(array_column($roles, 'name')) ?>;
-  const permissionCounts = <?= json_encode(array_column($roles, 'permission_count')) ?>;
-  const roleColors = roleLabels.map(role => {
-    const colors = {
-      'admin': 'rgba(239, 68, 68, 0.7)',
-      'moderator': 'rgba(245, 158, 11, 0.7)',
-      'editor': 'rgba(59, 130, 246, 0.7)',
-      'user': 'rgba(16, 185, 129, 0.7)'
-    };
-    return colors[role.toLowerCase()] || 'rgba(107, 114, 128, 0.7)';
-  });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Dữ liệu cho biểu đồ phân phối vai trò
+    const roleLabels = <?= json_encode(array_column($roles, 'name')) ?>;
+    const permissionCounts = <?= json_encode(array_column($roles, 'permission_count')) ?>;
+    const roleColors = roleLabels.map(role => {
+      const colors = {
+        'admin': 'rgba(239, 68, 68, 0.7)',
+        'moderator': 'rgba(245, 158, 11, 0.7)',
+        'editor': 'rgba(59, 130, 246, 0.7)',
+        'user': 'rgba(16, 185, 129, 0.7)'
+      };
+      return colors[role.toLowerCase()] || 'rgba(107, 114, 128, 0.7)';
+    });
 
-  // Tạo biểu đồ phân phối vai trò
-  const roleCtx = document.getElementById('roleDistributionChart').getContext('2d');
-  new Chart(roleCtx, {
-    type: 'bar',
-    data: {
-      labels: roleLabels,
-      datasets: [{
-        label: 'Số quyền',
-        data: permissionCounts,
-        backgroundColor: roleColors,
-        borderColor: roleColors.map(color => color.replace('0.7', '1')),
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            precision: 0
+    // Tạo biểu đồ phân phối vai trò
+    const roleCtx = document.getElementById('roleDistributionChart').getContext('2d');
+    new Chart(roleCtx, {
+      type: 'bar',
+      data: {
+        labels: roleLabels,
+        datasets: [{
+          label: 'Số quyền',
+          data: permissionCounts,
+          backgroundColor: roleColors,
+          borderColor: roleColors.map(color => color.replace('0.7', '1')),
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
           }
         }
-      },
-      plugins: {
-        legend: {
-          display: false
-        }
       }
-    }
+    });
   });
-});
 </script>

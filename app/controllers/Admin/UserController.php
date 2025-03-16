@@ -1,15 +1,18 @@
 <?php
+
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\User;
 use App\Models\Role;
 
-class UserController extends BaseController {
+class UserController extends BaseController
+{
     private $userModel;
     private $roleModel;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         // Áp dụng middleware để kiểm tra quyền admin
         $route = $this->getRouteByRole();
         $roleBase = 'admin';
@@ -17,27 +20,28 @@ class UserController extends BaseController {
         if ($role !== $roleBase) {
             $this->redirect($route);
         }
-        
+
         $this->userModel = new User();
         $this->roleModel = new Role();
     }
-    
+
     // -------------
     // Users
     // -------------
-    
-    public function index() {
+
+    public function index()
+    {
         $currentUser = $this->getCurrentUser();
-        
+
         $users = [];
         $query = $this->userModel->getAll();
         $roles = $this->roleModel->getAll();
-        
-        foreach($query as $user) {
+
+        foreach ($query as $user) {
             $userWithRole = $this->userModel->getUserWithRole($user['id']);
             $users[] = $userWithRole;
         }
-        
+
         $this->view('admin/users/index', [
             'user' => $currentUser,
             'users' => $users,
@@ -45,10 +49,11 @@ class UserController extends BaseController {
         ]);
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $currentUser = $this->userModel->findById($id);
-        
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'EDIT';
             // EDIT TRRONG NÀY
         } else {
@@ -56,25 +61,25 @@ class UserController extends BaseController {
                 'user' => $currentUser,
             ]);
         }
-
     }
-    
-    public function deleteUser($id) {
+
+    public function deleteUser($id)
+    {
         $currentUser = $this->getCurrentUser();
-        
+
         // Không cho phép xóa chính mình
-        if($id == $currentUser['id']) {
+        if ($id == $currentUser['id']) {
             $this->redirect('/admin/users?error=cannot_delete_self');
         }
-        
+
         $user = $this->userModel->getById($id);
-        
-        if(!$user) {
+
+        if (!$user) {
             $this->redirect('/admin/users');
         }
-        
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if($this->userModel->delete($id)) {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($this->userModel->delete($id)) {
                 $this->redirect('/admin/users?success=2');
             } else {
                 $this->redirect('/admin/users?error=delete_failed');
@@ -86,5 +91,4 @@ class UserController extends BaseController {
             ]);
         }
     }
-
 }
