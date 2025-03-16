@@ -7,7 +7,7 @@ namespace App\Models;
 class Image extends BaseModel {
     protected $table = 'images';
     protected $primaryKey = 'id';
-    
+      
     /**
      * Get all images with user information
      * 
@@ -85,18 +85,18 @@ class Image extends BaseModel {
                 
         $stmt = $this->db->prepare($sql);
         
-        $stmt->bindParam(':title', $data['title'] ?? null);
-        $stmt->bindParam(':description', $data['description'] ?? null);
-        $stmt->bindParam(':file_name', $data['file_name']);
-        $stmt->bindParam(':file_path', $data['file_path']);
-        $stmt->bindParam(':file_size', $data['file_size'] ?? null);
-        $stmt->bindParam(':file_type', $data['file_type'] ?? null);
-        $stmt->bindParam(':width', $data['width'] ?? null);
-        $stmt->bindParam(':height', $data['height'] ?? null);
-        $stmt->bindParam(':alt_text', $data['alt_text'] ?? null);
-        $stmt->bindParam(':cloudinary_id', $data['cloudinary_id'] ?? null);
-        $stmt->bindParam(':cloudinary_url', $data['cloudinary_url'] ?? null);
-        $stmt->bindParam(':user_id', $data['user_id']);
+        $stmt->bindValue(':title', $data['title'] ?? null);
+        $stmt->bindValue(':description', $data['description'] ?? null);
+        $stmt->bindValue(':file_name', $data['file_name']);
+        $stmt->bindValue(':file_path', $data['file_path']);
+        $stmt->bindValue(':file_size', $data['file_size'] ?? null);
+        $stmt->bindValue(':file_type', $data['file_type'] ?? null);
+        $stmt->bindValue(':width', $data['width'] ?? null);
+        $stmt->bindValue(':height', $data['height'] ?? null);
+        $stmt->bindValue(':alt_text', $data['alt_text'] ?? null);
+        $stmt->bindValue(':cloudinary_id', $data['cloudinary_id'] ?? null);
+        $stmt->bindValue(':cloudinary_url', $data['cloudinary_url'] ?? null);
+        $stmt->bindValue(':user_id', $data['user_id']);
         
         $stmt->execute();
         return $this->db->lastInsertId();
@@ -264,5 +264,34 @@ class Image extends BaseModel {
         $stmt->execute();
         
         return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+
+    /**
+     * Xóa bản ghi dựa trên một điều kiện cụ thể
+     * 
+     * @param string $column Tên cột
+     * @param mixed $value Giá trị cần so sánh
+     * @param string $operator Toán tử so sánh (=, >, <, ...)
+     * @return bool Kết quả xóa
+     */
+    public function deleteWhere($column, $value, $operator = '=') {
+        $sql = "DELETE FROM {$this->table} WHERE $column $operator :value";
+        $stmt = $this->db->prepare($sql);
+        
+        $paramType = null;
+        if (is_int($value)) {
+            $paramType = \PDO::PARAM_INT;
+        } elseif (is_bool($value)) {
+            $paramType = \PDO::PARAM_BOOL;
+        } elseif (is_null($value)) {
+            $paramType = \PDO::PARAM_NULL;
+        } else {
+            $paramType = \PDO::PARAM_STR;
+        }
+        
+        $stmt->bindValue(':value', $value, $paramType);
+        
+        return $stmt->execute();
     }
 }
