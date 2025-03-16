@@ -86,6 +86,7 @@ $router->get('/admin/roles/{id}/edit', 'Admin\RoleController@edit');
 
 // ADMIN/GALLERY
 $router->get('/admin/images', 'Admin\ImageController@index');
+$router->post('/admin/images', 'Admin\ImageController@upload');
 
 // ADMIN/PAYMENT/METHODS
 $router->get('/admin/payment/methods', 'Admin\PaymentController@methods');
