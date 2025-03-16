@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Models;
 
-class Booking extends BaseModel {
+class Booking extends BaseModel
+{
     protected $table = 'bookings';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -88,16 +90,17 @@ class Booking extends BaseModel {
      * @param string $bookingNumber Booking number
      * @return array|null Booking data or null if not found
      */
-    public function getByBookingNumber($bookingNumber) {
+    public function getByBookingNumber($bookingNumber)
+    {
         $sql = "SELECT b.*, t.name as tour_name, t.destination, t.duration
                 FROM {$this->table} b
                 LEFT JOIN tours t ON b.tour_id = t.id
                 WHERE b.booking_number = :booking_number";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':booking_number', $bookingNumber);
         $stmt->execute();
-        
+
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
@@ -107,17 +110,18 @@ class Booking extends BaseModel {
      * @param int $userId User ID
      * @return array Array of bookings
      */
-    public function getByUserId($userId) {
+    public function getByUserId($userId)
+    {
         $sql = "SELECT b.*, t.name as tour_name, t.destination, t.duration
                 FROM {$this->table} b
                 LEFT JOIN tours t ON b.tour_id = t.id
                 WHERE b.user_id = :user_id
                 ORDER BY b.created_at DESC";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':user_id', $userId, \PDO::PARAM_INT);
         $stmt->execute();
-        
+
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -127,17 +131,18 @@ class Booking extends BaseModel {
      * @param int $tourId Tour ID
      * @return array Array of bookings
      */
-    public function getByTourId($tourId) {
+    public function getByTourId($tourId)
+    {
         $sql = "SELECT b.*, t.name as tour_name, t.destination, t.duration
                 FROM {$this->table} b
                 LEFT JOIN tours t ON b.tour_id = t.id
                 WHERE b.tour_id = :tour_id
                 ORDER BY b.departure_date ASC";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':tour_id', $tourId, \PDO::PARAM_INT);
         $stmt->execute();
-        
+
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -149,20 +154,21 @@ class Booking extends BaseModel {
      * @param array $filters Optional filters
      * @return array Paginated bookings with pagination metadata
      */
-    public function getPaginated($page = 1, $limit = 10, $filters = []) {
+    public function getPaginated($page = 1, $limit = 10, $filters = [])
+    {
         $offset = ($page - 1) * $limit;
-        
+
         // Build the base query
         $sql = "SELECT b.*, t.name as tour_name, t.destination, t.duration
                 FROM {$this->table} b
                 LEFT JOIN tours t ON b.tour_id = t.id
                 WHERE 1=1";
-        
+
         $countSql = "SELECT COUNT(*) as total FROM {$this->table} b WHERE 1=1";
-        
+
         $params = [];
         $countParams = [];
-        
+
         // Apply filters
         if (!empty($filters['search'])) {
             $searchCondition = " AND (b.booking_number LIKE :search OR b.customer_name LIKE :search OR b.customer_email LIKE :search OR b.customer_phone LIKE :search)";
@@ -171,71 +177,71 @@ class Booking extends BaseModel {
             $params[':search'] = '%' . $filters['search'] . '%';
             $countParams[':search'] = '%' . $filters['search'] . '%';
         }
-        
+
         if (!empty($filters['status'])) {
             $sql .= " AND b.status = :status";
             $countSql .= " AND b.status = :status";
             $params[':status'] = $filters['status'];
             $countParams[':status'] = $filters['status'];
         }
-        
+
         if (!empty($filters['payment_status'])) {
             $sql .= " AND b.payment_status = :payment_status";
             $countSql .= " AND b.payment_status = :payment_status";
             $params[':payment_status'] = $filters['payment_status'];
             $countParams[':payment_status'] = $filters['payment_status'];
         }
-        
+
         if (!empty($filters['tour_id'])) {
             $sql .= " AND b.tour_id = :tour_id";
             $countSql .= " AND b.tour_id = :tour_id";
             $params[':tour_id'] = $filters['tour_id'];
             $countParams[':tour_id'] = $filters['tour_id'];
         }
-        
+
         if (!empty($filters['user_id'])) {
             $sql .= " AND b.user_id = :user_id";
             $countSql .= " AND b.user_id = :user_id";
             $params[':user_id'] = $filters['user_id'];
             $countParams[':user_id'] = $filters['user_id'];
         }
-        
+
         if (!empty($filters['date_from'])) {
             $sql .= " AND b.departure_date >= :date_from";
             $countSql .= " AND b.departure_date >= :date_from";
             $params[':date_from'] = $filters['date_from'];
             $countParams[':date_from'] = $filters['date_from'];
         }
-        
+
         if (!empty($filters['date_to'])) {
             $sql .= " AND b.departure_date <= :date_to";
             $countSql .= " AND b.departure_date <= :date_to";
             $params[':date_to'] = $filters['date_to'];
             $countParams[':date_to'] = $filters['date_to'];
         }
-        
+
         if (!empty($filters['created_from'])) {
             $sql .= " AND b.created_at >= :created_from";
             $countSql .= " AND b.created_at >= :created_from";
             $params[':created_from'] = $filters['created_from'] . ' 00:00:00';
             $countParams[':created_from'] = $filters['created_from'] . ' 00:00:00';
         }
-        
+
         if (!empty($filters['created_to'])) {
             $sql .= " AND b.created_at <= :created_to";
             $countSql .= " AND b.created_at <= :created_to";
             $params[':created_to'] = $filters['created_to'] . ' 23:59:59';
             $countParams[':created_to'] = $filters['created_to'] . ' 23:59:59';
         }
-        
+
         // Add sorting
         $sql .= " ORDER BY b.created_at DESC";
-        
+
         // Add pagination
         $sql .= " LIMIT :limit OFFSET :offset";
         $params[':limit'] = $limit;
         $params[':offset'] = $offset;
-        
+
         // Get total count
         $countStmt = $this->db->prepare($countSql);
         foreach ($countParams as $key => $value) {
@@ -243,7 +249,7 @@ class Booking extends BaseModel {
         }
         $countStmt->execute();
         $total = $countStmt->fetchColumn();
-        
+
         // Get paginated data
         $stmt = $this->db->prepare($sql);
         foreach ($params as $key => $value) {
@@ -252,12 +258,12 @@ class Booking extends BaseModel {
         }
         $stmt->execute();
         $items = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        
+
         // Calculate pagination metadata
         $totalPages = ceil($total / $limit);
         $hasNextPage = $page < $totalPages;
         $hasPrevPage = $page > 1;
-        
+
         return [
             'items' => $items,
             'pagination' => [
@@ -278,7 +284,8 @@ class Booking extends BaseModel {
      * @param string $status New status
      * @return bool True on success, false on failure
      */
-    public function updateStatus($id, $status) {
+    public function updateStatus($id, $status)
+    {
         return $this->update($id, [
             'status' => $status,
             'updated_at' => date('Y-m-d H:i:s')
@@ -292,7 +299,8 @@ class Booking extends BaseModel {
      * @param string $paymentStatus New payment status
      * @return bool True on success, false on failure
      */
-    public function updatePaymentStatus($id, $paymentStatus) {
+    public function updatePaymentStatus($id, $paymentStatus)
+    {
         return $this->update($id, [
             'payment_status' => $paymentStatus,
             'updated_at' => date('Y-m-d H:i:s')
@@ -304,11 +312,12 @@ class Booking extends BaseModel {
      * 
      * @return string Unique booking number
      */
-    public function generateBookingNumber() {
+    public function generateBookingNumber()
+    {
         $prefix = 'BK';
         $date = date('Ymd');
         $random = strtoupper(substr(uniqid(), -4));
-        
+
         return $prefix . $date . $random;
     }
 
@@ -320,16 +329,17 @@ class Booking extends BaseModel {
      * @param string $endDate End date (YYYY-MM-DD)
      * @return array Booking statistics
      */
-    public function getStatistics($period = 'monthly', $startDate = null, $endDate = null) {
+    public function getStatistics($period = 'monthly', $startDate = null, $endDate = null)
+    {
         // Set default dates if not provided
         if (!$startDate) {
             $startDate = date('Y-m-d', strtotime('-1 year'));
         }
-        
+
         if (!$endDate) {
             $endDate = date('Y-m-d');
         }
-        
+
         // Format for grouping based on period
         $groupFormat = '';
         switch ($period) {
@@ -348,7 +358,7 @@ class Booking extends BaseModel {
             default:
                 $groupFormat = '%Y-%m';
         }
-        
+
         // Get booking counts by period
         $sql = "SELECT 
                     DATE_FORMAT(created_at, '{$groupFormat}') as period,
@@ -361,13 +371,13 @@ class Booking extends BaseModel {
                 WHERE created_at BETWEEN :start_date AND :end_date
                 GROUP BY period
                 ORDER BY period ASC";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
         $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
         $stmt->execute();
         $periodStats = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        
+
         // Get overall statistics
         $overallSql = "SELECT 
                         COUNT(*) as total_bookings,
@@ -379,13 +389,13 @@ class Booking extends BaseModel {
                         AVG(number_of_people) as average_group_size
                     FROM {$this->table}
                     WHERE created_at BETWEEN :start_date AND :end_date";
-        
+
         $overallStmt = $this->db->prepare($overallSql);
         $overallStmt->bindValue(':start_date', $startDate . ' 00:00:00');
         $overallStmt->bindValue(':end_date', $endDate . ' 23:59:59');
         $overallStmt->execute();
         $overallStats = $overallStmt->fetch(\PDO::FETCH_ASSOC);
-        
+
         // Get top tours
         $topToursSql = "SELECT 
                             b.tour_id,
@@ -398,13 +408,13 @@ class Booking extends BaseModel {
                         GROUP BY b.tour_id, t.name
                         ORDER BY booking_count DESC
                         LIMIT 5";
-        
+
         $topToursStmt = $this->db->prepare($topToursSql);
         $topToursStmt->bindValue(':start_date', $startDate . ' 00:00:00');
         $topToursStmt->bindValue(':end_date', $endDate . ' 23:59:59');
         $topToursStmt->execute();
         $topTours = $topToursStmt->fetchAll(\PDO::FETCH_ASSOC);
-        
+
         return [
             'period_stats' => $periodStats,
             'overall_stats' => $overallStats,
@@ -498,4 +508,47 @@ class Booking extends BaseModel {
     }
 
 
+
+    public function getAllBookings()
+    {
+        $sql = "SELECT bookings.*,
+                bookings.booking_number, bookings.status AS booking_status, bookings.created_at AS booking_date,
+                bookings.adults, bookings.children,
+                tours.title AS tour_title, tours.price AS tour_price,tours.duration,
+                booking_customers.full_name AS customer_name,booking_customers.id AS customer_id,
+                payment_logs.status AS payment_status
+            FROM bookings
+            INNER JOIN tours ON bookings.tour_id = tours.id
+            INNER JOIN booking_customers ON bookings.id = booking_customers.booking_id
+            LEFT JOIN payment_logs ON bookings.id = payment_logs.booking_id
+            LEFT JOIN payments ON bookings.id = payments.booking_id
+            LEFT JOIN transactions ON payments.id = transactions.payment_id
+            ORDER BY bookings.id DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+    public function deleteById($id)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $this->db->prepare("DELETE FROM payments WHERE booking_id = :id")->execute([':id' => $id]);
+            $this->db->prepare("DELETE FROM transactions WHERE booking_id = :id")->execute([':id' => $id]);
+            $this->db->prepare("DELETE FROM booking_details WHERE booking_id = :id")->execute([':id' => $id]);
+
+            $stmt = $this->db->prepare("DELETE FROM bookings WHERE id = :id");
+            $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
 }

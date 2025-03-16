@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use Cloudinary\Api\Upload\UploadApi;
