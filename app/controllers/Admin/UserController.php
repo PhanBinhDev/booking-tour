@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
@@ -12,6 +13,7 @@ class UserController extends BaseController
     private $userModel;
     private $roleModel;
 
+
     public function __construct()
     {
         // Áp dụng middleware để kiểm tra quyền admin
@@ -22,9 +24,11 @@ class UserController extends BaseController
             $this->redirect($route);
         }
 
+
         $this->userModel = new User();
         $this->roleModel = new Role();
     }
+
 
     // -------------
     // Users
@@ -34,14 +38,19 @@ class UserController extends BaseController
     {
         $currentUser = $this->getCurrentUser();
 
+
         $users = [];
         $query = $this->userModel->getAll();
         $roles = $this->roleModel->getAll();
 
         foreach ($query as $user) {
-            $userWithRole = $this->userModel->getUserWithRole($user['id']);
-            $users[] = $userWithRole;
+
+            foreach ($query as $user) {
+                $userWithRole = $this->userModel->getUserWithRole($user['id']);
+                $users[] = $userWithRole;
+            }
         }
+
 
         $this->view('admin/users/index', [
             'user' => $currentUser,
@@ -81,12 +90,14 @@ class UserController extends BaseController
         // Không cho phép xóa chính mình
         if($id == $currentUser['id']) {
             $this->redirect(UrlHelper::route('/admin/users?error=cannot_delete_self'));
+            return;
         }
 
         $user = $this->userModel->getById($id);
         
         if(!$user) {
             $this->redirect(UrlHelper::route('/admin/users?error=user_not_found'));
+            return;
         }
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {

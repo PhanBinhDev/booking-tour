@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 class Booking extends BaseModel
@@ -97,9 +98,11 @@ class Booking extends BaseModel
                 LEFT JOIN tours t ON b.tour_id = t.id
                 WHERE b.booking_number = :booking_number";
 
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':booking_number', $bookingNumber);
         $stmt->execute();
+
 
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
@@ -118,9 +121,11 @@ class Booking extends BaseModel
                 WHERE b.user_id = :user_id
                 ORDER BY b.created_at DESC";
 
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':user_id', $userId, \PDO::PARAM_INT);
         $stmt->execute();
+
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -139,9 +144,11 @@ class Booking extends BaseModel
                 WHERE b.tour_id = :tour_id
                 ORDER BY b.departure_date ASC";
 
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':tour_id', $tourId, \PDO::PARAM_INT);
         $stmt->execute();
+
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -158,16 +165,20 @@ class Booking extends BaseModel
     {
         $offset = ($page - 1) * $limit;
 
+
         // Build the base query
         $sql = "SELECT b.*, t.name as tour_name, t.destination, t.duration
                 FROM {$this->table} b
                 LEFT JOIN tours t ON b.tour_id = t.id
                 WHERE 1=1";
 
+
         $countSql = "SELECT COUNT(*) as total FROM {$this->table} b WHERE 1=1";
+
 
         $params = [];
         $countParams = [];
+
 
         // Apply filters
         if (!empty($filters['search'])) {
@@ -178,12 +189,14 @@ class Booking extends BaseModel
             $countParams[':search'] = '%' . $filters['search'] . '%';
         }
 
+
         if (!empty($filters['status'])) {
             $sql .= " AND b.status = :status";
             $countSql .= " AND b.status = :status";
             $params[':status'] = $filters['status'];
             $countParams[':status'] = $filters['status'];
         }
+
 
         if (!empty($filters['payment_status'])) {
             $sql .= " AND b.payment_status = :payment_status";
@@ -192,12 +205,14 @@ class Booking extends BaseModel
             $countParams[':payment_status'] = $filters['payment_status'];
         }
 
+
         if (!empty($filters['tour_id'])) {
             $sql .= " AND b.tour_id = :tour_id";
             $countSql .= " AND b.tour_id = :tour_id";
             $params[':tour_id'] = $filters['tour_id'];
             $countParams[':tour_id'] = $filters['tour_id'];
         }
+
 
         if (!empty($filters['user_id'])) {
             $sql .= " AND b.user_id = :user_id";
@@ -206,12 +221,14 @@ class Booking extends BaseModel
             $countParams[':user_id'] = $filters['user_id'];
         }
 
+
         if (!empty($filters['date_from'])) {
             $sql .= " AND b.departure_date >= :date_from";
             $countSql .= " AND b.departure_date >= :date_from";
             $params[':date_from'] = $filters['date_from'];
             $countParams[':date_from'] = $filters['date_from'];
         }
+
 
         if (!empty($filters['date_to'])) {
             $sql .= " AND b.departure_date <= :date_to";
@@ -220,12 +237,14 @@ class Booking extends BaseModel
             $countParams[':date_to'] = $filters['date_to'];
         }
 
+
         if (!empty($filters['created_from'])) {
             $sql .= " AND b.created_at >= :created_from";
             $countSql .= " AND b.created_at >= :created_from";
             $params[':created_from'] = $filters['created_from'] . ' 00:00:00';
             $countParams[':created_from'] = $filters['created_from'] . ' 00:00:00';
         }
+
 
         if (!empty($filters['created_to'])) {
             $sql .= " AND b.created_at <= :created_to";
@@ -234,13 +253,16 @@ class Booking extends BaseModel
             $countParams[':created_to'] = $filters['created_to'] . ' 23:59:59';
         }
 
+
         // Add sorting
         $sql .= " ORDER BY b.created_at DESC";
+
 
         // Add pagination
         $sql .= " LIMIT :limit OFFSET :offset";
         $params[':limit'] = $limit;
         $params[':offset'] = $offset;
+
 
         // Get total count
         $countStmt = $this->db->prepare($countSql);
@@ -249,6 +271,7 @@ class Booking extends BaseModel
         }
         $countStmt->execute();
         $total = $countStmt->fetchColumn();
+
 
         // Get paginated data
         $stmt = $this->db->prepare($sql);
@@ -259,10 +282,12 @@ class Booking extends BaseModel
         $stmt->execute();
         $items = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
+
         // Calculate pagination metadata
         $totalPages = ceil($total / $limit);
         $hasNextPage = $page < $totalPages;
         $hasPrevPage = $page > 1;
+
 
         return [
             'items' => $items,
@@ -318,6 +343,7 @@ class Booking extends BaseModel
         $date = date('Ymd');
         $random = strtoupper(substr(uniqid(), -4));
 
+
         return $prefix . $date . $random;
     }
 
@@ -336,9 +362,11 @@ class Booking extends BaseModel
             $startDate = date('Y-m-d', strtotime('-1 year'));
         }
 
+
         if (!$endDate) {
             $endDate = date('Y-m-d');
         }
+
 
         // Format for grouping based on period
         $groupFormat = '';
@@ -359,6 +387,7 @@ class Booking extends BaseModel
                 $groupFormat = '%Y-%m';
         }
 
+
         // Get booking counts by period
         $sql = "SELECT 
                     DATE_FORMAT(created_at, '{$groupFormat}') as period,
@@ -372,11 +401,13 @@ class Booking extends BaseModel
                 GROUP BY period
                 ORDER BY period ASC";
 
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
         $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
         $stmt->execute();
         $periodStats = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
 
         // Get overall statistics
         $overallSql = "SELECT 
@@ -390,11 +421,13 @@ class Booking extends BaseModel
                     FROM {$this->table}
                     WHERE created_at BETWEEN :start_date AND :end_date";
 
+
         $overallStmt = $this->db->prepare($overallSql);
         $overallStmt->bindValue(':start_date', $startDate . ' 00:00:00');
         $overallStmt->bindValue(':end_date', $endDate . ' 23:59:59');
         $overallStmt->execute();
         $overallStats = $overallStmt->fetch(\PDO::FETCH_ASSOC);
+
 
         // Get top tours
         $topToursSql = "SELECT 
@@ -409,11 +442,13 @@ class Booking extends BaseModel
                         ORDER BY booking_count DESC
                         LIMIT 5";
 
+
         $topToursStmt = $this->db->prepare($topToursSql);
         $topToursStmt->bindValue(':start_date', $startDate . ' 00:00:00');
         $topToursStmt->bindValue(':end_date', $endDate . ' 23:59:59');
         $topToursStmt->execute();
         $topTours = $topToursStmt->fetchAll(\PDO::FETCH_ASSOC);
+
 
         return [
             'period_stats' => $periodStats,

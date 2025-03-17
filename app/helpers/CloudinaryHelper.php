@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use Cloudinary\Api\Upload\UploadApi;
@@ -6,7 +7,9 @@ use Cloudinary\Api\Admin\AdminApi;
 use App\Config\CloudinaryInstance;
 use App\Models\Image;
 
-class CloudinaryHelper {
+class CloudinaryHelper
+{
+
     /**
      * Tải lên một file ảnh lên Cloudinary
      * 
@@ -199,7 +202,7 @@ class CloudinaryHelper {
             return [];
         }
     }
-    
+
     /**
      * Tạo một đường dẫn ảnh placeholder khi ảnh không tồn tại
      * 

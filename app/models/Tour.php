@@ -23,7 +23,6 @@ class Tour extends BaseModel
         $stmt->execute();
         return $stmt->fetch();
     }
-
     /**
      * Retrieves the most popular tours based on bookings and ratings.
      *
@@ -80,8 +79,4 @@ class Tour extends BaseModel
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-
-    
   }
-
-?>
