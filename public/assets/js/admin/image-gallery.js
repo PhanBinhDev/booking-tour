@@ -42,6 +42,38 @@ document.addEventListener('DOMContentLoaded', () => {
   // Copy URL buttons
   const copyUrlBtns = document.querySelectorAll('.copy-url-btn')
 
+  // Dropdown functionality
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle')
+
+  // Handle dropdown toggle clicks
+  dropdownToggles.forEach((toggle) => {
+    toggle.addEventListener('click', function (e) {
+      e.stopPropagation()
+
+      // Get the dropdown menu
+      const dropdownMenu = this.nextElementSibling
+
+      // Close all other dropdowns first
+      document.querySelectorAll('.dropdown-menu').forEach((menu) => {
+        if (menu !== dropdownMenu) {
+          menu.classList.add('hidden')
+        }
+      })
+
+      // Toggle current dropdown
+      dropdownMenu.classList.toggle('hidden')
+    })
+  })
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-container')) {
+      document.querySelectorAll('.dropdown-menu').forEach((menu) => {
+        menu.classList.add('hidden')
+      })
+    }
+  })
+
   // Show Upload Modal
   function showUploadModal() {
     uploadModal.classList.remove('hidden')

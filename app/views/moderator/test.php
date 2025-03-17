@@ -18,6 +18,7 @@ class ToursController extends BaseController
     private $tourModel;
     private $bookingModel;
     private $categoriesModel;
+    private $roleModel;
 
     public function __construct()
     {
@@ -25,10 +26,16 @@ class ToursController extends BaseController
         $this->tourModel = new Tour();
         $this->bookingModel = new Booking();
         $this->categoriesModel = new Categories();
+        $this->roleModel = new Role();
     }
 
     public function bookings()
     {
+        if (!$this->checkPermission(PERM_VIEW_BOOKINGS)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
+            $this->view('error/403');
+            return;
+        }
         $bookings = $this->bookingModel->getAllBookings();
         $this->view('admin/bookings', ['bookings' => $bookings]);
     }
@@ -36,6 +43,15 @@ class ToursController extends BaseController
     public function deleteBooking($id)
     {
         $booking = $this->bookingModel->getById($id);
+        if (!$booking) {
+            $this->setFlashMessage('error', 'Đơn đặt không tồn tại');
+            header('location:' . UrlHelper::route('admin/bookings'));
+            return;
+        }
+
+        $this->bookingModel->deleteById($id);
+        $this->setFlashMessage('success', 'Xóa đơn đặt thành công');
+        header('location:' . UrlHelper::route('admin/bookings'));
         print_r($booking);
         die;
     }
