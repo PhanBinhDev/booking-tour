@@ -31,6 +31,12 @@ class ToursController extends BaseController
 
     public function bookings()
     {
+        if (!$this->checkPermission(PERM_VIEW_BOOKINGS)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
+            $this->view('error/403');
+            return;
+        }
+
         $bookings = $this->bookingModel->getAllBookings();
         $this->view('admin/bookings', ['bookings' => $bookings]);
     }
@@ -38,13 +44,26 @@ class ToursController extends BaseController
     public function deleteBooking($id)
     {
         $booking = $this->bookingModel->getById($id);
-        print_r($booking);
-        die;
+
+        if (!$booking) {
+            $this->setFlashMessage('error', 'Đơn đặt không tồn tại');
+            header('location:' . UrlHelper::route('admin/bookings'));
+            return;
+        }
+
+        $this->bookingModel->deleteById($id);
+        $this->setFlashMessage('success', 'Xóa đơn đặt thành công');
+        header('location:' . UrlHelper::route('admin/bookings'));
     }
 
 
     public function index()
     {
+        if (!$this->checkPermission(PERM_VIEW_TOURS)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
+            $this->view('error/403');
+            return; // Không tiếp tục thực hiện các bước sau nếu quyền truy cập không đúng. �� đây, nếu truy cập không h��p lệ, ta s�� chuyển hướng về trang quản trị. �� trang thông tin chi tiết, đây chỉ là một ví dụ, bạn có thể thêm các check và xử lý khác theo cách tùy chỉnh.
+        }
         $tours = $this->tourModel->getAll();
         $this->view('admin/tours/index', ['tours' => $tours]);
     }

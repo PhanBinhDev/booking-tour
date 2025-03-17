@@ -1014,6 +1014,10 @@ h1,
   display: none;
 }
 
+.aspect-square{
+  aspect-ratio: 1 / 1;
+}
+
 .size-full{
   width: 100%;
   height: 100%;
