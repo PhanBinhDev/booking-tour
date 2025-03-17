@@ -11,6 +11,11 @@ use App\Helpers\UrlHelper;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $title ?? 'Di Travel' ?></title>
   <link href="<?= UrlHelper::css('style.css') ?>" rel="stylesheet">
+  <link rel="icon" type="image/png" href="<?= UrlHelper::image('favicon/favicon-96x96.png') ?>" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg')?>" />
+  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico')?>" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png')?>" />
+  <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans flex flex-col">
@@ -188,15 +193,8 @@ use App\Helpers\UrlHelper;
   </header>
 
   <main class="container mx-auto flex-grow flex flex-col">
-    <!-- Flash messages -->
-    <?php if(isset($_SESSION['flash_message'])): ?>
-    <div
-      class="mb-4 p-4 rounded <?= $_SESSION['flash_message']['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
-      <?= $_SESSION['flash_message']['message'] ?>
-    </div>
-    <?php unset($_SESSION['flash_message']['message'], $_SESSION['flash_message']['type']); ?>
-    <?php endif; ?>
 
+    <!-- TODO: Add Flash Message Here -->
     <!-- Content will be inserted here -->
     <?php if (isset($content)) echo $content; ?>
   </main>

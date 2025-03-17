@@ -511,23 +511,41 @@ class Booking extends BaseModel
 
     public function getAllBookings()
     {
-        $sql = "SELECT bookings.*,
-                bookings.booking_number, bookings.status AS booking_status, bookings.created_at AS booking_date,
-                bookings.adults, bookings.children,
-                tours.title AS tour_title, tours.price AS tour_price,tours.duration,
-                booking_customers.full_name AS customer_name,booking_customers.id AS customer_id,
-                payment_logs.status AS payment_status
-            FROM bookings
-            INNER JOIN tours ON bookings.tour_id = tours.id
-            INNER JOIN booking_customers ON bookings.id = booking_customers.booking_id
-            LEFT JOIN payment_logs ON bookings.id = payment_logs.booking_id
-            LEFT JOIN payments ON bookings.id = payments.booking_id
-            LEFT JOIN transactions ON payments.id = transactions.payment_id
-            ORDER BY bookings.id DESC";
+        $sql = "SELECT 
+                    b.*,
+                    b.booking_number, 
+                    b.status AS booking_status, 
+                    b.created_at AS booking_date,
+                    b.adults, b.children,
+                    t.title AS tour_title, 
+                    t.price AS tour_price,
+                    t.duration,
+                    bc.full_name AS customer_name,
+                    bc.id AS customer_id,
+                    pl.status AS payment_status
+                FROM {$this->table} b
+                INNER JOIN tours t ON b.tour_id = t.id
+                LEFT JOIN (
+                    SELECT booking_id, MIN(id) as id, MIN(full_name) as full_name
+                    FROM booking_customers 
+                    WHERE type = 'adult'
+                    GROUP BY booking_id
+                ) bc ON b.id = bc.booking_id
+                LEFT JOIN (
+                    SELECT booking_id, status
+                    FROM payment_logs
+                    WHERE id IN (
+                        SELECT MAX(id) 
+                        FROM payment_logs 
+                        GROUP BY booking_id
+                    )
+                ) pl ON b.id = pl.booking_id
+                ORDER BY b.id DESC";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
 

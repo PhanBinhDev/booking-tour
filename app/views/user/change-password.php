@@ -8,13 +8,6 @@ $title = 'Đổi mật khẩu';
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <h1 class="text-2xl font-bold text-gray-900 mb-6">Thông tin cá nhân</h1>
 
-    <?php if (isset($_SESSION['flash_message'])): ?>
-    <div
-      class="mb-6 p-4 rounded-md <?= $_SESSION['flash_message']['type'] === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' ?>">
-      <?= $_SESSION['flash_message']['message'] ?>
-    </div>
-    <?php endif; ?>
-
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
       <!-- Tabs -->
       <div class="border-b border-gray-200">

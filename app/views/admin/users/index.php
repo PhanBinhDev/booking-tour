@@ -4,9 +4,11 @@ use App\Helpers\UrlHelper;
 <div class="container px-6 py-8 mx-auto">
   <div class="flex justify-between items-center mb-6">
     <h3 class="text-3xl font-bold text-gray-700">Quản lý người dùng</h3>
-    <button id="addUserBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
-      <i class="fas fa-user-plus mr-2"></i> Thêm người dùng
-    </button>
+    <a href="<?= UrlHelper::route('admin/users/create')?>">
+      <button class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
+        <i class="fas fa-user-plus mr-2"></i> Thêm người dùng
+      </button>
+    </a>
   </div>
 
   <!-- Bảng danh sách người dùng -->
@@ -101,9 +103,11 @@ use App\Helpers\UrlHelper;
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
       <div class="flex justify-between items-center p-4 border-b">
         <h3 class="text-lg font-semibold text-gray-900">Thêm người dùng mới</h3>
-        <button id="closeAddModal" class="text-gray-400 hover:text-gray-500">
-          <i class="fas fa-times"></i>
-        </button>
+        <a href="<? UrlHelper::route('admin/users/create')?>">
+          <button id="closeAddModal" class="text-gray-400 hover:text-gray-500">
+            <i class="fas fa-times"></i>
+          </button>
+        </a>
       </div>
       <form id="addUserForm" action="<?= UrlHelper::route('admin/users') ?>" method="POST">
         <div class="p-4">

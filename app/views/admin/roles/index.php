@@ -1,3 +1,7 @@
+<?php
+  $title = 'List Role';
+?>
+
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-3xl font-bold text-gray-800">Quản lý vai trò</h1>
   <a href="<?= PUBLIC_URL ?>/admin/roles/create"

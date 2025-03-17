@@ -11,6 +11,11 @@ use App\Helpers\UrlHelper;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $title ?? 'PHP MVC Project' ?></title>
   <link href="<?= UrlHelper::css('style.css') ?>" rel="stylesheet">
+  <link rel="icon" type="image/png" href="<?= UrlHelper::image('favicon/favicon-96x96.png') ?>" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg')?>" />
+  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico')?>" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png')?>" />
+  <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans flex flex-col">

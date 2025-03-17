@@ -50,6 +50,16 @@ class UserController extends BaseController
         ]);
     }
 
+    public function create() {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo 'CREATE';
+            // CREATE TRONG NÀY
+            //  Xử lý logic tạo mới users
+        }else {
+            $this->view('admin/users/create');
+        }
+    }
+
     public function edit($id)
     {
         $currentUser = $this->userModel->findById($id);

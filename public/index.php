@@ -74,6 +74,8 @@ $router->get('/admin/dashboard', 'Admin\DashboardController@dashboard');
 
 // ADMIN/USERS
 $router->get('/admin/users', 'Admin\UserController@index');
+$router->get('/admin/users/create', 'Admin\UserController@create'); // Admin\UserController || create
+$router->post('/admin/users/create', 'Admin\UserController@create'); // Admin\UserController
 $router->get('/admin/users/edit/{id}', 'Admin\UserController@edit');
 $router->post('/admin/users/edit/{id}', 'Admin\UserController@edit');
 

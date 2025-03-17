@@ -166,10 +166,10 @@ use App\Helpers\UrlHelper;
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
     <?php foreach ($images as $image): ?>
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden image-card"
-      data-id="<?= $image['id'] ?>">
-      <div class="relative aspect-w-16 aspect-h-9 bg-gray-100">
+      data-id="<?= $image['id'] ?>" data-description="<?= htmlspecialchars($image['description'] ?? '') ?>">
+      <div class="relative aspect-square bg-gray-100">
         <img src="<?= htmlspecialchars($image['cloudinary_url']) ?>" alt="<?= htmlspecialchars($image['alt_text']) ?>"
-          class="object-cover w-full h-full">
+          class="object-cover size-full">
 
         <?php if (isset($image['is_featured']) && $image['is_featured']): ?>
         <div class="absolute top-2 left-2">
@@ -426,7 +426,8 @@ use App\Helpers\UrlHelper;
 
     <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-    <div
+    <form id="upload-form" action="<?= UrlHelper::route('admin/images/upload') ?>" method="POST"
+      enctype="multipart/form-data"
       class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
       <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <div class="sm:flex sm:items-start">
@@ -435,72 +436,70 @@ use App\Helpers\UrlHelper;
               Tải lên hình ảnh mới
             </h3>
 
-            <form id="upload-form" action="<?= UrlHelper::route('admin/images/upload') ?>" method="POST"
-              enctype="multipart/form-data">
-              <div class="mb-4">
-                <div class="flex items-center justify-center">
-                  <div class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg relative" id="dropzone">
-                    <!-- Preview Container -->
-                    <div id="preview-container" class="hidden w-full h-full">
-                      <img id="image-preview" src="#" alt="Preview" class="w-full h-full object-contain rounded-lg">
-                      <button type="button" id="remove-preview"
-                        class="absolute top-2 right-2 p-1 bg-white rounded-full shadow-sm hover:bg-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none"
-                          viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
 
-                    <!-- Dropzone Text -->
-                    <div id="dropzone-text" class="absolute inset-0 flex flex-col items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none"
+            <div class="mb-4">
+              <div class="flex items-center justify-center">
+                <div class="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg relative" id="dropzone">
+                  <!-- Preview Container -->
+                  <div id="preview-container" class="hidden w-full h-full">
+                    <img id="image-preview" src="#" alt="Preview" class="w-full h-full object-contain rounded-lg">
+                    <button type="button" id="remove-preview"
+                      class="absolute top-2 right-2 p-1 bg-white rounded-full shadow-sm hover:bg-gray-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
+                          d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                      <p class="mt-1 text-sm text-gray-600">Kéo và thả hình ảnh vào đây hoặc <span
-                          class="text-teal-500 font-medium">chọn tệp</span></p>
-                      <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF tối đa 5MB</p>
-                    </div>
-
-                    <input type="file" id="file-input" name="image"
-                      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+                    </button>
                   </div>
+
+                  <!-- Dropzone Text -->
+                  <div id="dropzone-text" class="absolute inset-0 flex flex-col items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
+                    </svg>
+                    <p class="mt-1 text-sm text-gray-600">Kéo và thả hình ảnh vào đây hoặc <span
+                        class="text-teal-500 font-medium">chọn tệp</span></p>
+                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF tối đa 5MB</p>
+                  </div>
+
+                  <input type="file" id="file-input" name="image"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
                 </div>
               </div>
+            </div>
 
-              <div class="mb-4">
-                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề <span
-                    class="text-red-500">*</span></label>
-                <input type="text" id="title" name="title" required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              </div>
+            <div class="mb-4">
+              <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề <span
+                  class="text-red-500">*</span></label>
+              <input type="text" id="title" name="title" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+            </div>
 
-              <div class="mb-4">
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-                <textarea id="description" name="description" rows="2"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"></textarea>
-              </div>
+            <div class="mb-4">
+              <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
+              <textarea id="description" name="description" rows="2"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"></textarea>
+            </div>
 
-              <div class="mb-4">
-                <label for="alt_text" class="block text-sm font-medium text-gray-700 mb-1">Alt Text</label>
-                <input type="text" id="alt_text" name="alt_text"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              </div>
+            <div class="mb-4">
+              <label for="alt_text" class="block text-sm font-medium text-gray-700 mb-1">Alt Text</label>
+              <input type="text" id="alt_text" name="alt_text"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+            </div>
 
-              <div class="mb-4">
-                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
-                <select id="category" name="category"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                  <option value="general">Chung</option>
-                  <option value="tours">Tour</option>
-                  <option value="locations">Địa điểm</option>
-                  <option value="banner">Banner</option>
-                </select>
-              </div>
-            </form>
+            <div class="mb-4">
+              <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
+              <select id="category" name="category"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                <option value="general">Chung</option>
+                <option value="tours">Tour</option>
+                <option value="locations">Địa điểm</option>
+                <option value="banner">Banner</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -515,7 +514,7 @@ use App\Helpers\UrlHelper;
           Hủy
         </button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -731,6 +730,4 @@ use App\Helpers\UrlHelper;
   }
 ?>
 
-<script src="<?= UrlHelper::js('image-gallery.js') ?>"></script>
-
-</script>
+<script src="<?= UrlHelper::js('admin/image-gallery.js') ?>"></script>

@@ -2,6 +2,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
 use App\Models\Image;
 
@@ -81,110 +82,78 @@ class ImageController extends BaseController {
         if(!$this->isAuthenticated()) {
             $this->redirect(UrlHelper::route('/auth/login'));
         }
+
+        
+        $currentUser = $this->getCurrentUser();
+        $errors = [];
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $_POST['title'] ?? '';
             $description = $_POST['description'] ?? '';
-        //     $errors = [];
+            $alt = $_POST['alt_text'] ?? '';
+            $category = $_POST['category'] ?? '';
+            $errors = [];
             
-        //     if(empty($title)) {
-        //         $errors['title'] = 'Title is required';
-        //     }
+            // Lưu dữ liệu đã nhập để không mất nếu có lỗi
+            $formData = [
+                'title' => $title,
+                'description' => $description,
+                'alt' => $alt,
+                'category' => $category
+            ];
             
-        //     if(!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-        //         $errors['image'] = 'Please select an image to upload';
-        //     } else {
-        //         // Kiểm tra loại file
-        //         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        //         if(!in_array($_FILES['image']['type'], $allowedTypes)) {
-        //             $errors['image'] = 'Only JPG, PNG and GIF images are allowed';
-        //         }
+            if(empty($title)) {
+                $errors['title'] = 'Title is required';
+            }
+
+            if(empty($description)) {
+                $errors['description'] = 'Description is required';
+            }
+
+            if(empty($alt)) {
+                $errors['alt'] = 'Alt text is required';
+            }
+            
+            if(!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                $errors['image'] = 'Please select an image to upload';
+            } else {
+                // Kiểm tra loại file
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if(!in_array($_FILES['image']['type'], $allowedTypes)) {
+                    $errors['image'] = 'Only JPG, PNG and GIF images are allowed';
+                }
+            }
+            
+            // Nếu không có lỗi, tiến hành upload
+            if(empty($errors)) {
+                $imageData = [
+                    'title' => $title,
+                    'description' => $description,
+                    'alt_text' => $alt
+                ];
+                
+                $result = CloudinaryHelper::uploadAndSave(
+                    $_FILES['image']['tmp_name'],
+                    $imageData,
+                    $category,
+                    $currentUser['id']
+                );
+                
+                if($result) {
+                    // Thông báo thành công và chuyển hướng đến trang gallery
+                    $_SESSION['flash_message'] = [
+                        'type' => 'success',
+                        'message' => 'Image uploaded successfully!'
+                    ];
+                    $this->redirect(UrlHelper::route('/admin/images'));
+                } else {
+                    $errors['upload'] = 'Failed to upload image. Please try again.';
+                }
+            }
+        } else {
+            $this->setFlashMessage('error', 'Phương thức tải ảnh không hợp lệ!');
         }
-            
-        //     if(empty($errors)) {
-        //         try {
-        //             // Upload lên Cloudinary
-        //             $result = CloudinaryHelper::uploadImage(
-        //                 $_FILES['image']['tmp_name'],
-        //                 [
-        //                     'folder' => 'user_uploads',
-        //                     'public_id' => uniqid('img_')
-        //                 ]
-        //             );
-                    
-        //             // Lưu thông tin vào database
-        //             $imageId = $this->imageModel->create([
-        //                 'title' => $title,
-        //                 'description' => $description,
-        //                 'file_name' => $_FILES['image']['name'],
-        //                 'cloudinary_id' => $result['public_id'],
-        //                 'cloudinary_url' => $result['secure_url'],
-        //                 'user_id' => $currentUser['id']
-        //             ]);
-                    
-        //             if($imageId) {
-        //                 $this->redirect('/images');
-        //             } else {
-        //                 $errors['upload'] = 'Failed to save image information';
-        //             }
-        //         } catch(\Exception $e) {
-        //             $errors['upload'] = 'Error uploading image: ' . $e->getMessage();
-        //         }
-        //     }
-            
-        //     $this->view('images/upload', [
-        //         'errors' => $errors,
-        //         'title' => $title,
-        //         'description' => $description,
-        //         'user' => $currentUser
-        //     ]);
-        // } else {
-        //     $this->view('images/upload', [
-        //         'user' => $currentUser
-        //     ]);
-        // }
+
+        $this->redirect(UrlHelper::route('/admin/images'));
     }
-    
-    // public function delete($id) {
-    //     if(!$this->isAuthenticated()) {
-    //         $this->redirect('/login');
-    //     }
-        
-    //     $currentUser = $this->getCurrentUser();
-    //     $image = $this->imageModel->getById($id);
-        
-    //     if(!$image) {
-    //         $this->redirect('/images');
-    //     }
-        
-    //     // Kiểm tra quyền xóa
-    //     if($image['user_id'] != $currentUser['id'] && 
-    //        $currentUser['role_name'] !== 'admin' && 
-    //        $currentUser['role_name'] !== 'moderator') {
-    //         $this->redirect('/images');
-    //     }
-        
-    //     if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         try {
-    //             // Xóa hình ảnh từ Cloudinary
-    //             CloudinaryHelper::deleteImage($image['cloudinary_id']);
-                
-    //             // Xóa record từ database
-    //             $this->imageModel->delete($id);
-                
-    //             $this->redirect('/images');
-    //         } catch(\Exception $e) {
-    //             $this->view('images/delete', [
-    //                 'error' => 'Error deleting image: ' . $e->getMessage(),
-    //                 'image' => $image,
-    //                 'user' => $currentUser
-    //             ]);
-    //         }
-    //     } else {
-    //         $this->view('images/delete', [
-    //             'image' => $image,
-    //             'user' => $currentUser
-    //         ]);
-    //     }
-    // }
 }

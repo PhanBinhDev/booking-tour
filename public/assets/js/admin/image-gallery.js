@@ -4,10 +4,10 @@ function formatFileSize(bytes) {
   const k = 1024
   const sizes = ['Bytes', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
   // Upload Modal
   const uploadModal = document.getElementById('upload-modal')
   const uploadBtn = document.getElementById('upload-btn')
@@ -59,76 +59,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Show Edit Modal
   function showEditModal(id) {
-    // Get the image data from the card
-    const imageCard = document.querySelector(`.image-card[data-id="${id}"]`)
-    if (!imageCard) return
+    // Fetch image data via AJAX
+    fetch(`/admin/images/get?id=${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.json()
+      })
+      .then((image) => {
+        // Set the form ID
+        document.getElementById('edit-id').value = id
 
-    // Set the form ID
-    document.getElementById('edit-id').value = id
+        // Fill form fields
+        document.getElementById('edit-title').value = image.title || ''
+        document.getElementById('edit-description').value =
+          image.description || ''
+        document.getElementById('edit-alt_text').value = image.alt_text || ''
+        document.getElementById('edit-category').value =
+          image.category || 'general'
 
-    // Get image data from the card
-    const title = imageCard.querySelector('h3').getAttribute('title') || ''
-    const imgElement = imageCard.querySelector('img')
-    const imgSrc = imgElement ? imgElement.src : ''
-    const altText = imgElement ? imgElement.alt : ''
+        // Fill info fields
+        const fileName = image.file_name || 'image.jpg'
+        document.getElementById('edit-file_name').textContent = fileName
+        document.getElementById('edit-file_size').textContent = formatFileSize(
+          image.file_size || 0
+        )
+        document.getElementById('edit-dimensions').textContent = `${
+          image.width || 0
+        }x${image.height || 0} px`
+        document.getElementById('edit-created_at').textContent = new Date(
+          image.created_at
+        ).toLocaleDateString('vi-VN')
 
-    // Find category from badge
-    let category = 'general'
-    const categoryBadge = imageCard.querySelector(
-      '.inline-flex.items-center.px-2.py-1.rounded-full'
-    )
-    if (categoryBadge) {
-      const categoryText = categoryBadge.textContent.trim()
-      if (categoryText === 'Tour') category = 'tours'
-      else if (categoryText === 'Địa điểm') category = 'locations'
-      else if (categoryText === 'Banner') category = 'banner'
-    }
+        // Set preview image
+        document.getElementById('edit-preview').src = image.cloudinary_url
 
-    // Get file info
-    const fileInfo = imageCard.querySelectorAll(
-      '.text-xs.text-gray-500 .inline-flex.items-center'
-    )
-    let fileType = ''
-    let fileSize = ''
-    if (fileInfo && fileInfo.length >= 2) {
-      fileType = fileInfo[0].textContent.trim()
-      fileSize = fileInfo[1].textContent.trim()
-    }
-
-    // Get dimensions
-    const dimensionsElement = imageCard.querySelector(
-      '.text-gray-500 + .text-gray-500'
-    )
-    let dimensions = dimensionsElement
-      ? dimensionsElement.textContent.trim()
-      : ''
-
-    // Get created date
-    const dateElement = imageCard.querySelector('.text-xs .text-gray-500')
-    let createdDate = dateElement ? dateElement.textContent.trim() : ''
-
-    // Fill form fields
-    document.getElementById('edit-title').value = title
-    document.getElementById('edit-alt_text').value = altText
-    document.getElementById('edit-category').value = category
-
-    // Get description from data attribute or leave empty
-    const description = imageCard.getAttribute('data-description') || ''
-    document.getElementById('edit-description').value = description
-
-    // Fill info fields
-    const fileName = imgSrc.split('/').pop() || 'image.jpg'
-    document.getElementById('edit-file_name').textContent = fileName
-    document.getElementById('edit-file_size').textContent = fileSize
-    document.getElementById('edit-dimensions').textContent = dimensions
-    document.getElementById('edit-created_at').textContent = createdDate
-
-    // Set preview image
-    document.getElementById('edit-preview').src = imgSrc
-
-    // Show modal
-    editModal.classList.remove('hidden')
-    document.body.classList.add('overflow-hidden')
+        // Show modal
+        editModal.classList.remove('hidden')
+        document.body.classList.add('overflow-hidden')
+      })
+      .catch((error) => {
+        console.error('Error fetching image data:', error)
+        alert('Không thể tải thông tin hình ảnh. Vui lòng thử lại sau.')
+      })
   }
 
   // Hide Edit Modal
@@ -166,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Handle file input change
-  fileInput.addEventListener('change', function (e) {
+  fileInput?.addEventListener('change', (e) => {
     const file = e.target.files[0]
     if (file) {
       // Check file type
@@ -191,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Show preview
       const reader = new FileReader()
-      reader.onload = function (e) {
+      reader.onload = (e) => {
         imagePreview.src = e.target.result
         dropzoneText.classList.add('hidden')
         previewContainer.classList.remove('hidden')
@@ -201,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
   // Handle remove preview button
-  removePreviewBtn?.addEventListener('click', function (e) {
+  removePreviewBtn?.addEventListener('click', (e) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -215,19 +189,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Handle drag and drop
   ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
-    dropzone.addEventListener(eventName, preventDefaults, false)
+    dropzone?.addEventListener(eventName, preventDefaults, false)
   })
 
   function preventDefaults(e) {
     e.preventDefault()
     e.stopPropagation()
   }
-
   ;['dragenter', 'dragover'].forEach((eventName) => {
-    dropzone.addEventListener(eventName, highlight, false)
+    dropzone?.addEventListener(eventName, highlight, false)
   })
   ;['dragleave', 'drop'].forEach((eventName) => {
-    dropzone.addEventListener(eventName, unhighlight, false)
+    dropzone?.addEventListener(eventName, unhighlight, false)
   })
 
   function highlight() {
@@ -240,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
     dropzone.classList.remove('bg-teal-50')
   }
 
-  dropzone.addEventListener('drop', handleDrop, false)
+  dropzone?.addEventListener('drop', handleDrop, false)
 
   function handleDrop(e) {
     const dt = e.dataTransfer
@@ -258,10 +231,10 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', function () {
       const url = this.getAttribute('data-url')
       navigator.clipboard.writeText(url).then(
-        function () {
+        () => {
           alert('Đã sao chép URL vào clipboard!')
         },
-        function () {
+        () => {
           alert('Không thể sao chép URL. Vui lòng thử lại.')
         }
       )
@@ -299,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
   featuredCancelBtn?.addEventListener('click', hideFeaturedModal)
 
   // Close modals when clicking outside
-  window.addEventListener('click', function (e) {
+  window.addEventListener('click', (e) => {
     if (e.target === uploadModal) {
       hideUploadModal()
     }
@@ -311,51 +284,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (e.target === featuredModal) {
       hideFeaturedModal()
-    }
-  })
-
-  // Thêm code xử lý dropdown
-  const dropdownButtons = document.querySelectorAll('.dropdown-toggle')
-  const dropdownMenus = document.querySelectorAll('.dropdown-menu')
-
-  // Toggle dropdown function
-  function toggleDropdown(event) {
-    event.preventDefault()
-    event.stopPropagation()
-
-    const parentElement = this.closest('.dropdown')
-    const dropdownMenu = parentElement.querySelector('.dropdown-menu')
-
-    // Đóng tất cả dropdown khác trước khi mở dropdown này
-    dropdownMenus.forEach((menu) => {
-      if (menu !== dropdownMenu) {
-        menu.classList.add('hidden')
-      }
-    })
-
-    // Toggle dropdown hiện tại
-    dropdownMenu.classList.toggle('hidden')
-  }
-
-  // Attach event listeners to all dropdown toggle buttons
-  dropdownButtons.forEach((button) => {
-    button.addEventListener('click', toggleDropdown)
-  })
-
-  // Close dropdowns when clicking outside
-  document.addEventListener('click', function (event) {
-    let isClickInsideDropdown = false
-
-    dropdownButtons.forEach((button) => {
-      if (button.contains(event.target)) {
-        isClickInsideDropdown = true
-      }
-    })
-
-    if (!isClickInsideDropdown) {
-      dropdownMenus.forEach((menu) => {
-        menu.classList.add('hidden')
-      })
     }
   })
 })
