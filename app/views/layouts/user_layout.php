@@ -193,8 +193,16 @@ use App\Helpers\UrlHelper;
   </header>
 
   <main class="container mx-auto flex-grow flex flex-col">
+    <!-- Flash messages -->
+    <?php if(isset($_SESSION['flash_message'])): ?>
+    <?php if (!empty($_SESSION['flash']) && isset($_SESSION['flash']['message'])): ?>
+    <div class="mb-6 p-4 rounded-md <?= ($_SESSION['flash']['type'] ?? '') === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
+        <?= $_SESSION['flash']['message'] ?>
+    </div>
+<?php endif; ?>
+    <?php unset($_SESSION['flash_message']['message'], $_SESSION['flash_message']['type']); ?>
+    <?php endif; ?>
 
-    <!-- TODO: Add Flash Message Here -->
     <!-- Content will be inserted here -->
     <?php if (isset($content)) echo $content; ?>
   </main>
