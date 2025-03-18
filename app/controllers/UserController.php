@@ -100,6 +100,7 @@ class UserController extends BaseController {
                 if($this->userModel->update($currentUser['id'], $userData)) {
                     $_SESSION['username'] = $username;
                     $this->redirect(UrlHelper::route('user/profile?success=1'));
+                    $this->setFlashMessage('success', 'message');
                 } else {
                     $errors['update'] = 'Failed to update profile';
                 }
