@@ -3,6 +3,7 @@
 use App\Helpers\UrlHelper;
 ?>
 
+
 <div class="content-wrapper">
     <div class="mx-auto py-6 px-4">
         <!-- Tiêu đề trang -->
@@ -56,7 +57,8 @@ use App\Helpers\UrlHelper;
                                     <?= $item["id"] ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <img src="<?= UrlHelper::image('') ?>" alt="Du lịch trong nước" class="w-full h-full object-cover rounded">
+                                    <img src="<?= $item["image"] ?>" alt="Du lịch trong nước"
+                                        style='width: 50px; height: 50px' class="object-cover rounded">
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900"><?= $item["name"] ?></div>
@@ -75,12 +77,18 @@ use App\Helpers\UrlHelper;
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">
-                                        <button class="text-teal-600 hover:text-teal-900">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-900">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <a href="<?= UrlHelper::route('admin/tours/categories/updateCategory/' . $item['id']) ?>">
+                                            <button class="text-teal-600 hover:text-teal-900">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </a>
+
+                                        <a href="<?= UrlHelper::route('admin/tours/categories/deleteCategory/' . $item['id']) ?>"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                            <button class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

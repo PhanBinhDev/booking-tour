@@ -20,15 +20,27 @@ class Categories extends BaseModel
         $image,
         $status,
         $created_at,
-        $updated_at,
+        $updated_at
     ) {
-        $sql = "INSERT INTO news(name, slug, description, image, status, created_at,
+        $sql = "INSERT INTO tour_categories(name, slug, description, image,  status, created_at,
                                 updated_at)
-                VALUES('$name', '$slug', '$description', '$image',
+                VALUES('$name', '$slug', '$description', '$image', 
                         '$status', '$created_at', '$updated_at')";
         $stmt = $this->db->prepare($sql);
+        $parent_id = !empty($parent_id) ? (int)$parent_id : null;
         $stmt->execute();
     }
+
+    public function isSlugExists($slug)
+    {
+        $sql = "SELECT COUNT(*) FROM tour_categories WHERE slug = :slug";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':slug', $slug, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchColumn() > 0;
+    }
+
 
     public function getCategory($id)
     {
@@ -37,5 +49,21 @@ class Categories extends BaseModel
         $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch();
+    }
+
+    public function deleteById($id)
+    {
+        try {
+            $this->db->beginTransaction();
+            $stmt = $this->db->prepare("DELETE FROM tour_categories WHERE id = :id");
+            $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
     }
 }

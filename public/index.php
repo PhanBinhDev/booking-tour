@@ -1,5 +1,9 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 // Định nghĩa đường dẫn gốc
 // Lấy tên thư mục project từ đường dẫn thực tế
 
@@ -121,21 +125,21 @@ $router->get('/admin/payment/refunds/{id}', 'Admin\RefundController@show');
 // ADMIN/TOURS/
 $router->get('/admin/tours', 'Admin\ToursController@index');
 $router->get('/admin/tours/createTour', 'Admin\ToursController@createTour');
-// $router->post('/admin/tours/createTour', 'Admin\ToursController@createTour');
+$router->post('/admin/tours/createTour', 'Admin\ToursController@createTour');
 $router->get('/admin/tours/editTour/{id}', 'Admin\ToursController@editTour');
-$router->post('/admin/payment/methods/edit/{id}', 'Admin\PaymentController@editMethod');
 
 //ADMIN/CATEGORIES/
+$router->get('/admin/tours/categories', 'Admin\ToursController@categories');
 $router->get('/admin/tours/createCategory', 'Admin\ToursController@createCategory');
 $router->post('/admin/tours/createCategory', 'Admin\ToursController@createCategory');
+$router->get('/admin/tours/categories/deleteCategory/{id}', 'Admin\ToursController@deleteCategory');
+$router->get('/admin/tours/categories/updateCategory/{id}', 'Admin\ToursController@updateCategory');
+$router->post('/admin/tours/categories/updateCategory/{id}', 'Admin\ToursController@updateCategory');
+
 
 //ADMIN/BOOKINGS
 $router->get('/admin/bookings', 'Admin\ToursController@bookings');
-$router->delete('/admin/bookings/deleteBooking/{id}', 'Admin\ToursController@deleteBooking');
-
-
-$router->get('/admin/tours/categories', 'Admin\ToursController@categories');
-
+$router->get('/admin/bookings/deleteBooking/{id}', 'Admin\ToursController@deleteBooking');
 
 
 // ADMIN/SYSTEM

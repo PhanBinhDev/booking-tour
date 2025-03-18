@@ -66,13 +66,6 @@ class ToursController extends BaseController
         $this->view('admin/tours/index', ['tours' => $tours]);
     }
 
-    public function tourDetail($id)
-    {
-        echo "ID" . $id;
-        die;
-        $this->view('home/tour-details');
-    }
-
     public function createTour()
     {
         $this->view('admin/tours/createTour');
@@ -100,9 +93,7 @@ class ToursController extends BaseController
 
     public function createCategory()
     {
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
             $name = $_POST['name'] ?? '';
             $slug = $_POST['slug'] ?? '';
             $description = $_POST['description'] ?? '';
@@ -110,31 +101,78 @@ class ToursController extends BaseController
             $created_at = date('Y-m-d H:i:s');
             $updated_at = date('Y-m-d H:i:s');
 
-            try {
-                if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-                    throw new Exception('Không có file');
+            $imageUrl = '';
+
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    $image = CloudinaryHelper::upload($_FILES['image']['tmp_name'], 'categories');
+                    if (!isset($image['secure_url'])) {
+                        throw new Exception('Lỗi khi upload ảnh');
+                    }
+                    $imageUrl = $image['secure_url'];
+                } catch (Exception $e) {
+                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
+                    $this->view('admin/tours/createCategory');
+                    return;
                 }
-
-                $image = CloudinaryHelper::upload($_FILES['image']['tmp_name'], [
-                    'folder' => 'categories'
-                ]);
-
-                echo $image['secure_url'];
-            } catch (Exception $e) {
-                echo "Lỗi khi upload ảnh: " . $e->getMessage();
             }
-            die;
+
+            if (!$name || !$description || !$status) {
+                $this->setFlashMessage('error', 'Vui lòng nhập đủ thông tin');
+                $this->view('admin/tours/createCategory');
+                return;
+            }
+
+            if ($this->categoriesModel->isSlugExists($slug)) {
+                $this->setFlashMessage('error', 'Danh mục đã tồn tại');
+                $this->view('admin/tours/createCategory');
+                return;
+            }
 
             $this->categoriesModel->createCategory(
                 $name,
                 $slug,
                 $description,
-                $image,
+                $imageUrl,
                 $status,
                 $created_at,
                 $updated_at
             );
+
+            $this->setFlashMessage('success', 'Thêm danh mục thành công');
+            header('location:' . UrlHelper::route('admin/tours/categories'));
+            exit;
         }
+
         $this->view('admin/tours/createCategory');
+    }
+
+    public function updateCategory($id)
+    {
+        if (!$id) return;
+
+        $category = $this->categoriesModel->getCategory($id);
+        if (!$category) {
+            $this->setFlashMessage('error', 'Danh mục không tồn tại');
+            header('Location: ' . UrlHelper::route('admin/tours/categories'));
+            exit;
+        }
+
+        $this->view('admin/tours/createCategory', ['category' => $category]);
+    }
+
+
+    public function deleteCategory($id)
+    {
+        $category = $this->categoriesModel->getCategory($id);
+        if (!$category) {
+            $this->setFlashMessage('error', 'Danh mục không tồn tại');
+            header('location:' . UrlHelper::route('admin/tours/categories'));
+            return;
+        }
+
+        $this->categoriesModel->deleteById($id);
+        $this->setFlashMessage('success', 'Xóa danh mục thành công');
+        header('location:' . UrlHelper::route('admin/tours/categories'));
     }
 }
