@@ -56,9 +56,11 @@ class BaseController
         ];
     }
 
-    public function view($view, $data = []) {
+    public function view($view, $data = [], $layoutBase = null) {
         // Thiết lập layout mặc định nếu không được chỉ định
-        $layout = LayoutHelper::getLayoutByRole();
+        if(!$layoutBase){
+            $layout = LayoutHelper::getLayoutByRole();
+        }
 
         // Trích xuất dữ liệu thành các biến riêng lẻ
         extract($data);

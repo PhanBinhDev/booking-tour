@@ -17,6 +17,20 @@ class Payment extends BaseModel {
         return $this->getById($id);
     }
 
+
+    /**
+     * Get the year of the first transaction
+     * 
+     * @return int|null Year of first transaction or null if no transactions
+     */
+    public function getFirstTransactionYear() {
+        $sql = "SELECT MIN(YEAR(payment_date)) as first_year FROM {$this->table}";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['first_year'];
+    }
+
     /**
      * Retrieve payments by their status.
      *

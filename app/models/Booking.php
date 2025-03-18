@@ -303,6 +303,24 @@ class Booking extends BaseModel
     }
 
     /**
+     * Count bookings by status and year
+     * 
+     * @param string $status Status to count
+     * @param int $year Year to filter by
+     * @return int Count of bookings
+     */
+    public function countByStatusAndYear($status, $year) {
+        $sql = "SELECT COUNT(*) as count FROM {$this->table} 
+            WHERE status = :status AND YEAR(created_at) = :year";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':year', $year, \PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+
+    /**
      * Update booking status
      * 
      * @param int $id Booking ID
@@ -588,11 +606,6 @@ class Booking extends BaseModel
     {
         try {
             $this->db->beginTransaction();
-
-            $this->db->prepare("DELETE FROM payments WHERE booking_id = :id")->execute([':id' => $id]);
-            $this->db->prepare("DELETE FROM transactions WHERE booking_id = :id")->execute([':id' => $id]);
-            $this->db->prepare("DELETE FROM booking_details WHERE booking_id = :id")->execute([':id' => $id]);
-
             $stmt = $this->db->prepare("DELETE FROM bookings WHERE id = :id");
             $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
             $stmt->execute();

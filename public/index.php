@@ -89,6 +89,10 @@ $router->get('/admin/roles/{id}/edit', 'Admin\RoleController@edit');
 // ADMIN/GALLERY
 $router->get('/admin/images', 'Admin\ImageController@index');
 $router->post('/admin/images', 'Admin\ImageController@upload');
+$router->get('/admin/images/{id}', 'Admin\ImageController@details');
+$router->get('/admin/images/edit/{id}', 'Admin\ImageController@edit');
+$router->post('/admin/images/update/{id}', 'Admin\ImageController@update');
+$router->get('/admin/images/delete/{id}', 'Admin\ImageController@delete');
 
 // ADMIN/PAYMENT/METHODS
 $router->get('/admin/payment/methods', 'Admin\PaymentController@methods');

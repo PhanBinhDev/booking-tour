@@ -119,10 +119,11 @@ class Image extends BaseModel {
                 
         $stmt = $this->db->prepare($sql);
         
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':title', $data['title'] ?? null);
-        $stmt->bindParam(':description', $data['description'] ?? null);
-        $stmt->bindParam(':alt_text', $data['alt_text'] ?? null);
+        // Sử dụng bindValue() thay vì bindParam()
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':title', $data['title'] ?? null);
+        $stmt->bindValue(':description', $data['description'] ?? null);
+        $stmt->bindValue(':alt_text', $data['alt_text'] ?? null);
         
         return $stmt->execute();
     }
@@ -216,13 +217,23 @@ class Image extends BaseModel {
         $sql = "SELECT i.*, u.full_name as user_name 
                 FROM {$this->table} i 
                 LEFT JOIN users u ON i.user_id = u.id 
-                WHERE (i.title LIKE :keyword OR i.description LIKE :keyword OR i.alt_text LIKE :keyword)";
+                WHERE (i.title LIKE :keyword1 OR i.description LIKE :keyword2 OR i.alt_text LIKE :keyword3)";
         
         $keywordParam = "%$keyword%";
         
         // Add filters
         if (!empty($filters['user_id'])) {
             $sql .= " AND i.user_id = :user_id";
+        }
+        
+        // Thêm điều kiện cho category
+        if (!empty($filters['category'])) {
+            $sql .= " AND i.category = :category";
+        }
+        
+        // Thêm điều kiện cho status nếu cần
+        if (isset($filters['status']) && $filters['status'] !== null) {
+            $sql .= " AND i.status = :status";
         }
         
         $sql .= " ORDER BY i.created_at DESC";
@@ -233,15 +244,27 @@ class Image extends BaseModel {
         
         $stmt = $this->db->prepare($sql);
         
-        // Bind parameters
-        $stmt->bindParam(':keyword', $keywordParam);
+        // Bind parameters with unique placeholders
+        $stmt->bindValue(':keyword1', $keywordParam);
+        $stmt->bindValue(':keyword2', $keywordParam);
+        $stmt->bindValue(':keyword3', $keywordParam);
         
         if (!empty($filters['user_id'])) {
-            $stmt->bindParam(':user_id', $filters['user_id']);
+            $stmt->bindValue(':user_id', $filters['user_id']);
+        }
+
+        // Bind category nếu được cung cấp
+        if (!empty($filters['category'])) {
+            $stmt->bindValue(':category', $filters['category']);
+        }
+        
+        // Bind status nếu được cung cấp và không null
+        if (isset($filters['status']) && $filters['status'] !== null) {
+            $stmt->bindValue(':status', $filters['status']);
         }
         
         if (!empty($filters['limit'])) {
-            $stmt->bindParam(':limit', $filters['limit'], \PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $filters['limit'], \PDO::PARAM_INT);
         }
         
         $stmt->execute();

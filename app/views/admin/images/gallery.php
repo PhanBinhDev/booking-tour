@@ -1,5 +1,6 @@
 <?php
-use App\Helpers\UrlHelper;
+  use App\Helpers\UrlHelper;
+  var_dump($images);
 ?>
 <div class="container px-6 py-8 mx-auto">
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -16,7 +17,7 @@ use App\Helpers\UrlHelper;
         class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
         </svg>
         Tải lên
@@ -30,7 +31,7 @@ use App\Helpers\UrlHelper;
       <div class="flex items-center">
         <div class="p-3 rounded-full bg-teal-50 text-teal-500">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
@@ -45,7 +46,7 @@ use App\Helpers\UrlHelper;
       <div class="flex items-center">
         <div class="p-3 rounded-full bg-purple-50 text-purple-500">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
           </svg>
         </div>
@@ -60,7 +61,7 @@ use App\Helpers\UrlHelper;
       <div class="flex items-center">
         <div class="p-3 rounded-full bg-amber-50 text-amber-500">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
           </svg>
         </div>
@@ -75,7 +76,7 @@ use App\Helpers\UrlHelper;
       <div class="flex items-center">
         <div class="p-3 rounded-full bg-blue-50 text-blue-500">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
         </div>
@@ -98,7 +99,7 @@ use App\Helpers\UrlHelper;
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -122,7 +123,7 @@ use App\Helpers\UrlHelper;
           class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           Tìm kiếm
@@ -132,7 +133,7 @@ use App\Helpers\UrlHelper;
           class="inline-flex items-center px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
           Đặt lại
@@ -146,7 +147,7 @@ use App\Helpers\UrlHelper;
   <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
     <div class="mx-auto w-16 h-16 mb-4 text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
     </div>
@@ -156,7 +157,7 @@ use App\Helpers\UrlHelper;
       class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
         stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
       </svg>
       Tải lên hình ảnh mới
@@ -167,16 +168,16 @@ use App\Helpers\UrlHelper;
     <?php foreach ($images as $image): ?>
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden image-card"
       data-id="<?= $image['id'] ?>" data-description="<?= htmlspecialchars($image['description'] ?? '') ?>">
-      <div class="relative aspect-square bg-gray-100">
+      <div class="relative aspect-w-16 aspect-h-9 bg-gray-100">
         <img src="<?= htmlspecialchars($image['cloudinary_url']) ?>" alt="<?= htmlspecialchars($image['alt_text']) ?>"
-          class="object-cover size-full">
+          class="object-cover w-full h-full">
 
         <?php if (isset($image['is_featured']) && $image['is_featured']): ?>
         <div class="absolute top-2 left-2">
           <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
             </svg>
             Nổi bật
@@ -208,34 +209,47 @@ use App\Helpers\UrlHelper;
         <?php endif; ?>
 
         <div class="absolute top-2 right-2">
-          <div class="relative dropdown-container">
-            <button
-              class="dropdown-toggle p-1 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full text-gray-600 hover:text-gray-800 transition-colors">
+          <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open"
+              class="p-1 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full text-gray-600 hover:text-gray-800 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
               </svg>
             </button>
 
-            <div
-              class="dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 border border-gray-200">
+            <div x-show="open" @click.away="open = false"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-100 border border-gray-200">
               <div class="py-1">
-                <button class="edit-image-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  data-id="<?= $image['id'] ?>">
+                <!-- Tìm phần nút edit trong dropdown menu và thay đổi từ button thành link -->
+                <!-- Thay thế đoạn code này: -->
+                <!-- <button class="edit-image-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  data-id="<?= $image['id'] ?>" data-url="<?= UrlHelper::route('admin/images') ?>">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   Chỉnh sửa
-                </button>
+                </button> -->
+
+                <!-- Thay thế bằng đoạn code này: -->
+                <a href="<?= UrlHelper::route('admin/images/edit/' . $image['id']) ?>"
+                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Chỉnh sửa
+                </a>
 
                 <a href="<?= htmlspecialchars($image['cloudinary_url']) ?>" target="_blank"
                   class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                   Xem đầy đủ
@@ -245,7 +259,7 @@ use App\Helpers\UrlHelper;
                   data-url="<?= htmlspecialchars($image['cloudinary_url']) ?>">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                   </svg>
                   Sao chép URL
@@ -257,7 +271,7 @@ use App\Helpers\UrlHelper;
                   data-id="<?= $image['id'] ?>" data-tour-id="<?= $image['tour_id'] ?>">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
                   Đặt làm ảnh nổi bật
@@ -267,10 +281,10 @@ use App\Helpers\UrlHelper;
                 <hr class="my-1 border-gray-200">
 
                 <button class="delete-image-btn block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                  data-id="<?= $image['id'] ?>">
+                  data-base-url="<?= UrlHelper::route('admin/images/delete/' . $image['id']) ?>">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                   Xóa
@@ -289,7 +303,7 @@ use App\Helpers\UrlHelper;
         <div class="mt-1 text-xs text-gray-500 truncate" title="<?= htmlspecialchars($image['tour_name']) ?>">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
           <?= htmlspecialchars($image['tour_name']) ?>
@@ -300,7 +314,7 @@ use App\Helpers\UrlHelper;
         <div class="mt-1 text-xs text-gray-500 truncate" title="<?= htmlspecialchars($image['banner_title']) ?>">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
           </svg>
           <?= htmlspecialchars($image['banner_title']) ?>
@@ -311,7 +325,7 @@ use App\Helpers\UrlHelper;
           <span class="inline-flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
             </svg>
             <?= htmlspecialchars($image['file_type']) ?>
@@ -319,7 +333,7 @@ use App\Helpers\UrlHelper;
           <span class="inline-flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
             </svg>
             <?= formatFileSize($image['file_size']) ?>
@@ -348,9 +362,9 @@ use App\Helpers\UrlHelper;
         <span class="sr-only">Previous</span>
         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
           aria-hidden="true">
-          <path fillRule="evenodd"
+          <path fill-rule="evenodd"
             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-            clipRule="evenodd" />
+            clip-rule="evenodd" />
         </svg>
       </a>
       <?php else: ?>
@@ -359,9 +373,9 @@ use App\Helpers\UrlHelper;
         <span class="sr-only">Previous</span>
         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
           aria-hidden="true">
-          <path fillRule="evenodd"
+          <path fill-rule="evenodd"
             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-            clipRule="evenodd" />
+            clip-rule="evenodd" />
         </svg>
       </span>
       <?php endif; ?>
@@ -394,9 +408,9 @@ use App\Helpers\UrlHelper;
         <span class="sr-only">Next</span>
         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
           aria-hidden="true">
-          <path fillRule="evenodd"
+          <path fill-rule="evenodd"
             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clipRule="evenodd" />
+            clip-rule="evenodd" />
         </svg>
       </a>
       <?php else: ?>
@@ -405,9 +419,9 @@ use App\Helpers\UrlHelper;
         <span class="sr-only">Next</span>
         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
           aria-hidden="true">
-          <path fillRule="evenodd"
+          <path fill-rule="evenodd"
             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clipRule="evenodd" />
+            clip-rule="evenodd" />
         </svg>
       </span>
       <?php endif; ?>
@@ -426,8 +440,7 @@ use App\Helpers\UrlHelper;
 
     <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-    <form id="upload-form" action="<?= UrlHelper::route('admin/images/upload') ?>" method="POST"
-      enctype="multipart/form-data"
+    <form id="upload-form" action="<?= UrlHelper::route('admin/images') ?>" method="POST" enctype="multipart/form-data"
       class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
       <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <div class="sm:flex sm:items-start">
@@ -447,7 +460,8 @@ use App\Helpers\UrlHelper;
                       class="absolute top-2 right-2 p-1 bg-white rounded-full shadow-sm hover:bg-gray-100">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
                   </div>
@@ -456,7 +470,7 @@ use App\Helpers\UrlHelper;
                   <div id="dropzone-text" class="absolute inset-0 flex flex-col items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none"
                       viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
                     </svg>
                     <p class="mt-1 text-sm text-gray-600">Kéo và thả hình ảnh vào đây hoặc <span
@@ -517,105 +531,6 @@ use App\Helpers\UrlHelper;
   </div>
 </div>
 
-<!-- Edit Modal -->
-<div id="edit-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-  <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-    </div>
-
-    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-    <div
-      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div class="sm:flex sm:items-start">
-          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-              Chỉnh sửa thông tin hình ảnh
-            </h3>
-
-            <form id="edit-form" action="<?= UrlHelper::route('admin/images/update') ?>" method="POST">
-              <input type="hidden" id="edit-id" name="id">
-
-              <div class="mb-4">
-                <div class="flex items-center justify-center">
-                  <div
-                    class="w-full h-48 border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img id="edit-preview" src="#" alt="Preview" class="max-h-full max-w-full">
-                  </div>
-                </div>
-              </div>
-
-              <div class="mb-4">
-                <label for="edit-title" class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề <span
-                    class="text-red-500">*</span></label>
-                <input type="text" id="edit-title" name="title" required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              </div>
-
-              <div class="mb-4">
-                <label for="edit-description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-                <textarea id="edit-description" name="description" rows="2"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"></textarea>
-              </div>
-
-              <div class="mb-4">
-                <label for="edit-alt_text" class="block text-sm font-medium text-gray-700 mb-1">Alt Text</label>
-                <input type="text" id="edit-alt_text" name="alt_text"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              </div>
-
-              <div class="mb-4">
-                <label for="edit-category" class="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
-                <select id="edit-category" name="category"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                  <option value="general">Chung</option>
-                  <option value="tours">Tour</option>
-                  <option value="locations">Địa điểm</option>
-                  <option value="banner">Banner</option>
-                </select>
-              </div>
-
-              <div class="bg-gray-50 p-3 rounded-lg mb-4">
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span class="text-gray-500">File:</span>
-                    <span id="edit-file_name" class="ml-1 font-medium text-gray-700"></span>
-                  </div>
-                  <div>
-                    <span class="text-gray-500">Kích thước:</span>
-                    <span id="edit-file_size" class="ml-1 font-medium text-gray-700"></span>
-                  </div>
-                  <div>
-                    <span class="text-gray-500">Kích thước ảnh:</span>
-                    <span id="edit-dimensions" class="ml-1 font-medium text-gray-700"></span>
-                  </div>
-                  <div>
-                    <span class="text-gray-500">Ngày tạo:</span>
-                    <span id="edit-created_at" class="ml-1 font-medium text-gray-700"></span>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button type="submit" form="edit-form" id="edit-submit-btn"
-          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-500 text-base font-medium text-white hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm">
-          Lưu thay đổi
-        </button>
-        <button type="button" id="edit-cancel-btn"
-          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-          Hủy
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Delete Confirmation Modal -->
 <div id="delete-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
   <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
@@ -633,7 +548,7 @@ use App\Helpers\UrlHelper;
             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
             <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
@@ -650,7 +565,7 @@ use App\Helpers\UrlHelper;
         </div>
       </div>
       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <form id="delete-form" action="<?= UrlHelper::route('admin/images/delete') ?>" method="POST">
+        <form id="delete-form" action="" method="POST" data-base-url="<?= UrlHelper::route('admin/images/delete') ?>">
           <input type="hidden" id="delete-id" name="id">
           <button type="submit" id="delete-confirm-btn"
             class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
@@ -683,7 +598,7 @@ use App\Helpers\UrlHelper;
             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 sm:mx-0 sm:h-10 sm:w-10">
             <svg class="h-6 w-6 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
             </svg>
           </div>
@@ -729,4 +644,6 @@ use App\Helpers\UrlHelper;
   }
 ?>
 
+<!-- Thêm vào phần head của trang hoặc ngay trước thẻ đóng body -->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="<?= UrlHelper::js('admin/image-gallery.js') ?>"></script>

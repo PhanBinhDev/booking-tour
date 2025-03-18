@@ -99,7 +99,7 @@ use App\Helpers\UrlHelper;
   </div>
 
   <!-- Modal thêm người dùng -->
-  <div id="addUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div id="addUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
       <div class="flex justify-between items-center p-4 border-b">
         <h3 class="text-lg font-semibold text-gray-900">Thêm người dùng mới</h3>
@@ -180,7 +180,7 @@ use App\Helpers\UrlHelper;
   </div>
 
   <!-- Modal chỉnh sửa người dùng -->
-  <div id="editUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div id="editUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
       <div class="flex justify-between items-center p-4 border-b">
         <h3 class="text-lg font-semibold text-gray-900">Chỉnh sửa người dùng</h3>
@@ -259,8 +259,7 @@ use App\Helpers\UrlHelper;
   </div>
 
   <!-- Modal xác nhận xóa người dùng -->
-  <div id="deleteUserModal"
-    class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div id="deleteUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
       <div class="flex justify-between items-center p-4 border-b">
         <h3 class="text-lg font-semibold text-gray-900">Xác nhận xóa</h3>

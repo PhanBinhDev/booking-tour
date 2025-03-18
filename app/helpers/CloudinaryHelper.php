@@ -5,9 +5,10 @@ namespace App\Helpers;
 use Cloudinary\Api\Upload\UploadApi;
 use Cloudinary\Api\Admin\AdminApi;
 use App\Config\CloudinaryInstance;
+use App\Models\BaseModel;
 use App\Models\Image;
 
-class CloudinaryHelper
+class CloudinaryHelper extends BaseModel
 {
 
     /**
@@ -57,7 +58,11 @@ class CloudinaryHelper
         $imageModel = new Image();
         
         try {
-            // $imageModel->beginTransaction();
+            // Bắt đầu transaction nếu model hỗ trợ
+            if (method_exists($imageModel, 'beginTransaction')) {
+                $imageModel->db->beginTransaction();
+            }
+            
             // Upload lên Cloudinary
             $result = self::upload($filePath, $folder);
             
@@ -83,10 +88,32 @@ class CloudinaryHelper
             ];
             
             // Lưu vào cơ sở dữ liệu
-            $imageModel = new Image();
-            return $imageModel->create($data);
+            $imageId = $imageModel->create($data);
+            
+            // Nếu lưu thành công và có transaction, commit
+            if ($imageId && method_exists($imageModel, 'commit')) {
+                $imageModel->db->commit();
+            }
+            
+            return $imageId;
             
         } catch (\Exception $e) {
+            // Rollback transaction nếu có lỗi
+            if (method_exists($imageModel, 'rollback')) {
+                $imageModel->db->rollback();
+            }
+            
+            // Nếu đã upload lên Cloudinary nhưng lưu DB thất bại, xóa ảnh khỏi Cloudinary
+            if (isset($result) && isset($result['public_id'])) {
+                try {
+                    $uploadApi = new UploadApi();
+                    $uploadApi->destroy($result['public_id']);
+                } catch (\Exception $deleteEx) {
+                    // Ghi log lỗi khi xóa ảnh
+                    error_log('Failed to delete image from Cloudinary after DB error: ' . $deleteEx->getMessage());
+                }
+            }
+            
             // Xử lý lỗi và ghi log
             error_log('Cloudinary upload error: ' . $e->getMessage());
             return false;
@@ -161,21 +188,117 @@ class CloudinaryHelper
      * @param string $cloudinaryId Cloudinary public_id
      * @return bool Kết quả xóa
      */
-    public static function delete($cloudinaryId) {
+    public static function deleteImage($cloudinaryId) {
+        $imageModel = new Image();
+        
         try {
-            // Xóa ảnh từ Cloudinary
-            $uploadApi = new UploadApi();
-            $result = $uploadApi->destroy($cloudinaryId);
-            
-            if ($result['result'] === 'ok') {
-                // Xóa từ cơ sở dữ liệu
-                $imageModel = new Image();
-                return $imageModel->deleteWhere('cloudinary_id', $cloudinaryId);
+            // Bắt đầu transaction nếu model hỗ trợ
+            if (method_exists($imageModel, 'beginTransaction')) {
+                $imageModel->db->beginTransaction();
             }
             
-            return false;
+            // Xóa từ cơ sở dữ liệu trước
+            $dbResult = $imageModel->deleteWhere('cloudinary_id', $cloudinaryId);
+            
+            if ($dbResult) {
+                // Sau khi xóa thành công từ DB, xóa từ Cloudinary
+                $uploadApi = new UploadApi();
+                $result = $uploadApi->destroy($cloudinaryId);
+                
+                if ($result['result'] === 'ok') {
+                    // Commit transaction nếu cả hai bước đều thành công
+                    if (method_exists($imageModel, 'commit')) {
+                        $imageModel->db->commit();
+                    }
+                    return true;
+                } else {
+                    // Nếu xóa từ Cloudinary thất bại, rollback DB
+                    if (method_exists($imageModel, 'rollback')) {
+                        $imageModel->db->rollback();
+                    }
+                    error_log('Failed to delete image from Cloudinary: ' . json_encode($result));
+                    return false;
+                }
+            } else {
+                // Nếu xóa từ DB thất bại
+                if (method_exists($imageModel, 'rollback')) {
+                    $imageModel->db->rollback();
+                }
+                return false;
+            }
         } catch (\Exception $e) {
+            // Rollback transaction nếu có lỗi
+            if (method_exists($imageModel, 'rollback')) {
+                $imageModel->db->rollback();
+            }
             error_log('Cloudinary delete error: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Xóa ảnh từ cơ sở dữ liệu và Cloudinary theo ID
+     * 
+     * @param int $imageId ID của ảnh trong cơ sở dữ liệu
+     * @return bool Kết quả xóa
+     */
+    public static function deleteById($imageId) {
+        $imageModel = new Image();
+        
+        try {
+            // Lấy thông tin ảnh từ DB
+            $image = $imageModel->getById($imageId);
+            
+            if (!$image || !isset($image['cloudinary_id'])) {
+                return false;
+            }
+            
+            // Sử dụng phương thức delete đã cải tiến
+            return self::delete($image['cloudinary_id']);
+        } catch (\Exception $e) {
+            error_log('Delete image by ID error: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Cập nhật thông tin ảnh
+     * 
+     * @param int $imageId ID của ảnh
+     * @param array $data Dữ liệu cập nhật
+     * @return bool Kết quả cập nhật
+     */
+    public static function updateImage($imageId, $data) {
+        $imageModel = new Image();
+        
+        try {
+            // Bắt đầu transaction nếu model hỗ trợ
+            if (method_exists($imageModel, 'beginTransaction')) {
+                $imageModel->db->beginTransaction();
+            }
+            
+            // Cập nhật trong cơ sở dữ liệu
+            $result = $imageModel->update($imageId, $data);
+            
+            if ($result) {
+                // Commit transaction nếu thành công
+                if (method_exists($imageModel, 'commit')) {
+                    $imageModel->db->commit();
+                }
+                return true;
+            } else {
+                // Rollback nếu thất bại
+                if (method_exists($imageModel, 'rollback')) {
+                    $imageModel->db->rollback();
+                }
+                return false;
+            }
+        } catch (\Exception $e) {
+            // Rollback transaction nếu có lỗi
+            if (method_exists($imageModel, 'rollback')) {
+                $imageModel->db->rollback();
+            }
+            error_log('Update image error: ' . $e->getMessage());
             return false;
         }
     }
@@ -225,7 +348,4 @@ class CloudinaryHelper
         
         return self::getImageUrl('placeholders', 'blank', $options);
     }
-
-
-    
 }

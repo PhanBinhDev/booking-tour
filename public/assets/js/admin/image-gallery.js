@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const editModal = document.getElementById('edit-modal')
   const editBtns = document.querySelectorAll('.edit-image-btn')
   const editCancelBtn = document.getElementById('edit-cancel-btn')
-  const editForm = document.getElementById('edit-form')
 
   // Delete Modal
   const deleteModal = document.getElementById('delete-modal')
@@ -41,38 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Copy URL buttons
   const copyUrlBtns = document.querySelectorAll('.copy-url-btn')
-
-  // Dropdown functionality
-  const dropdownToggles = document.querySelectorAll('.dropdown-toggle')
-
-  // Handle dropdown toggle clicks
-  dropdownToggles.forEach((toggle) => {
-    toggle.addEventListener('click', function (e) {
-      e.stopPropagation()
-
-      // Get the dropdown menu
-      const dropdownMenu = this.nextElementSibling
-
-      // Close all other dropdowns first
-      document.querySelectorAll('.dropdown-menu').forEach((menu) => {
-        if (menu !== dropdownMenu) {
-          menu.classList.add('hidden')
-        }
-      })
-
-      // Toggle current dropdown
-      dropdownMenu.classList.toggle('hidden')
-    })
-  })
-
-  // Close dropdowns when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dropdown-container')) {
-      document.querySelectorAll('.dropdown-menu').forEach((menu) => {
-        menu.classList.add('hidden')
-      })
-    }
-  })
 
   // Show Upload Modal
   function showUploadModal() {
@@ -90,59 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Show Edit Modal
-  function showEditModal(id) {
-    // Fetch image data via AJAX
-    fetch(`/admin/images/get?id=${id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then((image) => {
-        // Set the form ID
-        document.getElementById('edit-id').value = id
-
-        // Fill form fields
-        document.getElementById('edit-title').value = image.title || ''
-        document.getElementById('edit-description').value =
-          image.description || ''
-        document.getElementById('edit-alt_text').value = image.alt_text || ''
-        document.getElementById('edit-category').value =
-          image.category || 'general'
-
-        // Fill info fields
-        const fileName = image.file_name || 'image.jpg'
-        document.getElementById('edit-file_name').textContent = fileName
-        document.getElementById('edit-file_size').textContent = formatFileSize(
-          image.file_size || 0
-        )
-        document.getElementById('edit-dimensions').textContent = `${
-          image.width || 0
-        }x${image.height || 0} px`
-        document.getElementById('edit-created_at').textContent = new Date(
-          image.created_at
-        ).toLocaleDateString('vi-VN')
-
-        // Set preview image
-        document.getElementById('edit-preview').src = image.cloudinary_url
-
-        // Show modal
-        editModal.classList.remove('hidden')
-        document.body.classList.add('overflow-hidden')
-      })
-      .catch((error) => {
-        console.error('Error fetching image data:', error)
-        alert('Không thể tải thông tin hình ảnh. Vui lòng thử lại sau.')
-      })
-  }
-
   // Hide Edit Modal
-  function hideEditModal() {
-    editModal.classList.add('hidden')
-    document.body.classList.remove('overflow-hidden')
-    editForm.reset()
-  }
 
   // Show Delete Modal
   function showDeleteModal(id) {
@@ -281,15 +196,21 @@ document.addEventListener('DOMContentLoaded', () => {
   editBtns.forEach((btn) => {
     btn.addEventListener('click', function () {
       const imageId = this.getAttribute('data-id')
-      showEditModal(imageId)
+      const baseUrl = this.getAttribute('data-url') || window.location.pathname
+      // Chuyển hướng đến trang edit với ID hình ảnh
+      window.location.href = `${baseUrl}/edit/${imageId}`
     })
   })
-  editCancelBtn?.addEventListener('click', hideEditModal)
+  editCancelBtn?.addEventListener('click', () => {})
 
   deleteBtns.forEach((btn) => {
     btn.addEventListener('click', function () {
-      const imageId = this.getAttribute('data-id')
-      showDeleteModal(imageId)
+      const action = this.getAttribute('data-base-url')
+      // Cập nhật action của form với ID hình ảnh
+      document.getElementById('delete-form').action = `${action}`
+
+      console.log(document.getElementById('delete-form'))
+      showDeleteModal()
     })
   })
   deleteCancelBtn?.addEventListener('click', hideDeleteModal)
@@ -307,9 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('click', (e) => {
     if (e.target === uploadModal) {
       hideUploadModal()
-    }
-    if (e.target === editModal) {
-      hideEditModal()
     }
     if (e.target === deleteModal) {
       hideDeleteModal()

@@ -1,25 +1,30 @@
 <?php
+
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Helpers\CloudinaryHelper;
-use App\Helpers\UrlHelper;
 use App\Models\Image;
+use App\Helpers\UrlHelper;
 
-class ImageController extends BaseController {
-    protected $imageModel;
-    protected $itemsPerPage = 24; // Show images in a 4x6 grid
+class ImageController extends BaseController
+{
+    private $imageModel;
+    protected $itemsPerPage = 24;
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->imageModel = new Image();
     }
-    
+
     /**
      * Display image gallery
      */
     public function index() {
-        if (!$this->isAuthenticated()) {
-            $this->redirect(UrlHelper::route('/auth/login'));
+        if (!$this->checkPermission(PERM_VIEW_IMAGES)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền xem hình ảnh');
+            $this->view('error/403');
+            return;
         }
         
         $currentUser = $this->getCurrentUser();
@@ -30,33 +35,39 @@ class ImageController extends BaseController {
         // Get search filters
         $filters = [
             'status' => $_GET['status'] ?? null,
-            'folder' => $_GET['folder'] ?? null,
+            'category' => $_GET['category'] ?? null,
             'keyword' => $_GET['keyword'] ?? null
         ];
         
-        // Get images based on user role and filters
-        if ($currentUser['role_name'] === 'admin' || $currentUser['role_name'] === 'moderator') {
-            $totalImages = count($this->imageModel->getAllWithUsers());
-            $images = $this->imageModel->getAllWithUsers();
-        } else {
-            $totalImages = count($this->imageModel->getUserImages($currentUser['id']));
-            $images = $this->imageModel->getUserImages($currentUser['id']);
+        $hasFilters = !empty($filters['keyword']) || !empty($filters['category']) || 
+                    (isset($filters['status']) && $filters['status'] !== null);
+        
+        // Prepare search filters
+        $searchFilters = [
+            'status' => $filters['status'],
+            'category' => $filters['category']
+        ];
+        
+        // Add user_id filter if user role is not admin/moderator
+        if ($currentUser['role_name'] === 'user') {
+            $searchFilters['user_id'] = (int)$currentUser['id'];
         }
         
-        // Apply search if keyword exists
-        if (!empty($filters['keyword'])) {
-            $searchFilters = [
-                'status' => $filters['status'],
-                'folder' => $filters['folder']
-            ];
-            
-            if ($currentUser['role_name'] === 'user') {
-                $searchFilters['user_id'] = (int)$currentUser['id'];
+        // Apply filters or get all images
+        if ($hasFilters) {
+            // Use search with or without keyword
+            $images = $this->imageModel->search($filters['keyword'] ?? '', $searchFilters);
+        } else {
+            // No filters - get all images based on user role
+            if ($currentUser['role_name'] === 'admin' || $currentUser['role_name'] === 'moderator') {
+                $images = $this->imageModel->getAllWithUsers();
+            } else {
+                $images = $this->imageModel->getUserImages($currentUser['id']);
             }
-            
-            $images = $this->imageModel->search($filters['keyword'], $searchFilters);
-            $totalImages = count($images);
         }
+        
+        // Get total count for pagination
+        $totalImages = count($images);
         
         // Calculate pagination
         $totalPages = ceil($totalImages / $this->itemsPerPage);
@@ -78,12 +89,17 @@ class ImageController extends BaseController {
         ]);
     }
     
+    /**
+     * Xử lý tải lên hình ảnh
+     */
     public function upload() {
-        if(!$this->isAuthenticated()) {
-            $this->redirect(UrlHelper::route('/auth/login'));
+        // ONLY CHECK THIS FUNCTION FOR ADMIN ROLE
+        if(!$this->checkPermission(PERM_UPLOAD_IMAGES)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền tải lên hình ảnh');
+            $this->view('error/403');
+            return;
         }
 
-        
         $currentUser = $this->getCurrentUser();
         $errors = [];
         
@@ -94,13 +110,6 @@ class ImageController extends BaseController {
             $category = $_POST['category'] ?? '';
             $errors = [];
             
-            // Lưu dữ liệu đã nhập để không mất nếu có lỗi
-            $formData = [
-                'title' => $title,
-                'description' => $description,
-                'alt' => $alt,
-                'category' => $category
-            ];
             
             if(empty($title)) {
                 $errors['title'] = 'Title is required';
@@ -129,7 +138,9 @@ class ImageController extends BaseController {
                 $imageData = [
                     'title' => $title,
                     'description' => $description,
-                    'alt_text' => $alt
+                    'alt_text' => $alt,
+                    'category' => $category,
+                    'user_id' => $currentUser['id']
                 ];
                 
                 $result = CloudinaryHelper::uploadAndSave(
@@ -155,5 +166,117 @@ class ImageController extends BaseController {
         }
 
         $this->redirect(UrlHelper::route('/admin/images'));
+    }
+    
+    /**
+     * Xử lý xóa hình ảnh
+     */
+    public function delete($id) {
+        if(!$this->checkPermission(PERM_DELETE_IMAGES)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền xóa hình ảnh');
+            $this->view('error/403');
+            return;
+        }
+        
+        if($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->setFlashMessage('error', 'Phương thức không hợp lệ');
+            $this->redirect(UrlHelper::route('/admin/images'));
+            return;
+        }
+        
+        if(!$id) {
+            $this->setFlashMessage('error', 'ID hình ảnh không hợp lệ');
+            $this->redirect(UrlHelper::route('/admin/images'));
+            return;
+        }
+        
+        // Sử dụng phương thức deleteById đã cải tiến
+        $result = CloudinaryHelper::deleteById($id);
+        
+        if($result) {
+            $this->setFlashMessage('success', 'Xóa hình ảnh thành công');
+        } else {
+            $this->setFlashMessage('error', 'Không thể xóa hình ảnh. Vui lòng thử lại sau.');
+        }
+        
+        $this->redirect(UrlHelper::route('/admin/images'));
+    }
+    
+    /**
+     * Xử lý cập nhật thông tin hình ảnh
+     */
+    public function update($id) {
+        // if(!$this->checkPermission(PERM_EDIT_IMAGES)) {
+        //     $this->setFlashMessage('error', 'Bạn không có quyền chỉnh sửa hình ảnh');
+        //     $this->view('error/403');
+        //     return;
+        // }
+        
+        if($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->setFlashMessage('error', 'Phương thức không hợp lệ');
+            $this->redirect(UrlHelper::route('/admin/images'));
+            return;
+        }
+        
+        $title = $_POST['title'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $altText = $_POST['alt_text'] ?? '';
+        $category = $_POST['category'] ?? '';
+        
+        if(!$id) {
+            $this->setFlashMessage('error', 'ID hình ảnh không hợp lệ');
+            $this->redirect(UrlHelper::route('/admin/images'));
+            return;
+        }
+        
+        if(empty($title)) {
+            $this->setFlashMessage('error', 'Tiêu đề không được để trống');
+            $this->redirect(UrlHelper::route('/admin/images/edit/' . $id));
+            return;
+        }
+        
+        $data = [
+            'title' => $title,
+            'description' => $description,
+            'alt_text' => $altText,
+            'category' => $category,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // Sử dụng phương thức update đã cải tiến
+        $result = CloudinaryHelper::updateImage($id, $data);
+        
+        if($result) {
+            $this->setFlashMessage('success', 'Cập nhật thông tin hình ảnh thành công');
+            $this->redirect(UrlHelper::route('/admin/images'));
+        } else {
+            $this->setFlashMessage('error', 'Không thể cập nhật thông tin hình ảnh. Vui lòng thử lại sau.');
+            $this->redirect(UrlHelper::route('/admin/images/edit/' . $id));
+        }
+    }
+    
+    /**
+     * Hiển thị trang chỉnh sửa hình ảnh
+     */
+    public function edit($id) {
+        // if(!$this->checkPermission(PERM_EDIT_IMAGES)) {
+        //     $this->setFlashMessage('error', 'Bạn không có quyền chỉnh sửa hình ảnh');
+        //     $this->view('error/403');
+        //     return;
+        // }
+        
+        $image = $this->imageModel->getById($id);
+        
+        if(!$image) {
+            $this->setFlashMessage('error', 'Không tìm thấy hình ảnh');
+            $this->redirect(UrlHelper::route('/admin/images'));
+            return;
+        }
+        
+        $this->view('admin/images/edit', [
+            'image' => $image,
+            'activePage' => 'images',
+            'pageTitle' => 'Chỉnh sửa hình ảnh'
+        ]);
     }
 }

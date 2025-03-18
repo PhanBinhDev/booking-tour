@@ -48,11 +48,19 @@ class DashboardController extends BaseController {
         if(!$this->checkPermission(PERM_VIEW_DASHBOARD)) {
             $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
             $this->view('error/403');
-            return; // Không tiếp tục thực hiện các bước sau nếu quyền truy cập không đúng. �� đây, nếu truy cập không h��p lệ, ta s�� chuyển hướng về trang quản trị. �� trang thông tin chi tiết, đây chỉ là một ví dụ, bạn có thể thêm các check và xử lý khác theo cách tùy chỉnh.
+            return;
         }
 
         $currentUser = $this->getCurrentUser();
-    
+        
+        // Lấy năm từ request hoặc sử dụng năm hiện tại
+        $selectedYear = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+        
+        // Tạo danh sách các năm để hiển thị trong dropdown (từ năm đầu tiên có dữ liệu đến năm hiện tại)
+        $currentYear = (int)date('Y');
+        $startYear = $this->paymentModel->getFirstTransactionYear() ?: $currentYear - 2; // Mặc định 2 năm trước nếu không có dữ liệu
+        $years = range($startYear, $currentYear);
+        
         // Lấy tổng số người dùng
         $users = $this->userModel->getAll();
         $userCount = count($users);
@@ -78,18 +86,17 @@ class DashboardController extends BaseController {
         foreach ($completedPayments as $payment) {
             $totalRevenue += $payment['amount'];
         }
-    
-        // Lấy dữ liệu trạng thái đặt tour cho biểu đồ
+
+        // Lấy dữ liệu trạng thái đặt tour cho biểu đồ theo năm đã chọn
         $bookingStatusData = [
-            'Chờ xác nhận' => $this->bookingModel->countByStatus('pending'),
-            'Đã xác nhận' => $this->bookingModel->countByStatus('confirmed'),
-            'Đã thanh toán' => $this->bookingModel->countByStatus('paid'),
-            'Đã hủy' => $this->bookingModel->countByStatus('cancelled'),
-            'Hoàn thành' => $this->bookingModel->countByStatus('completed')
+            'Chờ xác nhận' => $this->bookingModel->countByStatusAndYear('pending', $selectedYear),
+            'Đã xác nhận' => $this->bookingModel->countByStatusAndYear('confirmed', $selectedYear),
+            'Đã thanh toán' => $this->bookingModel->countByStatusAndYear('paid', $selectedYear),
+            'Đã hủy' => $this->bookingModel->countByStatusAndYear('cancelled', $selectedYear),
+            'Hoàn thành' => $this->bookingModel->countByStatusAndYear('completed', $selectedYear)
         ];
         
         // Lấy dữ liệu doanh thu theo tháng cho biểu đồ
-        $currentYear = date('Y');
         $monthlyRevenueData = [];
         $vietnameseMonths = [
             '1' => 'Tháng 1', '2' => 'Tháng 2', '3' => 'Tháng 3', 
@@ -99,7 +106,7 @@ class DashboardController extends BaseController {
         ];
         
         for ($month = 1; $month <= 12; $month++) {
-            $monthlyRevenue = $this->paymentModel->getMonthlyRevenue($currentYear, $month);
+            $monthlyRevenue = $this->paymentModel->getMonthlyRevenue($selectedYear, $month);
             $monthlyRevenueData[$vietnameseMonths[$month]] = $monthlyRevenue;
         }
         
@@ -124,9 +131,13 @@ class DashboardController extends BaseController {
             'monthlyRevenueData' => $monthlyRevenueData,
             'recentBookings' => $recentBookings,
             'popularTours' => $popularTours,
-            'popularLocations' => $popularLocations
+            'popularLocations' => $popularLocations,
+            'selectedYear' => $selectedYear,
+            'years' => $years
         ]);
     }
+
+
 
     /**
      * Display activity logs

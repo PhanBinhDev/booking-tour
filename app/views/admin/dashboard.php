@@ -123,9 +123,21 @@ use App\Helpers\FormatHelper;
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Booking Status Chart -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Trạng thái đặt tour</h3>
-        <div class="text-sm text-gray-500">Tổng: <?= number_format($bookingCount) ?></div>
+        <div class="flex items-center mt-2 sm:mt-0">
+          <form action="<?= UrlHelper::route('admin/dashboard') ?>" method="GET" class="flex items-center">
+            <label for="year-select" class="mr-2 text-sm text-gray-600">Năm:</label>
+            <select id="year-select" name="year"
+              class="border border-gray-300 rounded-md text-sm py-1 px-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              onchange="this.form.submit()">
+              <?php foreach ($years as $year): ?>
+              <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>><?= $year ?></option>
+              <?php endforeach; ?>
+            </select>
+          </form>
+          <div class="ml-4 text-sm text-gray-500">Tổng: <?= number_format(array_sum($bookingStatusData)) ?></div>
+        </div>
       </div>
       <div class="h-64">
         <canvas id="bookingStatusChart"></canvas>
@@ -134,9 +146,13 @@ use App\Helpers\FormatHelper;
 
     <!-- Revenue Chart -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Doanh thu theo tháng</h3>
-        <div class="text-sm text-gray-500"><?= date('Y') ?></div>
+        <div class="flex items-center mt-2 sm:mt-0">
+          <span class="text-sm text-gray-500">Năm: <?= $selectedYear ?></span>
+          <span class="ml-4 text-sm text-gray-500">Tổng:
+            <?= FormatHelper::formatCurrency(array_sum($monthlyRevenueData)) ?></span>
+        </div>
       </div>
       <div class="h-64">
         <canvas id="revenueChart"></canvas>
@@ -199,7 +215,7 @@ use App\Helpers\FormatHelper;
         <!-- Tour Management -->
         <a href="<?= UrlHelper::route('admin/tours/create') ?>"
           class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-          <div class="p-2 rounded-md bg-green-100 text-green-600 flex items-center justify-center">
+          <div class="p-2 rounded-md bg-green-100 text-green-600">
             <i class="fas fa-plus"></i>
           </div>
           <div class="ml-3">
@@ -211,7 +227,7 @@ use App\Helpers\FormatHelper;
         <!-- Location Management -->
         <a href="<?= UrlHelper::route('admin/locations') ?>"
           class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-          <div class="p-2 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center">
+          <div class="p-2 rounded-md bg-blue-100 text-blue-600">
             <i class="fas fa-map-marker-alt"></i>
           </div>
           <div class="ml-3">
@@ -223,7 +239,7 @@ use App\Helpers\FormatHelper;
         <!-- Media Management -->
         <a href="<?= UrlHelper::route('admin/images') ?>"
           class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-          <div class="p-2 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center">
+          <div class="p-2 rounded-md bg-purple-100 text-purple-600">
             <i class="fas fa-images"></i>
           </div>
           <div class="ml-3">
@@ -235,7 +251,7 @@ use App\Helpers\FormatHelper;
         <!-- Payment Management -->
         <a href="<?= UrlHelper::route('admin/payment/transactions') ?>"
           class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-          <div class="p-2 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center">
+          <div class="p-2 rounded-md bg-amber-100 text-amber-600">
             <i class="fas fa-money-bill-wave"></i>
           </div>
           <div class="ml-3">
