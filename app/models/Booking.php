@@ -41,7 +41,8 @@ class Booking extends BaseModel
      *
      * @return int The number of bookings with the specified status
      */
-    public function countByStatus($status) {
+    public function countByStatus($status)
+    {
         $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE status = :status";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':status', $status);
@@ -57,7 +58,8 @@ class Booking extends BaseModel
      * @param int $id Booking ID
      * @return array|null Booking data or null if not found
      */
-    public function getById($id) {
+    public function getById($id)
+    {
         $sql = "SELECT b.*, 
                 t.title as tour_name, 
                 t.slug as tour_slug,
@@ -77,11 +79,11 @@ class Booking extends BaseModel
             LEFT JOIN locations l ON t.location_id = l.id
             LEFT JOIN locations dl ON t.departure_location_id = dl.id
             WHERE b.id = :id";
-        
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         $stmt->execute();
-        
+
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
@@ -494,7 +496,8 @@ class Booking extends BaseModel
      * - tour_title: The title of the tour associated with the booking.
      * - customer_name: The name of the customer associated with the booking.
      */
-    public function getRecent($limit = 5) {
+    public function getRecent($limit = 5)
+    {
         $sql = "
             SELECT DISTINCT
                 b.id, 
@@ -541,7 +544,8 @@ class Booking extends BaseModel
      *               - completed_bookings: The number of bookings with 'completed' status.
      *               - total_revenue: The sum of total_price for all bookings.
      */
-    public function getBookingStatistics() {
+    public function getBookingStatistics()
+    {
         $sql = "
             SELECT 
                 COUNT(*) as total_bookings,
@@ -559,8 +563,6 @@ class Booking extends BaseModel
         $stmt->execute();
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
-
-
 
     public function getAllBookings()
     {

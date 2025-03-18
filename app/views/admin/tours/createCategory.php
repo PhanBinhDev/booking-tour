@@ -17,7 +17,9 @@ use App\Helpers\UrlHelper;
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="col-span-2">
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Tên danh mục <span class="text-red-500">*</span></label>
-                        <input type="text" id="name" name="name" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                        <input type="text" id="name" name="name" required
+                            value="<?php echo isset($category['id']) ? $category['name'] : ''; ?>"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
                     </div>
 
                     <div class="col-span-2">
@@ -117,6 +119,7 @@ use App\Helpers\UrlHelper;
     });
 
     // Preview image before upload
+
     function previewImage(input) {
         const preview = document.getElementById('preview-image');
         const placeholder = document.getElementById('placeholder-icon');
@@ -131,6 +134,8 @@ use App\Helpers\UrlHelper;
             }
 
             reader.readAsDataURL(input.files[0]);
+
+            input.value = "";
         } else {
             preview.classList.add('hidden');
             placeholder.classList.remove('hidden');

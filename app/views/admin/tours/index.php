@@ -94,54 +94,50 @@ use App\Helpers\UrlHelper;
           <tbody class="bg-white divide-y divide-gray-200">
             <!-- Tour 1 -->
             <?php foreach ($tours as $item) { ?>
-            <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["id"] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <img src="<?= UrlHelper::image('') ?>" alt="Tour Hà Nội" class="w-full h-full object-cover rounded">
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["title"] ?></div>
-                <div class="text-sm text-gray-500"><?= $item["slug"] ?></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><?= $item["group_size"] ?></div>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= $item["id"] ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <img src="<?= UrlHelper::image('') ?>" alt="Tour Hà Nội" class="w-full h-full object-cover rounded">
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["title"] ?></div>
+                  <div class="text-sm text-gray-500"><?= $item["slug"] ?></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><?= $item["group_size"] ?></div>
 
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["sale_price"] ?>₫</div>
-                <div class="text-xs text-gray-500 line-through"><?= $item["price"] ?>₫</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["duration"] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  <?= $item["status"] ?>
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["created_at"] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex space-x-2">
-                  <a href="<?= UrlHelper::route('admin/tours/view/' . $item['id']) ?>">
-                    <button class="text-teal-600 hover:text-teal-900" title="Xem chi tiết">
-                      <i class="fas fa-eye"></i>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["sale_price"] ?>₫</div>
+                  <div class="text-xs text-gray-500 line-through"><?= $item["price"] ?>₫</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= $item["duration"] ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <?= $item["status"] ?>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= $item["created_at"] ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+
+                    <a href="<?= UrlHelper::route('admin/tours/editTour/' . $item['id']) ?>">
+                      <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </a>
+                    <button class="text-red-600 hover:text-red-900" title="Xóa">
+                      <i class="fas fa-trash"></i>
                     </button>
-                  </a>
-                  <a href="<?= UrlHelper::route('admin/tours/editTour/' . $item['id']) ?>">
-                    <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </a>
-                  <button class="text-red-600 hover:text-red-900" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
+                  </div>
+                </td>
+              </tr>
             <?php } ?>
 
 
