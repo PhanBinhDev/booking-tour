@@ -43,7 +43,8 @@ class Tour extends BaseModel
      *               - reviews: The number of reviews for the tour
      *               - image: The URL of the featured image for the tour
      */
-    public function getPopular($limit = 5) {
+    public function getPopular($limit = 5)
+    {
         $sql = "
             SELECT 
                 t.id,
@@ -79,4 +80,51 @@ class Tour extends BaseModel
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-  }
+
+
+    public function insertTour($data)
+    {
+        $sql = "INSERT INTO `tours` (
+                    `title`, `slug`, `description`, `content`, `duration`, `group_size`, `price`, `sale_price`, 
+                    `category_id`, `location_id`, `departure_location_id`, `included`, `excluded`, `itinerary`, 
+                    `meta_title`, `meta_description`, `status`, `featured`, `views`, `created_by`, `updated_by`, `created_at`, `updated_at`
+                ) VALUES (
+                    :title, :slug, :description, :content, :duration, :group_size, :price, :sale_price, 
+                    :category_id, :location_id, :departure_location_id, :included, :excluded, :itinerary, 
+                    :meta_title, :meta_description, :status, :featured, :views, :created_by, :updated_by, NOW(), NOW()
+                )";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+
+    public function updateTour($data)
+    {
+        $sql = "UPDATE `tours` 
+                SET `title` = :title, 
+                    `slug` = :slug, 
+                    `description` = :description, 
+                    `content` = :content, 
+                    `duration` = :duration, 
+                    `group_size` = :group_size, 
+                    `price` = :price, 
+                    `sale_price` = :sale_price, 
+                    `category_id` = :category_id, 
+                    `location_id` = :location_id, 
+                    `departure_location_id` = :departure_location_id, 
+                    `included` = :included, 
+                    `excluded` = :excluded, 
+                    `itinerary` = :itinerary, 
+                    `meta_title` = :meta_title, 
+                    `meta_description` = :meta_description, 
+                    `status` = :status, 
+                    `featured` = :featured, 
+                    `updated_by` = :updated_by, 
+                    `updated_at` = NOW() 
+                WHERE `id` = :id";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($data);
+    }
+}

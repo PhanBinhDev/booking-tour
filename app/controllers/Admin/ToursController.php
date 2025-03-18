@@ -40,18 +40,10 @@ class ToursController extends BaseController
         $this->view('admin/bookings', ['bookings' => $bookings]);
     }
 
-    public function deleteBooking($id)
+    public function updateBooking($id)
     {
         $booking = $this->bookingModel->getById($id);
-        if (!$booking) {
-            $this->setFlashMessage('error', 'Đơn đặt không tồn tại');
-            header('location:' . UrlHelper::route('admin/bookings'));
-            return;
-        }
-
-        $this->bookingModel->deleteById($id);
-        $this->setFlashMessage('success', 'Xóa đơn đặt thành công');
-        header('location:' . UrlHelper::route('admin/bookings'));
+        $this->view('admin/updateBooking', ['booking' => $booking]);
     }
 
 
@@ -68,6 +60,10 @@ class ToursController extends BaseController
 
     public function createTour()
     {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo 'hhhh';
+        }
         $this->view('admin/tours/createTour');
     }
 
