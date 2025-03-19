@@ -140,7 +140,7 @@ $router->post('/admin/tours/categories/updateCategory/{id}', 'Admin\ToursControl
 
 //ADMIN/BOOKINGS
 $router->get('/admin/bookings', 'Admin\ToursController@bookings');
-$router->get('/admin/bookings/deleteBooking/{id}', 'Admin\ToursController@deleteBooking');
+$router->get('/admin/bookings/updateBooking/{id}', 'Admin\ToursController@updateBooking');
 
 
 // ADMIN/SYSTEM

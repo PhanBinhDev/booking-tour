@@ -19,13 +19,13 @@ use App\Helpers\UrlHelper;
                     <button type="button" class="tab-btn active py-4 px-6 border-b-2 border-teal-500 font-medium text-sm text-teal-600" data-target="basic-info">
                         Thông tin cơ bản
                     </button>
-                    <button type="button" class="tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-target="details">
+                    <button type="button" class="tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-150" data-target="details">
                         Chi tiết tour
                     </button>
-                    <button type="button" class="tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-target="itinerary">
+                    <button type="button" class="tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-150" data-target="itinerary">
                         Lịch trình
                     </button>
-                    <button type="button" class="tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-target="seo">
+                    <button type="button" class="tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-150" data-target="seo">
                         SEO & Cài đặt
                     </button>
                 </nav>
@@ -38,14 +38,14 @@ use App\Helpers\UrlHelper;
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-2">
                             <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Tên tour <span class="text-red-500">*</span></label>
-                            <input type="text" id="title" name="title" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="text" id="title" name="title" required class="w-full border-2 focus:outline-none p-2 rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div class="col-span-2">
                             <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
                             <div class="flex">
-                                <input type="text" id="slug" name="slug" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
-                                <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                                <input type="text" id="slug" name="slug" class="w-full px-2.5 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                                <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-150 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
                                     Tạo slug
                                 </button>
                             </div>
@@ -54,27 +54,27 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Giá tour (VNĐ) <span class="text-red-500">*</span></label>
-                            <input type="number" id="price" name="price" required min="0" step="1000" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="number" id="price" name="price" required min="0" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
                             <label for="sale_price" class="block text-sm font-medium text-gray-700 mb-1">Giá khuyến mãi (VNĐ)</label>
-                            <input type="number" id="sale_price" name="sale_price" min="0" step="1000" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="number" id="sale_price" name="sale_price" min="0" step="1000" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
                             <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Thời gian tour</label>
-                            <input type="text" id="duration" name="duration" placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="text" id="duration" name="duration" placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
                             <label for="group_size" class="block text-sm font-medium text-gray-700 mb-1">Số người tối đa</label>
-                            <input type="text" id="group_size" name="group_size" placeholder="Ví dụ: 20 người" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="text" id="group_size" name="group_size" placeholder="Ví dụ: 20 người" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
                             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục tour</label>
-                            <select id="category_id" name="category_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <select id="category_id" name="category_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn danh mục --</option>
                                 <option value="1">Du lịch trong nước</option>
                                 <option value="2">Du lịch nước ngoài</option>
@@ -86,7 +86,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm đến</label>
-                            <select id="location_id" name="location_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <select id="location_id" name="location_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn điểm đến --</option>
                                 <option value="1">Hà Nội</option>
                                 <option value="2">Hạ Long</option>
@@ -103,7 +103,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="departure_location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm khởi hành</label>
-                            <select id="departure_location_id" name="departure_location_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <select id="departure_location_id" name="departure_location_id" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn điểm khởi hành --</option>
                                 <option value="1">Hà Nội</option>
                                 <option value="9">TP. Hồ Chí Minh</option>
@@ -113,12 +113,12 @@ use App\Helpers\UrlHelper;
 
                         <div class="col-span-2">
                             <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
-                            <textarea id="description" name="description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50"></textarea>
+                            <textarea id="description" name="description" rows="3" class="w-full border-2 px-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
                         </div>
 
                         <div class="col-span-2">
                             <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Nội dung chi tiết</label>
-                            <textarea id="content" name="content" rows="6" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50"></textarea>
+                            <textarea id="content" name="content" rows="6" class="w-full rounded-md border-2 px-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
                             <p class="mt-1 text-xs text-gray-500">Mô tả chi tiết về tour du lịch</p>
                         </div>
                     </div>
@@ -129,19 +129,19 @@ use App\Helpers\UrlHelper;
                     <div class="grid grid-cols-1 gap-6">
                         <div>
                             <label for="included" class="block text-sm font-medium text-gray-700 mb-1">Dịch vụ bao gồm</label>
-                            <textarea id="included" name="included" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Mỗi dịch vụ một dòng"></textarea>
+                            <textarea id="included" name="included" rows="4" class="w-full px-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Mỗi dịch vụ một dòng"></textarea>
                             <p class="mt-1 text-xs text-gray-500">Liệt kê các dịch vụ bao gồm trong tour</p>
                         </div>
 
                         <div>
                             <label for="excluded" class="block text-sm font-medium text-gray-700 mb-1">Dịch vụ không bao gồm</label>
-                            <textarea id="excluded" name="excluded" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Mỗi dịch vụ một dòng"></textarea>
+                            <textarea id="excluded" name="excluded" rows="4" class="w-full px-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Mỗi dịch vụ một dòng"></textarea>
                             <p class="mt-1 text-xs text-gray-500">Liệt kê các dịch vụ không bao gồm trong tour</p>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh tour</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-150 border-dashed rounded-md">
                                 <div class="space-y-1 text-center">
                                     <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -180,32 +180,32 @@ use App\Helpers\UrlHelper;
                             <div class="grid grid-cols-1 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề ngày</label>
-                                    <input type="text" name="itinerary[0][title]" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Ví dụ: Hà Nội - Hạ Long">
+                                    <input type="text" name="itinerary[0][title]" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Ví dụ: Hà Nội - Hạ Long">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả hoạt động</label>
-                                    <textarea name="itinerary[0][description]" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Mô tả chi tiết các hoạt động trong ngày"></textarea>
+                                    <textarea name="itinerary[0][description]" rows="3" class="w-full border-2 focus:outline-none p-2 rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Mô tả chi tiết các hoạt động trong ngày"></textarea>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Bữa ăn</label>
                                     <div class="flex space-x-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" name="itinerary[0][meals][]" value="breakfast" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                            <input type="checkbox" name="itinerary[0][meals][]" value="breakfast" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                             <span class="ml-2 text-sm text-gray-700">Sáng</span>
                                         </label>
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" name="itinerary[0][meals][]" value="lunch" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                            <input type="checkbox" name="itinerary[0][meals][]" value="lunch" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                             <span class="ml-2 text-sm text-gray-700">Trưa</span>
                                         </label>
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" name="itinerary[0][meals][]" value="dinner" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                            <input type="checkbox" name="itinerary[0][meals][]" value="dinner" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                             <span class="ml-2 text-sm text-gray-700">Tối</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Chỗ ở</label>
-                                    <input type="text" name="itinerary[0][accommodation]" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Ví dụ: Khách sạn 4 sao tại Hạ Long">
+                                    <input type="text" name="itinerary[0][accommodation]" class="w-full border-2 focus:outline-none p-2 rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Ví dụ: Khách sạn 4 sao tại Hạ Long">
                                 </div>
                             </div>
                         </div>
@@ -217,20 +217,20 @@ use App\Helpers\UrlHelper;
                     <div class="grid grid-cols-1 gap-6">
                         <div>
                             <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                            <input type="text" id="meta_title" name="meta_title" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="text" id="meta_title" name="meta_title" class="w-full border-2 focus:outline-none p-2 rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                             <p class="mt-1 text-xs text-gray-500">Để trống để sử dụng tên tour</p>
                         </div>
 
                         <div>
                             <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                            <textarea id="meta_description" name="meta_description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50"></textarea>
+                            <textarea id="meta_description" name="meta_description" rows="3" class="w-full border-2 focus:outline-none p-2 rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
                             <p class="mt-1 text-xs text-gray-500">Để trống để sử dụng mô tả ngắn</p>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
-                                <select id="status" name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                                <select id="status" name="status" class="w-full border-2 focus:outline-none p-2 rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                     <option value="active">Hoạt động</option>
                                     <option value="inactive">Không hoạt động</option>
                                     <option value="draft">Bản nháp</option>
@@ -241,7 +241,7 @@ use App\Helpers\UrlHelper;
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tùy chọn</label>
                                 <div class="mt-2">
                                     <label class="inline-flex items-center">
-                                        <input type="checkbox" name="featured" value="1" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                        <input type="checkbox" name="featured" value="1" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                         <span class="ml-2 text-sm text-gray-700">Tour nổi bật</span>
                                     </label>
                                 </div>
@@ -253,7 +253,7 @@ use App\Helpers\UrlHelper;
 
             <!-- Form actions -->
             <div class="px-6 py-4 bg-gray-50 text-right">
-                <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 mr-2">
+                <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-150 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 mr-2">
                     Hủy
                 </button>
                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
@@ -333,32 +333,32 @@ use App\Helpers\UrlHelper;
                 <div class="grid grid-cols-1 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề ngày</label>
-                        <input type="text" name="itinerary[${dayCount-1}][title]" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Ví dụ: Hạ Long - Sapa">
+                        <input type="text" name="itinerary[${dayCount-1}][title]" class="w-full rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Ví dụ: Hạ Long - Sapa">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả hoạt động</label>
-                        <textarea name="itinerary[${dayCount-1}][description]" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Mô tả chi tiết các hoạt động trong ngày"></textarea>
+                        <textarea name="itinerary[${dayCount-1}][description]" rows="3" class="w-full rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Mô tả chi tiết các hoạt động trong ngày"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Bữa ăn</label>
                         <div class="flex space-x-4">
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="itinerary[${dayCount-1}][meals][]" value="breakfast" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                <input type="checkbox" name="itinerary[${dayCount-1}][meals][]" value="breakfast" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                 <span class="ml-2 text-sm text-gray-700">Sáng</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="itinerary[${dayCount-1}][meals][]" value="lunch" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                <input type="checkbox" name="itinerary[${dayCount-1}][meals][]" value="lunch" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                 <span class="ml-2 text-sm text-gray-700">Trưa</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="itinerary[${dayCount-1}][meals][]" value="dinner" class="rounded border-gray-300 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-50">
+                                <input type="checkbox" name="itinerary[${dayCount-1}][meals][]" value="dinner" class="rounded border-gray-150 text-teal-600 shadow-sm focus:border-teal-300 focus:ring focus:ring-teal-200 focus:ring-opacity-20">
                                 <span class="ml-2 text-sm text-gray-700">Tối</span>
                             </label>
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Chỗ ở</label>
-                        <input type="text" name="itinerary[${dayCount-1}][accommodation]" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Ví dụ: Khách sạn 4 sao tại Sapa">
+                        <input type="text" name="itinerary[${dayCount-1}][accommodation]" class="w-full rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Ví dụ: Khách sạn 4 sao tại Sapa">
                     </div>
                 </div>
             `;

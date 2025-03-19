@@ -19,13 +19,18 @@ use App\Helpers\UrlHelper;
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Tên danh mục <span class="text-red-500">*</span></label>
                         <input type="text" id="name" name="name" required
                             value="<?php echo isset($category['id']) ? $category['name'] : ''; ?>"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            class="w-full p-2.5 rounded-md border-2 border-gray-500 shadow-sm
+                                    focus:border-1 focus:border-teal-500 focus:outline-none 
+                                    focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                     </div>
 
                     <div class="col-span-2">
                         <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
                         <div class="flex">
-                            <input type="text" id="slug" name="slug" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                            <input type="text" id="slug" name="slug"
+                                class="w-full rounded-md border-2 border-gray-500 shadow-sm
+                                 focus:border-teal-500 focus:outline-none px-2.5
+                                 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                             <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
                                 Tạo slug
                             </button>
@@ -33,21 +38,12 @@ use App\Helpers\UrlHelper;
                         <p class="mt-1 text-xs text-gray-500">Để trống để tự động tạo từ tên danh mục</p>
                     </div>
 
-                    <div class="col-span-2 md:col-span-1">
-                        <label for="parent_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục cha</label>
-                        <select id="parent_id" name="parent_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
-                            <option value="">-- Không có danh mục cha --</option>
-                            <option value="1">Du lịch trong nước</option>
-                            <option value="2">Du lịch nước ngoài</option>
-                            <option value="3">Tour theo chủ đề</option>
-                            <option value="4">Tour theo mùa</option>
-                        </select>
-                        <p class="mt-1 text-xs text-gray-500">Chọn danh mục cha nếu đây là danh mục con</p>
-                    </div>
-
-                    <div class="col-span-2 md:col-span-1">
+                    <div class="col-span-2 md:col-span-2">
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
-                        <select id="status" name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+                        <select id="status" name="status"
+                            class="w-full rounded-md border-2 border-gray-500 shadow-sm
+                                 focus:border-teal-500 focus:outline-none px-2.5
+                                 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20 p-2.5">
                             <option value="active">Hoạt động</option>
                             <option value="inactive">Không hoạt động</option>
                         </select>
@@ -55,7 +51,9 @@ use App\Helpers\UrlHelper;
 
                     <div class="col-span-2">
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-                        <textarea id="description" name="description" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50"></textarea>
+                        <textarea id="description" name="description" rows="4"
+                            class="w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-teal-500 focus:outline-none
+                        focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20 px-2.5"></textarea>
                     </div>
 
                     <div class="col-span-2">

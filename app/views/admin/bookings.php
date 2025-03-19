@@ -95,48 +95,47 @@ use App\Helpers\UrlHelper;
             <!-- Đặt tour 1 - Đây là mẫu, bạn sẽ thay thế bằng dữ liệu từ MySQL -->
 
             <?php foreach ($bookings as $item) { ?>
-            <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["booking_number"] ?>
-              </td>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= $item["booking_number"] ?>
+                </td>
 
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["tour_title"] ?></div>
-                <div class="text-sm text-gray-500"><?= $item["duration"] ?></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><?= $item["customer_name"] ?></div>
-                <div class="text-xs text-gray-500">ID: <?= $item["customer_id"] ?></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["adults"] ?> người lớn</div>
-                <div class="text-xs text-gray-500"><?= $item["children"] ?> trẻ em</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["tour_price"] ?>₫</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                  <?= $item["booking_status"] ?>
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  <?= $item["payment_status"] ?>
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["booking_date"] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a href="<?= UrlHelper::route('admin/bookings/deleteBooking/' . $item['id']) ?>"
-                  onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                  <button class="text-red-600 hover:text-red-900" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </a>
-              </td>
-            </tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["tour_title"] ?></div>
+                  <div class="text-sm text-gray-500"><?= $item["duration"] ?></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><?= $item["customer_name"] ?></div>
+                  <div class="text-xs text-gray-500">ID: <?= $item["customer_id"] ?></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["adults"] ?> người lớn</div>
+                  <div class="text-xs text-gray-500"><?= $item["children"] ?> trẻ em</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["tour_price"] ?>₫</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    <?= $item["booking_status"] ?>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <?= $item["payment_status"] ?>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= $item["booking_date"] ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="<?= UrlHelper::route('admin/bookings/updateBooking/' . $item['id']) ?>">
+                    <button class="text-teal-600 hover:text-teal-900" title="Xóa">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </a>
+                </td>
+              </tr>
             <?php } ?>
 
           </tbody>

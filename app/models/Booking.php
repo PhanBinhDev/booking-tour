@@ -311,7 +311,8 @@ class Booking extends BaseModel
      * @param int $year Year to filter by
      * @return int Count of bookings
      */
-    public function countByStatusAndYear($status, $year) {
+    public function countByStatusAndYear($status, $year)
+    {
         $sql = "SELECT COUNT(*) as count FROM {$this->table} 
             WHERE status = :status AND YEAR(created_at) = :year";
         $stmt = $this->db->prepare($sql);
@@ -601,22 +602,5 @@ class Booking extends BaseModel
         $stmt->execute();
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
-    }
-
-
-    public function deleteById($id)
-    {
-        try {
-            $this->db->beginTransaction();
-            $stmt = $this->db->prepare("DELETE FROM bookings WHERE id = :id");
-            $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-            $stmt->execute();
-
-            $this->db->commit();
-            return true;
-        } catch (\Exception $e) {
-            $this->db->rollBack();
-            return false;
-        }
     }
 }
