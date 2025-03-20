@@ -7,6 +7,7 @@ use Cloudinary\Api\Admin\AdminApi;
 use App\Config\CloudinaryInstance;
 use App\Models\BaseModel;
 use App\Models\Image;
+use Cloudinary\Transformation\Resize;
 
 class CloudinaryHelper extends BaseModel
 {
@@ -19,32 +20,33 @@ class CloudinaryHelper extends BaseModel
      * @param array $options Tùy chọn upload bổ sung
      * @return array Kết quả từ Cloudinary API
      */
-    public static function upload($filePath, $folder = null, $options = []) {
+    public static function upload($filePath, $folder = null, $options = [])
+    {
         $prefix = 'booking_travel';
 
         // Đảm bảo Cloudinary đã được cấu hình
         CloudinaryInstance::setup();
-        
+
         // Thiết lập các tùy chọn mặc định
         $uploadOptions = [
             'resource_type' => 'image',
             'unique_filename' => true,
             'overwrite' => false
         ];
-        
+
         // Thêm folder nếu được chỉ định
         if ($folder) {
             $uploadOptions['folder'] =  $prefix . '/' . $folder;
         }
-        
+
         // Gộp các tùy chọn bổ sung
         $uploadOptions = array_merge($uploadOptions, $options);
-        
+
         // Thực hiện upload
         $uploadApi = new UploadApi();
         return $uploadApi->upload($filePath, $uploadOptions);
     }
-    
+
     /**
      * Tải lên ảnh và lưu thông tin vào cơ sở dữ liệu
      * 
@@ -54,22 +56,23 @@ class CloudinaryHelper extends BaseModel
      * @param int $userId ID của người dùng tải lên
      * @return int|false ID của bản ghi ảnh hoặc false nếu thất bại
      */
-    public static function uploadAndSave($filePath, $imageData, $folder = 'general', $userId = null) {
+    public static function uploadAndSave($filePath, $imageData, $folder = 'general', $userId = null)
+    {
         $imageModel = new Image();
-        
+
         try {
             // Bắt đầu transaction nếu model hỗ trợ
             if (method_exists($imageModel, 'beginTransaction')) {
                 $imageModel->db->beginTransaction();
             }
-            
+
             // Upload lên Cloudinary
             $result = self::upload($filePath, $folder);
-            
+
             // Lấy thông tin từ file gốc
             $fileInfo = pathinfo($filePath);
             $fileSize = filesize($filePath);
-            
+
             // Tạo mảng dữ liệu để lưu vào DB
             $data = [
                 'title' => $imageData['title'] ?? $fileInfo['filename'],
@@ -86,23 +89,22 @@ class CloudinaryHelper extends BaseModel
                 'category' => $folder,
                 'user_id' => $userId
             ];
-            
+
             // Lưu vào cơ sở dữ liệu
             $imageId = $imageModel->create($data);
-            
+
             // Nếu lưu thành công và có transaction, commit
             if ($imageId && method_exists($imageModel, 'commit')) {
                 $imageModel->db->commit();
             }
-            
+
             return $imageId;
-            
         } catch (\Exception $e) {
             // Rollback transaction nếu có lỗi
             if (method_exists($imageModel, 'rollback')) {
                 $imageModel->db->rollback();
             }
-            
+
             // Nếu đã upload lên Cloudinary nhưng lưu DB thất bại, xóa ảnh khỏi Cloudinary
             if (isset($result) && isset($result['public_id'])) {
                 try {
@@ -113,13 +115,13 @@ class CloudinaryHelper extends BaseModel
                     error_log('Failed to delete image from Cloudinary after DB error: ' . $deleteEx->getMessage());
                 }
             }
-            
+
             // Xử lý lỗi và ghi log
             error_log('Cloudinary upload error: ' . $e->getMessage());
             return false;
         }
     }
-    
+
     /**
      * Lấy URL của ảnh dựa vào tên file và thư mục
      * 
@@ -128,15 +130,16 @@ class CloudinaryHelper extends BaseModel
      * @param array $transformations Các biến đổi ảnh (resize, crop...)
      * @return string URL của ảnh
      */
-    public static function getImageUrl($folder, $fileName, $transformations = []) {
+    public static function getImageUrl($folder, $fileName, $transformations = [])
+    {
         CloudinaryInstance::setup();
-        
+
         // Xây dựng public_id từ folder và fileName
         $publicId = $folder ? $folder . '/' . pathinfo($fileName, PATHINFO_FILENAME) : pathinfo($fileName, PATHINFO_FILENAME);
-        
+
         // Tạo URL sử dụng Cloudinary SDK
         $cloudinaryUrl = 'https://res.cloudinary.com/' . $_ENV['CLOUDINARY_CLOUD_NAME'] . '/image/upload/';
-        
+
         // Thêm các biến đổi nếu có
         if (!empty($transformations)) {
             $transformString = '';
@@ -146,13 +149,13 @@ class CloudinaryHelper extends BaseModel
             $transformString = rtrim($transformString, ',');
             $cloudinaryUrl .= $transformString . '/';
         }
-        
+
         // Thêm public_id
         $cloudinaryUrl .= $publicId;
-        
+
         return $cloudinaryUrl;
     }
-    
+
     /**
      * Lấy URL của ảnh từ Cloudinary ID
      * 
@@ -160,12 +163,13 @@ class CloudinaryHelper extends BaseModel
      * @param array $transformations Các biến đổi ảnh
      * @return string URL của ảnh
      */
-    public static function getUrlFromId($cloudinaryId, $transformations = []) {
+    public static function getUrlFromId($cloudinaryId, $transformations = [])
+    {
         CloudinaryInstance::setup();
-        
+
         // Tạo URL cơ bản
         $cloudinaryUrl = 'https://res.cloudinary.com/' . $_ENV['CLOUDINARY_CLOUD_NAME'] . '/image/upload/';
-        
+
         // Thêm các biến đổi nếu có
         if (!empty($transformations)) {
             $transformString = '';
@@ -175,36 +179,37 @@ class CloudinaryHelper extends BaseModel
             $transformString = rtrim($transformString, ',');
             $cloudinaryUrl .= $transformString . '/';
         }
-        
+
         // Thêm public_id
         $cloudinaryUrl .= $cloudinaryId;
-        
+
         return $cloudinaryUrl;
     }
-    
+
     /**
      * Xóa ảnh từ Cloudinary và cơ sở dữ liệu
      * 
      * @param string $cloudinaryId Cloudinary public_id
      * @return bool Kết quả xóa
      */
-    public static function deleteImage($cloudinaryId) {
+    public static function deleteImage($cloudinaryId)
+    {
         $imageModel = new Image();
-        
+
         try {
             // Bắt đầu transaction nếu model hỗ trợ
             if (method_exists($imageModel, 'beginTransaction')) {
                 $imageModel->db->beginTransaction();
             }
-            
+
             // Xóa từ cơ sở dữ liệu trước
             $dbResult = $imageModel->deleteWhere('cloudinary_id', $cloudinaryId);
-            
+
             if ($dbResult) {
                 // Sau khi xóa thành công từ DB, xóa từ Cloudinary
                 $uploadApi = new UploadApi();
                 $result = $uploadApi->destroy($cloudinaryId);
-                
+
                 if ($result['result'] === 'ok') {
                     // Commit transaction nếu cả hai bước đều thành công
                     if (method_exists($imageModel, 'commit')) {
@@ -235,24 +240,25 @@ class CloudinaryHelper extends BaseModel
             return false;
         }
     }
-    
+
     /**
      * Xóa ảnh từ cơ sở dữ liệu và Cloudinary theo ID
      * 
      * @param int $imageId ID của ảnh trong cơ sở dữ liệu
      * @return bool Kết quả xóa
      */
-    public static function deleteById($imageId) {
+    public static function deleteById($imageId)
+    {
         $imageModel = new Image();
-        
+
         try {
             // Lấy thông tin ảnh từ DB
             $image = $imageModel->getById($imageId);
-            
+
             if (!$image || !isset($image['cloudinary_id'])) {
                 return false;
             }
-            
+
             // Sử dụng phương thức delete đã cải tiến
             return self::delete($image['cloudinary_id']);
         } catch (\Exception $e) {
@@ -260,7 +266,7 @@ class CloudinaryHelper extends BaseModel
             return false;
         }
     }
-    
+
     /**
      * Cập nhật thông tin ảnh
      * 
@@ -268,18 +274,19 @@ class CloudinaryHelper extends BaseModel
      * @param array $data Dữ liệu cập nhật
      * @return bool Kết quả cập nhật
      */
-    public static function updateImage($imageId, $data) {
+    public static function updateImage($imageId, $data)
+    {
         $imageModel = new Image();
-        
+
         try {
             // Bắt đầu transaction nếu model hỗ trợ
             if (method_exists($imageModel, 'beginTransaction')) {
                 $imageModel->db->beginTransaction();
             }
-            
+
             // Cập nhật trong cơ sở dữ liệu
             $result = $imageModel->update($imageId, $data);
-            
+
             if ($result) {
                 // Commit transaction nếu thành công
                 if (method_exists($imageModel, 'commit')) {
@@ -302,7 +309,7 @@ class CloudinaryHelper extends BaseModel
             return false;
         }
     }
-    
+
     /**
      * Lấy danh sách ảnh trong một thư mục
      * 
@@ -310,15 +317,17 @@ class CloudinaryHelper extends BaseModel
      * @param int $maxResults Số lượng kết quả tối đa
      * @return array Danh sách ảnh
      */
-    public static function getFolderImages($folder, $maxResults = 100) {
+    public static function getFolderImages($folder, $maxResults = 100)
+    {
         try {
+            $prefix = 'booking_travel/';
             $adminApi = new AdminApi();
             $result = $adminApi->assets([
                 'type' => 'upload',
-                'prefix' => $folder . '/',
+                'prefix' =>  $prefix . $folder . '/',
                 'max_results' => $maxResults
             ]);
-            
+
             return $result['resources'];
         } catch (\Exception $e) {
             error_log('Cloudinary folder search error: ' . $e->getMessage());
@@ -334,10 +343,11 @@ class CloudinaryHelper extends BaseModel
      * @param string $text Văn bản hiển thị
      * @return string URL placeholder
      */
-    public static function getPlaceholder($width = 300, $height = 200, $text = 'No Image') {
+    public static function getPlaceholder($width = 300, $height = 200, $text = 'No Image')
+    {
         // Sử dụng Cloudinary để tạo placeholder
         CloudinaryInstance::setup();
-        
+
         $options = [
             'width' => $width,
             'height' => $height,
@@ -345,7 +355,42 @@ class CloudinaryHelper extends BaseModel
             'color' => '999999',
             'text' => $text
         ];
-        
+
         return self::getImageUrl('placeholders', 'blank', $options);
+    }
+
+    public static function getImageUrlByFolderAndName($folder, $name, $options = [])
+    {
+        // Thiết lập cấu hình Cloudinary
+        CloudinaryInstance::setup();
+
+        // Sử dụng Cloudinary\Cloudinary class để lấy URL
+        $cloudinary = CloudinaryInstance::getInstance();
+
+        $prefix = 'booking_travel/';
+
+        // Tạo đường dẫn đầy đủ tới ảnh (folder/name)
+        $fullPath = $prefix . $folder . '/' . $name;
+
+        // Xây dựng URL với các tùy chọn (nếu có)
+        $url = $cloudinary->image($fullPath);
+
+        // Áp dụng các tùy chọn biến đổi nếu có
+        if (!empty($options)) {
+            if (isset($options['width'])) {
+                $url = $url->resize(Resize::scale()->width($options['width']));
+            }
+
+            if (isset($options['height'])) {
+                $url = $url->resize(Resize::scale()->height($options['height']));
+            }
+
+            if (isset($options['crop']) && $options['crop'] === 'fill' && isset($options['width']) && isset($options['height'])) {
+                $url = $url->resize(Resize::fill()->width($options['width'])->height($options['height']));
+            }
+        }
+
+        // Tạo và trả về URL đầy đủ
+        return (string) $url->toUrl();
     }
 }

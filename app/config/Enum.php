@@ -55,7 +55,6 @@ class Enum
     const BOOKING_STATUS = [
         'PENDING' => 'pending',
         'CONFIRMED' => 'confirmed',
-        'PAID' => 'paid',
         'CANCELLED' => 'cancelled',
         'COMPLETED' => 'completed',
     ];
@@ -120,4 +119,3 @@ class Enum
         'REFUNDED' => 'refunded',
     ];
 }
-?>

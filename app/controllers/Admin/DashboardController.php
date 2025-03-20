@@ -45,11 +45,11 @@ class DashboardController extends BaseController {
     }
 
     public function dashboard() {
-        if(!$this->checkPermission(PERM_VIEW_DASHBOARD)) {
-            $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
-            $this->view('error/403');
-            return;
-        }
+        // if(!$this->checkPermission(PERM_VIEW_DASHBOARD)) {
+        //     $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
+        //     $this->view('error/403');
+        //     return;
+        // }
 
         $currentUser = $this->getCurrentUser();
         

@@ -36,8 +36,60 @@ class ToursController extends BaseController
             return;
         }
 
-        $bookings = $this->bookingModel->getAllBookings();
-        $this->view('admin/bookings', ['bookings' => $bookings]);
+        // Khởi tạo biến $filters từ các tham số GET
+        $filters = [
+            'search' => $_GET['search'] ?? '',
+            'status' => $_GET['status'] ?? '',
+            'tour_category' => $_GET['tour_category'] ?? '',
+            'payment_status' => $_GET['payment_status'] ?? '',
+            'date_from' => $_GET['date_from'] ?? '',
+            'date_to' => $_GET['date_to'] ?? '',
+        ];
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+
+
+        $bookings = $this->bookingModel->getPaginated($page, $limit, $filters);
+
+        $tourCategories = $this->categoriesModel->getAll();
+        // Phân loại danh mục thành cha-con
+        $parentCategories = [];
+        $childCategories = [];
+
+        foreach ($tourCategories as $category) {
+            if (empty($category['parent_id'])) {
+                $parentCategories[] = $category;
+            } else {
+                if (!isset($childCategories[$category['parent_id']])) {
+                    $childCategories[$category['parent_id']] = [];
+                }
+                $childCategories[$category['parent_id']][] = $category;
+            }
+        }
+
+        $this->view('admin/booking/index', [
+            'bookings' => $bookings,
+            'tourCategories' => $tourCategories,
+            'parentCategories' => $parentCategories,
+            'childCategories' => $childCategories,
+            'filters' => $filters
+        ]);
+    }
+
+    public function bookingDetails($id)
+    {
+        $booking = $this->bookingModel->getBookingDetails($id);
+
+        // var_dump($booking);
+        $this->view('admin/booking/details', [
+            'booking' => $booking['booking'],
+            'tour' => $booking['tour'],
+            'payments' => $booking['payments'],
+            'latest_payment' => $booking['latest_payment'],
+            'booking_history' => $booking['booking_history'],
+            'invoice' => $booking['invoice']
+        ]);
     }
 
     public function updateBooking($id)

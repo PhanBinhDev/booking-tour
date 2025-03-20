@@ -17,6 +17,13 @@ abstract class BaseModel
         $this->db = $database->getConnection();
     }
 
+    public function deleteSoft($id)
+    {
+        $sql = "UPDATE {$this->table} SET isDeleted = '1' WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
     /**
      * Lấy tất cả bản ghi
      * 

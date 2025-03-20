@@ -15,12 +15,19 @@ ob_start();
   <title><?= $title ?? 'Admin Dashboard - Di Travel' ?></title>
   <link href="<?= UrlHelper::css('style.css') ?>" rel="stylesheet">
   <link rel="icon" type="image/png" href="<?= UrlHelper::image('favicon/favicon-96x96.png') ?>" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg')?>" />
-  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico')?>" />
-  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png')?>" />
+  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg') ?>" />
+  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico') ?>" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png') ?>" />
   <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
   <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js">
+  </script>
+  <link rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+  <link rel="stylesheet" href="<?= UrlHelper::css('mapbox.css') ?>">
 </head>
 
 <body class="bg-gray-100">
@@ -236,6 +243,15 @@ ob_start();
                 </a>
               </li>
             </ul>
+          </li>
+
+          <!-- Location Management -->
+          <li>
+            <a href="<?= UrlHelper::route('admin/locations') ?>"
+              class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors <?= $activePage === 'comments' ? 'bg-gray-700 text-white' : '' ?>">
+              <i class="fas fa-map-marker-alt w-5 h-5 mr-3"></i>
+              <span>Quản lý Địa điểm</span>
+            </a>
           </li>
 
           <!-- Comments Management -->
@@ -498,6 +514,7 @@ ob_start();
     });
   });
   </script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>
 
 </html>
