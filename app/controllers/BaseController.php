@@ -49,16 +49,18 @@ class BaseController
      * @param string $type Loại thông báo
      * @param string $message Nội dung thông báo
      */
-    function setFlashMessage($type, $message) {
+    function setFlashMessage($type, $message)
+    {
         $_SESSION['flash_message'] = [
             'type' => $type,
             'message' => $message
         ];
     }
 
-    public function view($view, $data = [], $layoutBase = null) {
+    public function view($view, $data = [], $layoutBase = null)
+    {
         // Thiết lập layout mặc định nếu không được chỉ định
-        if(!$layoutBase){
+        if (!$layoutBase) {
             $layout = LayoutHelper::getLayoutByRole();
         }
 
