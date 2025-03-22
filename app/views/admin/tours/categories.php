@@ -16,6 +16,45 @@ use App\Helpers\UrlHelper;
             </a>
         </div>
 
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="col-span-1">
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
+                    <select id="category" name="category"
+                        class="w-full rounded-md focus:outline-none p-2 border-2 border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                        <option value="">Tất cả danh mục</option>
+                        <option value="1">Du lịch trong nước</option>
+                        <option value="2">Du lịch nước ngoài</option>
+                        <option value="3">Miền Bắc</option>
+                    </select>
+                </div>
+                <div class="col-span-1">
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
+                    <select id="status" name="status"
+                        class="w-full rounded-md focus:outline-none p-2 border-2 border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="1">Đang hoạt động</option>
+                        <option value="0">Tạm ngưng</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
+                    <div class="relative">
+                        <input type="text" id="search" name="search" placeholder="Nhập tên tour hoặc mã tour..."
+                            class="w-full rounded-md focus:outline-none p-2 border-2 border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20 pl-10">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-filter mr-2"></i> Lọc
+                </button>
+            </div>
+        </div>
+
 
         <!-- Bảng danh sách danh mục với scroll horizontal -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden w-full">

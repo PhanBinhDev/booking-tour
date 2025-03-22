@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use PDO;
+
 class Tour extends BaseModel
 {
     protected $table = 'tours';
@@ -13,11 +15,16 @@ class Tour extends BaseModel
 
     public function getTourDetails($tourId)
     {
-        $sql = "SELECT tours.*, tour_categories.name as category_name, start_date, end_date 
-        FROM tours
-        JOIN tour_categories ON tours.category_id = tour_categories.id 
-        JOIN tour_dates ON tour_dates.tour_id = tours.id 
-        WHERE tours.id = :id";
+        $sql = "SELECT 
+                tours.*, 
+                tour_categories.name AS category_name, 
+                tour_dates.start_date, 
+                tour_dates.end_date 
+            FROM tours
+            LEFT JOIN tour_categories ON tours.category_id = tour_categories.id 
+            LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id 
+            LEFT JOIN locations ON locations.id = tours.location_id 
+            WHERE tours.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $tourId, \PDO::PARAM_INT);
         $stmt->execute();
@@ -95,13 +102,13 @@ class Tour extends BaseModel
                 )";
 
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute($data);
+        $stmt->execute($data);
     }
-
 
     public function updateTour($data)
     {
-        $sql = "UPDATE `tours` 
+        try {
+            $sql = "UPDATE `tours` 
                 SET `title` = :title, 
                     `slug` = :slug, 
                     `description` = :description, 
@@ -110,21 +117,32 @@ class Tour extends BaseModel
                     `group_size` = :group_size, 
                     `price` = :price, 
                     `sale_price` = :sale_price, 
-                    `category_id` = :category_id, 
-                    `location_id` = :location_id, 
-                    `departure_location_id` = :departure_location_id, 
+                    `category_id` = NULLIF(:category_id, ''), 
+                    `location_id` = NULLIF(:location_id, ''), 
+                    `departure_location_id` = NULLIF(:departure_location_id, ''), 
                     `included` = :included, 
                     `excluded` = :excluded, 
                     `itinerary` = :itinerary, 
                     `meta_title` = :meta_title, 
                     `meta_description` = :meta_description, 
                     `status` = :status, 
-                    `featured` = :featured, 
+                    `featured` = COALESCE(:featured, 0), 
                     `updated_by` = :updated_by, 
                     `updated_at` = NOW() 
                 WHERE `id` = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute($data);
 
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute($data);
+            if ($result && $stmt->rowCount() > 0) {
+                return true;
+            } else {
+                // Ghi log lỗi hoặc trả về thông báo lỗi
+                error_log("Không có dòng nào được cập nhật: " . print_r($data, true));
+                return false;
+            }
+        } catch (\Exception $e) {
+            error_log("Lỗi SQL: " . $e->getMessage());
+            return false;
+        }
     }
 }

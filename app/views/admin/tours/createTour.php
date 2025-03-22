@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\UrlHelper;
+
 ?>
 
 <div class="content-wrapper">
@@ -12,7 +13,7 @@ use App\Helpers\UrlHelper;
         </div>
 
         <!-- Form thêm tour -->
-        <form action="" method="POST" class="bg-white shadow-md rounded-lg overflow-hidden">
+        <form action="<?= UrlHelper::route('admin/tours/createTour') ?>" method="POST" class="bg-white shadow-md rounded-lg overflow-hidden">
             <!-- Tabs điều hướng -->
             <div class="border-b border-gray-200">
                 <nav class="flex -mb-px">
@@ -45,7 +46,7 @@ use App\Helpers\UrlHelper;
                             <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
                             <div class="flex">
                                 <input type="text" id="slug" name="slug" class="w-full px-2.5 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                                <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-150 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                                <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-150 shadow-sm text-sm leading-4 font-medium rounded-md  text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
                                     Tạo slug
                                 </button>
                             </div>
@@ -59,7 +60,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="sale_price" class="block text-sm font-medium text-gray-700 mb-1">Giá khuyến mãi (VNĐ)</label>
-                            <input type="number" id="sale_price" name="sale_price" min="0" step="1000" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                            <input type="number" id="sale_price" name="sale_price" min="0" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
@@ -76,11 +77,11 @@ use App\Helpers\UrlHelper;
                             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục tour</label>
                             <select id="category_id" name="category_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn danh mục --</option>
-                                <option value="1">Du lịch trong nước</option>
-                                <option value="2">Du lịch nước ngoài</option>
-                                <option value="3">Tour miền Bắc</option>
-                                <option value="4">Tour miền Trung</option>
-                                <option value="5">Tour miền Nam</option>
+                                <?php
+                                foreach ($categories as $value) { ?>
+                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
+                                <?php } ?>
+
                             </select>
                         </div>
 
@@ -88,16 +89,11 @@ use App\Helpers\UrlHelper;
                             <label for="location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm đến</label>
                             <select id="location_id" name="location_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn điểm đến --</option>
-                                <option value="1">Hà Nội</option>
-                                <option value="2">Hạ Long</option>
-                                <option value="3">Sapa</option>
-                                <option value="4">Đà Nẵng</option>
-                                <option value="5">Hội An</option>
-                                <option value="6">Huế</option>
-                                <option value="7">Nha Trang</option>
-                                <option value="8">Đà Lạt</option>
-                                <option value="9">TP. Hồ Chí Minh</option>
-                                <option value="10">Phú Quốc</option>
+                                <?php
+                                foreach ($locations as $value) { ?>
+                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
+                                <?php } ?>
+
                             </select>
                         </div>
 
@@ -105,9 +101,11 @@ use App\Helpers\UrlHelper;
                             <label for="departure_location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm khởi hành</label>
                             <select id="departure_location_id" name="departure_location_id" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn điểm khởi hành --</option>
-                                <option value="1">Hà Nội</option>
-                                <option value="9">TP. Hồ Chí Minh</option>
-                                <option value="4">Đà Nẵng</option>
+                                <?php
+                                foreach ($locations as $value) { ?>
+                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
+                                <?php } ?>
+
                             </select>
                         </div>
 
