@@ -3,11 +3,12 @@
 namespace App\Controllers;
 
 use App\Models\Tour;
+use App\Models\Contact;
 
 class HomeController extends BaseController
 {
   private $tourModel;
-
+  private $contactModel;
   function __construct()
   {
     $route = $this->getRouteByRole();
@@ -18,6 +19,7 @@ class HomeController extends BaseController
     }
 
     $this->tourModel = new Tour();
+    $this->contactModel = new Contact();
   }
   function index()
   {
@@ -32,6 +34,26 @@ class HomeController extends BaseController
 
   function contact()
   {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+       $name = $_POST['name'] ?? '';
+       $email = $_POST['email'] ?? '';
+       $phone = $_POST['phone'] ?? '';
+       $subject = $_POST['subject'] ?? '';
+       $message = $_POST['message'] ?? '';
+
+       $data =[
+        'name'=> $name,
+        'email'=> $email,
+        'phone'=> $phone,
+        'subject'=> $subject,
+        'message'=> $message,
+       ];
+      //  var_dump($data); die();
+        $this->contactModel->createContact($data);
+
+    }
+
+
     $this->view('home/contact');
   }
 

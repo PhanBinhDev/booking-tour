@@ -180,7 +180,7 @@ $activePage = 'contact';
                 <option value="inquiry">Thông tin tour</option>
                 <option value="feedback">Phản hồi</option>
                 <option value="partnership">Hợp tác</option>
-                <option value="other">Khác</option>
+                <option value="other">Khác</option> 
               </select>
             </div>
 
