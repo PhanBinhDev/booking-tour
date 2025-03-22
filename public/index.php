@@ -129,6 +129,9 @@ $router->get('/admin/tours', 'Admin\ToursController@index');
 $router->get('/admin/tours/createTour', 'Admin\ToursController@createTour');
 $router->post('/admin/tours/createTour', 'Admin\ToursController@createTour');
 $router->get('/admin/tours/editTour/{id}', 'Admin\ToursController@editTour');
+$router->post('/admin/tours/editTour/{id}', 'Admin\ToursController@editTour');
+$router->get('/admin/tours/deleteTour/{id}', 'Admin\ToursController@deleteTour');
+
 
 //ADMIN/CATEGORIES/
 $router->get('/admin/tours/categories', 'Admin\ToursController@categories');

@@ -22,7 +22,7 @@ use App\Helpers\UrlHelper;
         <div class="col-span-1">
           <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
           <select id="category" name="category"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+            class="w-full rounded-md focus:outline-none p-2 border-2 border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
             <option value="">Tất cả danh mục</option>
             <option value="1">Du lịch trong nước</option>
             <option value="2">Du lịch nước ngoài</option>
@@ -32,7 +32,7 @@ use App\Helpers\UrlHelper;
         <div class="col-span-1">
           <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
           <select id="status" name="status"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50">
+            class="w-full rounded-md focus:outline-none p-2 border-2 border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
             <option value="">Tất cả trạng thái</option>
             <option value="1">Đang hoạt động</option>
             <option value="0">Tạm ngưng</option>
@@ -42,7 +42,7 @@ use App\Helpers\UrlHelper;
           <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
           <div class="relative">
             <input type="text" id="search" name="search" placeholder="Nhập tên tour hoặc mã tour..."
-              class="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 pl-10">
+              class="w-full rounded-md focus:outline-none p-2 border-2 border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20 pl-10">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <i class="fas fa-search text-gray-400"></i>
             </div>
@@ -132,9 +132,12 @@ use App\Helpers\UrlHelper;
                         <i class="fas fa-edit"></i>
                       </button>
                     </a>
-                    <button class="text-red-600 hover:text-red-900" title="Xóa">
-                      <i class="fas fa-trash"></i>
-                    </button>
+                    <a href="<?= UrlHelper::route('admin/tours/deleteTour/' . $item['id']) ?>"
+                      onclick="return confirm('Bạn có chắc chắn muốn xóa tour này?');">
+                      <button class="text-red-600 hover:text-red-900" title="Xóa">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -143,6 +146,7 @@ use App\Helpers\UrlHelper;
 
           </tbody>
         </table>
+
       </div>
     </div>
   </div>

@@ -84,6 +84,15 @@ abstract class BaseModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    public function getTitle($id, $title, $tb)
+    {
+        $sql = "SELECT {$id},{$title} FROM {$tb}";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /**
      * Lấy một bản ghi theo ID
      * 
