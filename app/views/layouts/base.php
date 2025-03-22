@@ -12,10 +12,18 @@ use App\Helpers\UrlHelper;
   <title><?= $title ?? 'PHP MVC Project' ?></title>
   <link href="<?= UrlHelper::css('style.css') ?>" rel="stylesheet">
   <link rel="icon" type="image/png" href="<?= UrlHelper::image('favicon/favicon-96x96.png') ?>" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg')?>" />
-  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico')?>" />
-  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png')?>" />
+  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg') ?>" />
+  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico') ?>" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png') ?>" />
   <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js">
+  </script>
+  <link rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+  <link rel="stylesheet" href="<?= UrlHelper::css('mapbox.css') ?>">
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans flex flex-col">
@@ -108,7 +116,7 @@ use App\Helpers\UrlHelper;
   </header>
   <main class="container mx-auto flex-grow flex flex-col">
     <!-- Flash messages -->
-    <?php if(isset($_SESSION['flash_message'])): ?>
+    <?php if (isset($_SESSION['flash_message'])): ?>
     <div
       class="mb-4 p-4 rounded <?= $_SESSION['flash_message']['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
       <?= $_SESSION['flash_message']['message'] ?>
