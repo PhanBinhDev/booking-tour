@@ -48,6 +48,7 @@ $router = new Router();
 $router->get('/', 'HomeController@index');
 $router->get('/home/about', 'HomeController@about');
 $router->get('/home/contact', 'HomeController@contact');
+$router->post('/home/contact', 'HomeController@contact');
 $router->get('/home/faq', 'HomeController@faq');
 $router->get('/home/privacy-policy', 'HomeController@privacyPolicy');
 $router->get('/home/terms', 'HomeController@terms');
