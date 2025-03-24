@@ -117,11 +117,11 @@ use App\Helpers\UrlHelper;
   <main class="container mx-auto flex-grow flex flex-col">
     <!-- Flash messages -->
     <?php if (isset($_SESSION['flash_message'])): ?>
-    <div
-      class="mb-4 p-4 rounded <?= $_SESSION['flash_message']['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
-      <?= $_SESSION['flash_message']['message'] ?>
-    </div>
-    <?php unset($_SESSION['flash_message']['message'], $_SESSION['flash_message']['type']); ?>
+      <div
+        class="mb-4 p-4 rounded <?= $_SESSION['flash_message']['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
+        <?= $_SESSION['flash_message']['message'] ?>
+      </div>
+      <?php unset($_SESSION['flash_message']['message'], $_SESSION['flash_message']['type']); ?>
     <?php endif; ?>
 
     <!-- Content will be inserted here -->
@@ -355,18 +355,18 @@ use App\Helpers\UrlHelper;
   </footer>
   <!-- Add JavaScript for mobile menu toggle -->
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.querySelector('button[aria-expanded]');
-    const mobileMenu = document.querySelector('.md\\:hidden.hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.querySelector('button[aria-expanded]');
+      const mobileMenu = document.querySelector('.md\\:hidden.hidden');
 
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', function() {
-        const expanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', !expanded);
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
-  });
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
   </script>
 </body>
 

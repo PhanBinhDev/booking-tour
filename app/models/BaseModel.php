@@ -33,11 +33,16 @@ abstract class BaseModel
      * @param int $offset Vị trí bắt đầu
      * @return array Danh sách bản ghi
      */
-    public function getAll($conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null)
+    public function getAll($columns = "*", $conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null, $joins = [])
     {
-        $sql = "SELECT * FROM {$this->table}";
+        $sql = "SELECT {$columns} FROM {$this->table}";
 
-        // Thêm điều kiện WHERE nếu có
+        if (!empty($joins)) {
+            foreach ($joins as $join) {
+                $sql .= " " . $join;
+            }
+        }
+
         if (!empty($conditions)) {
             $sql .= " WHERE ";
             $whereClauses = [];
@@ -49,12 +54,10 @@ abstract class BaseModel
             $sql .= implode(' AND ', $whereClauses);
         }
 
-        // Thêm ORDER BY
         if ($orderBy) {
             $sql .= " ORDER BY $orderBy";
         }
 
-        // Thêm LIMIT và OFFSET
         if ($limit !== null) {
             $sql .= " LIMIT :limit";
 
@@ -65,7 +68,6 @@ abstract class BaseModel
 
         $stmt = $this->db->prepare($sql);
 
-        // Bind các tham số
         if (!empty($conditions)) {
             foreach ($conditions as $key => $value) {
                 $stmt->bindValue(":$key", $value);
@@ -83,6 +85,8 @@ abstract class BaseModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 
 
     public function getTitle($id, $title, $tb)

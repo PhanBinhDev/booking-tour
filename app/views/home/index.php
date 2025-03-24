@@ -1,3 +1,11 @@
+<?php
+
+use App\Helpers\UrlHelper;
+
+$title = 'Trang chủ - Di Travel';
+
+?>
+
 <body class="bg-gray-50">
   <!-- Your header goes here -->
 
@@ -13,34 +21,44 @@
       </div>
       <div class="relative h-full flex items-center justify-center px-4">
         <div class="text-center max-w-3xl">
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+          <h1 class="text-xl md:text-5xl lg:text-6xl font-bold text-white mb-3">
             Di Travel
           </h1>
-          <p class="text-xl text-white mb-8">
+          <p class="text-l text-white mb-5">
             Tại DiTravel, chúng tôi cam kết mang đến cho bạn những trải nghiệm du lịch độc đáo, những dịch vụ chất lượng
             và những thông tin hữu ích để bạn có thể lên kế hoạch cho chuyến đi hoàn hảo.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
-              Explore Destinations
+              class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-8 rounded-lg transition duration-300">
+              Xem ngay
             </button>
-            <button
-              class="bg-white hover:bg-gray-100 text-teal-500 font-semibold py-3 px-8 rounded-lg transition duration-300">
-              View Packages
-            </button>
+
           </div>
         </div>
       </div>
     </section>
 
     <!-- Search Section -->
-    <section class="py-8 px-4">
+    <section class="py-8 px-4 bg-teal-50">
       <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg -mt-16 relative z-10 p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Find Your Perfect Trip</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Tìm kiếm </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
           <div>
-            <label class="block text-gray-700 mb-2">Destination</label>
+            <label class="block text-gray-700 mb-2">Danh mục</label>
+            <select
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+              <option>1 Person</option>
+              <option>2 People</option>
+              <option>3 People</option>
+              <option>4+ People</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 mb-2">Địa điểm</label>
             <select
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
               <option>Any Destination</option>
@@ -52,21 +70,7 @@
               <option>Australia</option>
             </select>
           </div>
-          <div>
-            <label class="block text-gray-700 mb-2">Date</label>
-            <input type="date"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
-          </div>
-          <div>
-            <label class="block text-gray-700 mb-2">Travelers</label>
-            <select
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              <option>1 Person</option>
-              <option>2 People</option>
-              <option>3 People</option>
-              <option>4+ People</option>
-            </select>
-          </div>
+
           <div class="flex items-end">
             <button
               class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300">
@@ -78,12 +82,12 @@
     </section>
 
     <!-- Featured Destinations -->
-    <section class="py-16 px-4 bg-white">
+    <section class="py-12 px-4 bg-white">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-800 mb-4">Featured Destinations</h2>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">Điểm đến nổi bật</h2>
           <p class="text-gray-600 max-w-2xl mx-auto">
-            Explore our handpicked selection of the most beautiful and exciting destinations around the world
+            Hãy cùng chúng tôi hòa mình vào văn hóa bản địa, thưởng thức ẩm thực đặc sắc và tạo nên những kỷ niệm khó quên.
           </p>
         </div>
 
@@ -180,72 +184,260 @@
         <div class="text-center mt-12">
           <button
             class="bg-white border-2 border-teal-500 hover:bg-teal-50 text-teal-500 font-semibold py-3 px-8 rounded-lg transition duration-300">
-            View All Destinations
+            Xem tất cả
           </button>
         </div>
       </div>
     </section>
 
     <!-- Special Offers -->
-    <section class="py-16 px-4 bg-teal-50">
-      <div class="max-w-6xl mx-auto">
+    <section class="py-12 px-4 bg-teal-50">
+      <div class="max-w-7xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-800 mb-4">Special Offers</h2>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">Giá cả ưu đãi không thể bỏ lỡ</h2>
           <p class="text-gray-600 max-w-2xl mx-auto">
-            Take advantage of our limited-time deals and save on your next adventure
+            Những tour với giá ưu đãi nhất, đi thả ga không lo về giá.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Offer 1 -->
-          <div
-            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row">
-            <div class="md:w-2/5 h-64 md:h-auto">
-              <img src="https://via.placeholder.com/300x300" alt="Summer Beach Getaway"
-                class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&h=300&fit=crop" alt="Summer Beach Getaway" class="w-full h-full object-cover" />
             </div>
-            <div class="md:w-3/5 p-6">
+            <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
                 25% OFF
               </div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Summer Beach Getaway</h3>
-              <p class="text-gray-600 mb-4">
-                Enjoy a relaxing beach vacation with our all-inclusive package. Limited time offer!
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Summer Beach Getaway</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Enjoy a relaxing beach vacation with our all-inclusive package.
               </p>
               <div class="flex items-center mb-4">
                 <span class="text-gray-400 line-through mr-2">$1,999</span>
                 <span class="text-teal-500 font-bold text-xl">$1,499</span>
               </div>
-              <button
-                class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                Book Now
-              </button>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Offer 2 -->
-          <div
-            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row">
-            <div class="md:w-2/5 h-64 md:h-auto">
-              <img src="https://via.placeholder.com/300x300" alt="European Adventure"
-                class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=300&fit=crop" alt="Mountain Retreat" class="w-full h-full object-cover" />
             </div>
-            <div class="md:w-3/5 p-6">
+            <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
                 30% OFF
               </div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2">European Adventure</h3>
-              <p class="text-gray-600 mb-4">
-                Explore the best of Europe with our guided tour package. Book before it's gone!
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Mountain Retreat</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Explore breathtaking mountain views with guided hiking tours.
               </p>
               <div class="flex items-center mb-4">
                 <span class="text-gray-400 line-through mr-2">$2,899</span>
                 <span class="text-teal-500 font-bold text-xl">$1,999</span>
               </div>
-              <button
-                class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                Book Now
-              </button>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer 3 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&h=300&fit=crop" alt="Paris Explorer" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5">
+              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
+                20% OFF
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Paris Explorer</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Experience the romance and culture of Paris with guided tours.
+              </p>
+              <div class="flex items-center mb-4">
+                <span class="text-gray-400 line-through mr-2">$2,199</span>
+                <span class="text-teal-500 font-bold text-xl">$1,759</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer 4 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=500&h=300&fit=crop" alt="Safari Adventure" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5">
+              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
+                15% OFF
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Safari Adventure</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Witness incredible wildlife on this African safari adventure.
+              </p>
+              <div class="flex items-center mb-4">
+                <span class="text-gray-400 line-through mr-2">$3,499</span>
+                <span class="text-teal-500 font-bold text-xl">$2,974</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer 5 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=500&h=300&fit=crop" alt="Island Hopping" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5">
+              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
+                35% OFF
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Island Hopping</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Explore multiple tropical islands in this 8-day adventure.
+              </p>
+              <div class="flex items-center mb-4">
+                <span class="text-gray-400 line-through mr-2">$2,499</span>
+                <span class="text-teal-500 font-bold text-xl">$1,624</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer 6 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=500&h=300&fit=crop" alt="Cultural Immersion" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5">
+              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
+                25% OFF
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Cultural Immersion</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Immerse yourself in local traditions with this cultural tour.
+              </p>
+              <div class="flex items-center mb-4">
+                <span class="text-gray-400 line-through mr-2">$1,899</span>
+                <span class="text-teal-500 font-bold text-xl">$1,424</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer 7 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop" alt="Luxury Retreat" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5">
+              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
+                40% OFF
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Luxury Retreat</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Indulge in a luxury retreat with premium accommodations.
+              </p>
+              <div class="flex items-center mb-4">
+                <span class="text-gray-400 line-through mr-2">$4,999</span>
+                <span class="text-teal-500 font-bold text-xl">$2,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer 8 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div class="h-48">
+              <img src="https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=500&h=300&fit=crop" alt="Family Fun" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5">
+              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
+                30% OFF
+              </div>
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Family Fun Package</h3>
+              <p class="text-gray-600 mb-4 text-sm">
+                Create lasting memories with this family-friendly vacation.
+              </p>
+              <div class="flex items-center mb-4">
+                <span class="text-gray-400 line-through mr-2">$3,299</span>
+                <span class="text-teal-500 font-bold text-xl">$2,309</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                  Đặt ngay
+                </button>
+                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -253,12 +445,12 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="py-16 px-4 bg-white">
+    <section class="py-12 px-4 bg-white">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-800 mb-4">What Our Travelers Say</h2>
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">Khách hàng nói gì về chúng tôi</h2>
           <p class="text-gray-600 max-w-2xl mx-auto">
-            Read about the experiences of travelers who have explored the world with us
+            Cùng đọc những trải nghiệm mà các vị khách đã nhận được trong suốt những chuyến hành trình cùng Di Travel
           </p>
         </div>
 
@@ -335,35 +527,8 @@
       </div>
     </section>
 
-    <!-- Newsletter -->
-    <section class="py-16 px-4 bg-teal-500 text-white">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold mb-4">Get Travel Inspiration & Special Offers</h2>
-          <p class="max-w-2xl mx-auto">
-            Subscribe to our newsletter and be the first to know about new destinations, exclusive deals, and travel
-            tips
-          </p>
-        </div>
-
-        <div class="max-w-xl mx-auto">
-          <form class="flex flex-col sm:flex-row gap-4">
-            <input type="email" placeholder="Enter your email address"
-              class="flex-grow py-3 px-4 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-white" />
-            <button
-              class="bg-white text-teal-500 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg transition duration-300">
-              Subscribe
-            </button>
-          </form>
-          <p class="text-sm mt-4 text-center text-teal-100">
-            By subscribing, you agree to our Privacy Policy and consent to receive travel-related emails.
-          </p>
-        </div>
-      </div>
-    </section>
-
     <!-- Why Choose Us -->
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-teal-50">
       <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Tại Sao Chọn Di Travel</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Reason 1 -->
@@ -377,7 +542,7 @@
           </div>
           <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Đặt Tour An Toàn 100%</h3>
           <p class="text-gray-600 text-center">
-            Thanh toán và thông tin cá nhân của bạn luôn được bảo vệ với hệ thống đặt tour an toàn của chúng tôi.
+            Thanh toán dễ dàng, thông tin cá nhân của bạn luôn được bảo vệ với hệ thống đặt tour an toàn và bảo mật của chúng tôi.
           </p>
         </div>
 
@@ -423,7 +588,7 @@
                 d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Hướng Dẫn Viên Chuyên Nghiệp</h3>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">HDV Chuyên Nghiệp</h3>
           <p class="text-gray-600 text-center">
             Các hướng dẫn viên am hiểu của chúng tôi cung cấp góc nhìn nội địa và đảm bảo bạn trải nghiệm bản chất chân
             thực của mỗi điểm đến.
@@ -433,20 +598,20 @@
     </div>
 
     <!-- Call to Action -->
-    <section class="py-16 px-4 bg-gray-900 text-white">
+    <section class="py-12 px-4 bg-gray-900 text-white">
       <div class="max-w-6xl mx-auto text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Adventure?</h2>
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Bạn đã sẵn sàng cho chuyến đi sắp tới?</h2>
         <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-          Let us help you create memories that will last a lifetime. Your dream vacation is just a click away.
+          Cùng Di Travel tạo nên những hành trình tuyệt vời chỉ với một cú nhấp chuột.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
-            Plan Your Trip
+            Lên lịch ngay
           </button>
           <button
             class="bg-transparent hover:bg-white hover:text-gray-900 text-white font-semibold py-3 px-8 rounded-lg border-2 border-white transition duration-300">
-            Contact Us
+            Liên hệ với chúng tôi
           </button>
         </div>
       </div>
