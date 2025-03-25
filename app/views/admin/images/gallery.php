@@ -1,6 +1,6 @@
 <?php
-  use App\Helpers\UrlHelper;
-  var_dump($images);
+
+use App\Helpers\UrlHelper;
 ?>
 <div class="container px-6 py-8 mx-auto">
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -144,290 +144,292 @@
 
   <!-- Image Gallery -->
   <?php if (empty($images)): ?>
-  <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
-    <div class="mx-auto w-16 h-16 mb-4 text-gray-400">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
+      <div class="mx-auto w-16 h-16 mb-4 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-800 mb-2">Không tìm thấy hình ảnh</h3>
+      <p class="text-gray-600 mb-4">Không có hình ảnh nào phù hợp với tiêu chí tìm kiếm của bạn.</p>
+      <button id="empty-upload-btn"
+        class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
+        </svg>
+        Tải lên hình ảnh mới
+      </button>
     </div>
-    <h3 class="text-lg font-medium text-gray-800 mb-2">Không tìm thấy hình ảnh</h3>
-    <p class="text-gray-600 mb-4">Không có hình ảnh nào phù hợp với tiêu chí tìm kiếm của bạn.</p>
-    <button id="empty-upload-btn"
-      class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-lg transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" />
-      </svg>
-      Tải lên hình ảnh mới
-    </button>
-  </div>
   <?php else: ?>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-    <?php foreach ($images as $image): ?>
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden image-card"
-      data-id="<?= $image['id'] ?>" data-description="<?= htmlspecialchars($image['description'] ?? '') ?>">
-      <div class="relative aspect-w-16 aspect-h-9 bg-gray-100">
-        <img src="<?= htmlspecialchars($image['cloudinary_url']) ?>" alt="<?= htmlspecialchars($image['alt_text']) ?>"
-          class="object-cover w-full h-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+      <?php foreach ($images as $image): ?>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden image-card"
+          data-id="<?= $image['id'] ?>" data-description="<?= htmlspecialchars($image['description'] ?? '') ?>">
+          <div class="relative aspect-w-16 aspect-h-9 bg-gray-100">
+            <img src="<?= htmlspecialchars($image['cloudinary_url']) ?>" alt="<?= htmlspecialchars($image['alt_text']) ?>"
+              class="object-cover w-full h-full">
 
-        <?php if (isset($image['is_featured']) && $image['is_featured']): ?>
-        <div class="absolute top-2 left-2">
-          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
-            Nổi bật
-          </span>
-        </div>
-        <?php endif; ?>
-
-        <?php if (!empty($image['category']) && $image['category'] !== 'general'): ?>
-        <div class="absolute top-2 <?= isset($image['is_featured']) && $image['is_featured'] ? 'left-20' : 'left-2' ?>">
-          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-            <?php 
-            switch($image['category']) {
-              case 'tours': echo 'bg-purple-100 text-purple-800'; break;
-              case 'locations': echo 'bg-green-100 text-green-800'; break;
-              case 'banner': echo 'bg-amber-100 text-amber-800'; break;
-              default: echo 'bg-gray-100 text-gray-800';
-            }
-            ?>">
-            <?php 
-            switch($image['category']) {
-              case 'tours': echo 'Tour'; break;
-              case 'locations': echo 'Địa điểm'; break;
-              case 'banner': echo 'Banner'; break;
-              default: echo 'Chung';
-            }
-            ?>
-          </span>
-        </div>
-        <?php endif; ?>
-
-        <div class="absolute top-2 right-2">
-          <div class="relative" x-data="{ open: false }">
-            <button @click="open = !open"
-              class="p-1 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full text-gray-600 hover:text-gray-800 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-              </svg>
-            </button>
-
-            <div x-show="open" @click.away="open = false"
-              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-100 border border-gray-200">
-              <div class="py-1">
-                <!-- Tìm phần nút edit trong dropdown menu và thay đổi từ button thành link -->
-                <!-- Thay thế đoạn code này: -->
-                <!-- <button class="edit-image-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  data-id="<?= $image['id'] ?>" data-url="<?= UrlHelper::route('admin/images') ?>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Chỉnh sửa
-                </button> -->
-
-                <!-- Thay thế bằng đoạn code này: -->
-                <a href="<?= UrlHelper::route('admin/images/edit/' . $image['id']) ?>"
-                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Chỉnh sửa
-                </a>
-
-                <a href="<?= htmlspecialchars($image['cloudinary_url']) ?>" target="_blank"
-                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                  Xem đầy đủ
-                </a>
-
-                <button class="copy-url-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  data-url="<?= htmlspecialchars($image['cloudinary_url']) ?>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                  Sao chép URL
-                </button>
-
-                <?php if ($image['category'] === 'tours' && (!isset($image['is_featured']) || !$image['is_featured']) && isset($image['tour_id'])): ?>
-                <button
-                  class="set-featured-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  data-id="<?= $image['id'] ?>" data-tour-id="<?= $image['tour_id'] ?>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
+            <?php if (isset($image['is_featured']) && $image['is_featured']): ?>
+              <div class="absolute top-2 left-2">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
-                  Đặt làm ảnh nổi bật
-                </button>
-                <?php endif; ?>
+                  Nổi bật
+                </span>
+              </div>
+            <?php endif; ?>
 
-                <hr class="my-1 border-gray-200">
+            <?php if (!empty($image['category']) && $image['category'] !== 'general'): ?>
+              <div class="absolute top-2 <?= isset($image['is_featured']) && $image['is_featured'] ? 'left-20' : 'left-2' ?>">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+            <?php
+              switch ($image['category']) {
+                case 'tours':
+                  echo 'bg-purple-100 text-purple-800';
+                  break;
+                case 'locations':
+                  echo 'bg-green-100 text-green-800';
+                  break;
+                case 'banner':
+                  echo 'bg-amber-100 text-amber-800';
+                  break;
+                default:
+                  echo 'bg-gray-100 text-gray-800';
+              }
+            ?>">
+                  <?php
+                  switch ($image['category']) {
+                    case 'tours':
+                      echo 'Tour';
+                      break;
+                    case 'locations':
+                      echo 'Địa điểm';
+                      break;
+                    case 'banner':
+                      echo 'Banner';
+                      break;
+                    default:
+                      echo 'Chung';
+                  }
+                  ?>
+                </span>
+              </div>
+            <?php endif; ?>
 
-                <button class="delete-image-btn block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                  data-base-url="<?= UrlHelper::route('admin/images/delete/' . $image['id']) ?>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
+            <div class="absolute top-2 right-2">
+              <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open"
+                  class="p-1 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full text-gray-600 hover:text-gray-800 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                   </svg>
-                  Xóa
                 </button>
+
+                <div x-show="open" @click.away="open = false"
+                  class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-100 border border-gray-200">
+                  <div class="py-1">
+                    <!-- Thay thế bằng đoạn code này: -->
+                    <a href="<?= UrlHelper::route('admin/images/edit/' . $image['id']) ?>"
+                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Chỉnh sửa
+                    </a>
+
+                    <a href="<?= htmlspecialchars($image['cloudinary_url']) ?>" target="_blank"
+                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Xem đầy đủ
+                    </a>
+
+                    <button class="copy-url-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      data-url="<?= htmlspecialchars($image['cloudinary_url']) ?>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                      Sao chép URL
+                    </button>
+
+                    <?php if ($image['category'] === 'tours' && (!isset($image['is_featured']) || !$image['is_featured']) && isset($image['tour_id'])): ?>
+                      <button
+                        class="set-featured-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        data-id="<?= $image['id'] ?>" data-tour-id="<?= $image['tour_id'] ?>">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
+                          viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                        Đặt làm ảnh nổi bật
+                      </button>
+                    <?php endif; ?>
+
+                    <hr class="my-1 border-gray-200">
+
+                    <button class="delete-image-btn block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      data-base-url="<?= UrlHelper::route('admin/images/delete/' . $image['id']) ?>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-2" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Xóa
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="p-3">
-        <h3 class="font-medium text-gray-800 truncate" title="<?= htmlspecialchars($image['title']) ?>">
-          <?= htmlspecialchars($image['title']) ?></h3>
+          <div class="p-3">
+            <h3 class="font-medium text-gray-800 truncate" title="<?= htmlspecialchars($image['title']) ?>">
+              <?= htmlspecialchars($image['title']) ?></h3>
 
-        <?php if (isset($image['tour_name']) && !empty($image['tour_name'])): ?>
-        <div class="mt-1 text-xs text-gray-500 truncate" title="<?= htmlspecialchars($image['tour_name']) ?>">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-          <?= htmlspecialchars($image['tour_name']) ?>
-        </div>
-        <?php endif; ?>
+            <?php if (isset($image['tour_name']) && !empty($image['tour_name'])): ?>
+              <div class="mt-1 text-xs text-gray-500 truncate" title="<?= htmlspecialchars($image['tour_name']) ?>">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <?= htmlspecialchars($image['tour_name']) ?>
+              </div>
+            <?php endif; ?>
 
-        <?php if (isset($image['banner_title']) && !empty($image['banner_title'])): ?>
-        <div class="mt-1 text-xs text-gray-500 truncate" title="<?= htmlspecialchars($image['banner_title']) ?>">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-          </svg>
-          <?= htmlspecialchars($image['banner_title']) ?>
-        </div>
-        <?php endif; ?>
+            <?php if (isset($image['banner_title']) && !empty($image['banner_title'])): ?>
+              <div class="mt-1 text-xs text-gray-500 truncate" title="<?= htmlspecialchars($image['banner_title']) ?>">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                </svg>
+                <?= htmlspecialchars($image['banner_title']) ?>
+              </div>
+            <?php endif; ?>
 
-        <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
-          <span class="inline-flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            </svg>
-            <?= htmlspecialchars($image['file_type']) ?>
-          </span>
-          <span class="inline-flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-            </svg>
-            <?= formatFileSize($image['file_size']) ?>
-          </span>
+            <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
+              <span class="inline-flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+                <?= htmlspecialchars($image['file_type']) ?>
+              </span>
+              <span class="inline-flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                </svg>
+                <?= formatFileSize($image['file_size']) ?>
+              </span>
+            </div>
+            <div class="flex items-center justify-between mt-2 text-xs">
+              <span class="text-gray-500">
+                <?= date('d/m/Y', strtotime($image['created_at'])) ?>
+              </span>
+              <span class="text-gray-500">
+                <?= $image['width'] ?>x<?= $image['height'] ?> px
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-between mt-2 text-xs">
-          <span class="text-gray-500">
-            <?= date('d/m/Y', strtotime($image['created_at'])) ?>
-          </span>
-          <span class="text-gray-500">
-            <?= $image['width'] ?>x<?= $image['height'] ?> px
-          </span>
-        </div>
-      </div>
+      <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
-  </div>
 
-  <!-- Pagination -->
-  <?php if ($totalPages > 1): ?>
-  <div class="flex justify-center mt-8">
-    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-      <?php if ($currentPage > 1): ?>
-      <a href="<?= str_replace('(:num)', $currentPage - 1, $pagination['urlPattern']) ?>"
-        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-        <span class="sr-only">Previous</span>
-        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-          aria-hidden="true">
-          <path fill-rule="evenodd"
-            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-            clip-rule="evenodd" />
-        </svg>
-      </a>
-      <?php else: ?>
-      <span
-        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
-        <span class="sr-only">Previous</span>
-        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-          aria-hidden="true">
-          <path fill-rule="evenodd"
-            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-            clip-rule="evenodd" />
-        </svg>
-      </span>
-      <?php endif; ?>
+    <!-- Pagination -->
+    <?php if ($totalPages > 1): ?>
+      <div class="flex justify-center mt-8">
+        <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <?php if ($currentPage > 1): ?>
+            <a href="<?= str_replace('(:num)', $currentPage - 1, $pagination['urlPattern']) ?>"
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <span class="sr-only">Previous</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+            </a>
+          <?php else: ?>
+            <span
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+              <span class="sr-only">Previous</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+            </span>
+          <?php endif; ?>
 
-      <?php
-      $startPage = max(1, $currentPage - 2);
-      $endPage = min($totalPages, $startPage + 4);
-      if ($endPage - $startPage < 4) {
-          $startPage = max(1, $endPage - 4);
-      }
-      
-      for ($i = $startPage; $i <= $endPage; $i++):
-      ?>
-      <?php if ($i == $currentPage): ?>
-      <span
-        class="relative inline-flex items-center px-4 py-2 border border-teal-500 bg-teal-50 text-sm font-medium text-teal-600">
-        <?= $i ?>
-      </span>
-      <?php else: ?>
-      <a href="<?= str_replace('(:num)', $i, $pagination['urlPattern']) ?>"
-        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-        <?= $i ?>
-      </a>
-      <?php endif; ?>
-      <?php endfor; ?>
+          <?php
+          $startPage = max(1, $currentPage - 2);
+          $endPage = min($totalPages, $startPage + 4);
+          if ($endPage - $startPage < 4) {
+            $startPage = max(1, $endPage - 4);
+          }
 
-      <?php if ($currentPage < $totalPages): ?>
-      <a href="<?= str_replace('(:num)', $currentPage + 1, $pagination['urlPattern']) ?>"
-        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-        <span class="sr-only">Next</span>
-        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-          aria-hidden="true">
-          <path fill-rule="evenodd"
-            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clip-rule="evenodd" />
-        </svg>
-      </a>
-      <?php else: ?>
-      <span
-        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
-        <span class="sr-only">Next</span>
-        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-          aria-hidden="true">
-          <path fill-rule="evenodd"
-            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clip-rule="evenodd" />
-        </svg>
-      </span>
-      <?php endif; ?>
-    </nav>
-  </div>
-  <?php endif; ?>
+          for ($i = $startPage; $i <= $endPage; $i++):
+          ?>
+            <?php if ($i == $currentPage): ?>
+              <span
+                class="relative inline-flex items-center px-4 py-2 border border-teal-500 bg-teal-50 text-sm font-medium text-teal-600">
+                <?= $i ?>
+              </span>
+            <?php else: ?>
+              <a href="<?= str_replace('(:num)', $i, $pagination['urlPattern']) ?>"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                <?= $i ?>
+              </a>
+            <?php endif; ?>
+          <?php endfor; ?>
+
+          <?php if ($currentPage < $totalPages): ?>
+            <a href="<?= str_replace('(:num)', $currentPage + 1, $pagination['urlPattern']) ?>"
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <span class="sr-only">Next</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+            </a>
+          <?php else: ?>
+            <span
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+              <span class="sr-only">Next</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+            </span>
+          <?php endif; ?>
+        </nav>
+      </div>
+    <?php endif; ?>
   <?php endif; ?>
 </div>
 
@@ -635,13 +637,14 @@
 
 <?php
 // Helper function to format file size
-  function formatFileSize($bytes) {
-    if ($bytes === 0) return '0 Bytes';
-    $k = 1024;
-    $sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    $i = floor(log($bytes) / log($k));
-    return round($bytes / pow($k, $i), 2) . ' ' . $sizes[$i];
-  }
+function formatFileSize($bytes)
+{
+  if ($bytes === 0) return '0 Bytes';
+  $k = 1024;
+  $sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  $i = floor(log($bytes) / log($k));
+  return round($bytes / pow($k, $i), 2) . ' ' . $sizes[$i];
+}
 ?>
 
 <!-- Thêm vào phần head của trang hoặc ngay trước thẻ đóng body -->

@@ -206,7 +206,7 @@ class Refund extends BaseModel {
      * @return array List of refunds
      */
     public function getByTransactionId($transactionId) {
-        return $this->getAll(['transaction_id' => $transactionId], 'created_at DESC');
+        return $this->getAll("*",['transaction_id' => $transactionId], 'created_at DESC');
     }
     
     /**
@@ -216,7 +216,7 @@ class Refund extends BaseModel {
      * @return array List of refunds
      */
     public function getByBookingId($bookingId) {
-        return $this->getAll(['booking_id' => $bookingId], 'created_at DESC');
+        return $this->getAll("*",['booking_id' => $bookingId], 'created_at DESC');
     }
 
     public function getById($id) {

@@ -3,7 +3,7 @@
 
 namespace App\Config;
 
-use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class CloudinaryInstance
 {
@@ -41,12 +41,14 @@ class CloudinaryInstance
                     'api_secret' => $_ENV['CLOUDINARY_API_SECRET']
                 ],
                 'url' => [
-                    'secure' => true
+                    'secure' => false
                 ]
             ];
 
             // Tạo instance mới và lưu vào static property
-            self::$instance = new Cloudinary($config);
+            Configuration::instance($config);
+
+            self::$instance = new Cloudinary();
             self::$isSetup = true;
 
             return self::$instance;

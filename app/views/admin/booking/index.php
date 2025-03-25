@@ -500,6 +500,7 @@ $title = 'Quản lý đặt tours';
         })
         .then(response => response.json())
         .then(data => {
+          console.log(data);
           if (data.success) {
             // Cập nhật UI hoặc reload trang
             location.reload();

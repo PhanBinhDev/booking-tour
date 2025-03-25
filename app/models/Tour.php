@@ -13,6 +13,115 @@ class Tour extends BaseModel
         parent::__construct();
     }
 
+    /**
+     * Get paginated tours with optional filters
+     * 
+     * @param int $page Page number
+     * @param int $limit Items per page
+     * @param array $filters Optional filters (status, category_id, location_id, price_min, price_max, duration, featured)
+     * @param string $sort Field to sort by (default: created_at)
+     * @param string $direction Sort direction (asc or desc, default: desc)
+     * @return array Paginated tours with pagination metadata
+     */
+    public function getPaginated($page = 1, $limit = 10, $filters = [], $sortBy = 'created_at', $sortOrder = 'desc')
+    {
+        $offset = ($page - 1) * $limit;
+
+        // Build the base query
+        $sql = "SELECT t.id, t.title, t.slug, t.description, t.duration, t.group_size, 
+                       t.price, t.sale_price, t.status, t.featured, t.views, 
+                       t.created_at, t.updated_at, 
+                       tc.name as category_name, l.name as location_name, 
+                       dl.name as departure_location_name
+                FROM {$this->table} t
+                LEFT JOIN tour_categories tc ON t.category_id = tc.id
+                LEFT JOIN locations l ON t.location_id = l.id
+                LEFT JOIN locations dl ON t.departure_location_id = dl.id
+                WHERE 1=1";
+
+        $countSql = "SELECT COUNT(*) as total
+                     FROM {$this->table} t
+                     LEFT JOIN tour_categories tc ON t.category_id = tc.id
+                     LEFT JOIN locations l ON t.location_id = l.id
+                     LEFT JOIN locations dl ON t.departure_location_id = dl.id
+                     WHERE 1=1";
+
+        $params = [];
+        $countParams = [];
+
+        // Apply filters
+        if (!empty($filters['status'])) {
+            $sql .= " AND t.status = :status";
+            $countSql .= " AND t.status = :status";
+            $params[':status'] = $filters['status'];
+            $countParams[':status'] = $filters['status'];
+        }
+
+        if (!empty($filters['category_id'])) {
+            $sql .= " AND t.category_id = :category_id";
+            $countSql .= " AND t.category_id = :category_id";
+            $params[':category_id'] = $filters['category_id'];
+            $countParams[':category_id'] = $filters['category_id'];
+        }
+
+        if (!empty($filters['location_id'])) {
+            $sql .= " AND t.location_id = :location_id";
+            $countSql .= " AND t.location_id = :location_id";
+            $params[':location_id'] = $filters['location_id'];
+            $countParams[':location_id'] = $filters['location_id'];
+        }
+
+        // Add sorting and pagination
+        $sql .= " GROUP BY t.id, t.title, t.slug, t.description, t.duration, t.group_size, 
+                         t.price, t.sale_price, t.status, t.featured, t.views, 
+                         t.created_at, t.updated_at, 
+                         tc.name, l.name, dl.name
+                  ORDER BY t.{$sortBy} {$sortOrder}
+                  LIMIT :limit OFFSET :offset";
+        $params[':limit'] = $limit;
+        $params[':offset'] = $offset;
+
+        // Get total count
+        $countStmt = $this->db->prepare($countSql);
+        foreach ($countParams as $key => $value) {
+            $countStmt->bindValue($key, $value);
+        }
+        $countStmt->execute();
+        $total = $countStmt->fetchColumn();
+
+        // Get paginated data
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $key => $value) {
+            $paramType = is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR;
+            $stmt->bindValue($key, $value, $paramType);
+        }
+        $stmt->execute();
+        $items = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Calculate pagination metadata
+        $totalPages = ceil($total / $limit);
+        $hasNextPage = $page < $totalPages;
+        $hasPrevPage = $page > 1;
+
+        // Calculate from and to values for displaying "Showing X to Y of Z results"
+        $from = $total > 0 ? ($page - 1) * $limit + 1 : 0;
+        $to = min($page * $limit, $total);
+
+        return [
+            'items' => $items,
+            'pagination' => [
+                'total' => $total,
+                'per_page' => $limit,
+                'current_page' => $page,
+                'total_pages' => $totalPages,
+                'has_next_page' => $hasNextPage,
+                'has_prev_page' => $hasPrevPage,
+                'from' => $from,
+                'to' => $to
+            ]
+        ];
+    }
+
     public function getTourDetails($tourId)
     {
         $sql = "SELECT 

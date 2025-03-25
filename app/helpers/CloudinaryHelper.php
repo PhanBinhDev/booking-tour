@@ -23,9 +23,10 @@ class CloudinaryHelper extends BaseModel
     public static function upload($filePath, $folder = null, $options = [])
     {
         $prefix = 'booking_travel';
-
         // Đảm bảo Cloudinary đã được cấu hình
         CloudinaryInstance::setup();
+
+        // Đảm bảo Cloudinary đã được cấu hình
 
         // Thiết lập các tùy chọn mặc định
         $uploadOptions = [
@@ -357,40 +358,5 @@ class CloudinaryHelper extends BaseModel
         ];
 
         return self::getImageUrl('placeholders', 'blank', $options);
-    }
-
-    public static function getImageUrlByFolderAndName($folder, $name, $options = [])
-    {
-        // Thiết lập cấu hình Cloudinary
-        CloudinaryInstance::setup();
-
-        // Sử dụng Cloudinary\Cloudinary class để lấy URL
-        $cloudinary = CloudinaryInstance::getInstance();
-
-        $prefix = 'booking_travel/';
-
-        // Tạo đường dẫn đầy đủ tới ảnh (folder/name)
-        $fullPath = $prefix . $folder . '/' . $name;
-
-        // Xây dựng URL với các tùy chọn (nếu có)
-        $url = $cloudinary->image($fullPath);
-
-        // Áp dụng các tùy chọn biến đổi nếu có
-        if (!empty($options)) {
-            if (isset($options['width'])) {
-                $url = $url->resize(Resize::scale()->width($options['width']));
-            }
-
-            if (isset($options['height'])) {
-                $url = $url->resize(Resize::scale()->height($options['height']));
-            }
-
-            if (isset($options['crop']) && $options['crop'] === 'fill' && isset($options['width']) && isset($options['height'])) {
-                $url = $url->resize(Resize::fill()->width($options['width'])->height($options['height']));
-            }
-        }
-
-        // Tạo và trả về URL đầy đủ
-        return (string) $url->toUrl();
     }
 }

@@ -108,11 +108,44 @@ class ToursController extends BaseController
         if (!$this->checkPermission(PERM_VIEW_TOURS)) {
             $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
             $this->view('error/403');
-            return; // Không tiếp tục thực hiện các bước sau nếu quyền truy cập không đúng. �� đây, nếu truy cập không h��p lệ, ta s�� chuyển hướng về trang quản trị. �� trang thông tin chi tiết, đây chỉ là một ví dụ, bạn có thể thêm các check và xử lý khác theo cách tùy chỉnh.
+            return;
         }
 
-        $tours = $this->tourModel->getAll();
-        $this->view('admin/tours/index', ['tours' => $tours]);
+        // Lấy tham số từ URL
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $sort = $_GET['sort'] ?? 'created_at';
+        $direction = $_GET['direction'] ?? 'desc';
+
+        // Xây dựng bộ lọc
+        $filters = [
+            'search' => $_GET['search'] ?? '',
+            'status' => $_GET['status'] ?? '',
+            'category_id' => $_GET['category_id'] ?? '',
+            'location_id' => $_GET['location_id'] ?? '',
+            'featured' => isset($_GET['featured']) ? $_GET['featured'] : '',
+            'price_min' => $_GET['price_min'] ?? '',
+            'price_max' => $_GET['price_max'] ?? '',
+            'duration' => $_GET['duration'] ?? '',
+        ];
+
+        // Lấy danh sách tour có phân trang
+        $result = $this->tourModel->getPaginated($page, $limit, $filters, $sort, $direction);
+
+        // Lấy danh sách danh mục cho bộ lọc
+        $tourCategories = $this->categoriesModel->getAll();
+        $locations = $this->categoriesModel->getTitle('id', 'name', 'locations');
+
+        // Truyền dữ liệu cho view
+        $this->view('admin/tours/index', [
+            'tours' => $result['items'],
+            'pagination' => $result['pagination'],
+            'filters' => $filters,
+            'sort' => $sort,
+            'direction' => $direction,
+            'categories' => $tourCategories,
+            'locations' => $locations
+        ]);
     }
 
     public function createTour()
@@ -310,8 +343,54 @@ class ToursController extends BaseController
 
     public function categories()
     {
-        $categories = $this->categoriesModel->getAll();
-        $this->view('admin/tours/categories', ['categories' => $categories]);
+        if (!$this->checkPermission(PERM_VIEW_TOURS)) {
+            $this->setFlashMessage('error', 'Bạn không có quyền truy cập trang này');
+            $this->view('error/403');
+            return;
+        }
+
+        // Lấy tham số từ URL
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $sort = $_GET['sort'] ?? 'name';
+        $direction = $_GET['direction'] ?? 'asc';
+
+        // Xây dựng bộ lọc
+        $filters = [
+            'search' => $_GET['search'] ?? '',
+            'status' => $_GET['status'] ?? '',
+        ];
+
+        // Lấy danh sách danh mục có phân trang
+        $options = [
+            'table_alias' => 'tc',
+            'columns' => 'tc.*, 
+                    (SELECT COUNT(*) FROM tours t WHERE t.category_id = tc.id) as tour_count',
+            'filters' => [
+                'tc.status' => $filters['status'] ?: null
+            ],
+            'sort' => "tc.{$sort}",
+            'direction' => $direction,
+            'page' => $page,
+            'limit' => $limit
+        ];
+
+        // Nếu có tìm kiếm
+        if (!empty($filters['search'])) {
+            $options['search_term'] = '%' . $filters['search'] . '%';
+            $options['search_fields'] = ['tc.name', 'tc.description'];
+        }
+
+        $result = $this->categoriesModel->getPaginatedCustom($options);
+
+        // Truyền dữ liệu cho view
+        $this->view('admin/tours/categories', [
+            'categories' => $result['items'],
+            'pagination' => $result['pagination'],
+            'filters' => $filters,
+            'sort' => $sort,
+            'direction' => $direction
+        ]);
     }
 
 
@@ -384,7 +463,11 @@ class ToursController extends BaseController
 
     public function updateCategory($id)
     {
-        if (!$id) return;
+        if (!$id) {
+            $this->setFlashMessage('error', 'ID danh mục không hợp lệ');
+            header('Location: ' . UrlHelper::route('admin/tours/categories'));
+            exit;
+        }
 
         $category = $this->categoriesModel->getCategory($id);
 
@@ -394,39 +477,105 @@ class ToursController extends BaseController
             exit;
         }
 
+        // Lấy danh sách danh mục cho select parent_id
+        $categories = $this->categoriesModel->getAll("*", ["status" => "active"]);
+
+        // Loại bỏ danh mục hiện tại khỏi danh sách parent_id
+        $filteredCategories = array_filter($categories, function ($cat) use ($id) {
+            return $cat['id'] != $id;
+        });
+
         $formData = $category;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $currentUser = $this->getCurrentUser();
             $formData['name'] = trim($_POST['name'] ?? $category['name']);
             $formData['slug'] = trim($_POST['slug'] ?? $category['slug']);
             $formData['description'] = trim($_POST['description'] ?? $category['description']);
             $formData['status'] = $_POST['status'] ?? $category['status'];
-            $image = $category['image'] ?? '';
+            $formData['meta_title'] = trim($_POST['meta_title'] ?? $category['meta_title'] ?? '');
+            $formData['meta_description'] = trim($_POST['meta_description'] ?? $category['meta_description'] ?? '');
+            $formData['parent_id'] = $_POST['parent_id'] ? (int)$_POST['parent_id'] : null;
 
+            // Giữ hình ảnh hiện tại
+            $imageUrl = $category['image'] ?? '';
 
+            // Xử lý upload hình ảnh mới nếu có
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    // Chuẩn bị dữ liệu cho ảnh
+                    $imageData = [
+                        'title' => $formData['name'],
+                        'description' => $formData['description'],
+                        'alt_text' => $formData['name'],
+                        'category' => 'tour_category',
+                        'user_id' => $currentUser['id'] ?? null
+                    ];
 
-            if (empty($formData['name']) || empty($formData['description']) || empty($formData['status'])) {
-                $this->setFlashMessage('error', 'Vui lòng nhập đủ thông tin');
-                return $this->view('admin/tours/createCategory', ['category' => $formData, 'isUpdate' => true]);
+                    // Upload ảnh và lưu thông tin
+                    $uploadResult = CloudinaryHelper::upload($_FILES['image']['tmp_name'], 'categories');
+
+                    if (!isset($uploadResult['secure_url'])) {
+                        throw new Exception('Lỗi khi upload ảnh');
+                    }
+
+                    $imageUrl = $uploadResult['secure_url'];
+                    $formData['image'] = $imageUrl;
+                } catch (Exception $e) {
+                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
+                    $this->view('admin/tours/editCategory', [
+                        'category' => $formData,
+                        'categories' => $filteredCategories
+                    ]);
+                    return;
+                }
             }
 
+            // Kiểm tra dữ liệu
+            if (empty($formData['name'])) {
+                $this->setFlashMessage('error', 'Vui lòng nhập tên danh mục');
+                $this->view('admin/tours/editCategory', [
+                    'category' => $formData,
+                    'categories' => $filteredCategories
+                ]);
+                return;
+            }
+
+            // Tạo slug nếu không có
+            if (empty($formData['slug'])) {
+                $formData['slug'] = createSlug($formData['name']);
+            }
+
+            // Kiểm tra slug trùng (chỉ khi slug thay đổi)
             if ($formData['slug'] !== $category['slug'] && $this->categoriesModel->isSlugExists($formData['slug'])) {
-                $this->setFlashMessage('error', 'Slug đã tồn tại');
-                return $this->view('admin/tours/createCategory', ['category' => $formData, 'isUpdate' => true]);
+                $this->setFlashMessage('error', 'Slug đã tồn tại, vui lòng chọn tên khác');
+                $this->view('admin/tours/editCategory', [
+                    'category' => $formData,
+                    'categories' => $filteredCategories
+                ]);
+                return;
             }
 
+            // Cập nhật danh mục
             $result = $this->categoriesModel->updateCategory(
                 $id,
                 $formData['name'],
                 $formData['slug'],
                 $formData['description'],
-                $image,
-                $formData['status']
+                $imageUrl,
+                $formData['status'],
+                $formData['meta_title'],
+                $formData['meta_description'],
+                $formData['parent_id']
             );
 
             if (!$result) {
                 $this->setFlashMessage('error', 'Cập nhật danh mục thất bại, vui lòng thử lại.');
-                return $this->view('admin/tours/createCategory', ['category' => $formData, 'isUpdate' => true]);
+                $this->view('admin/tours/editCategory', [
+                    'category' => $formData,
+                    'categories' => $filteredCategories
+                ]);
+                return;
             }
 
             $this->setFlashMessage('success', 'Cập nhật danh mục thành công');
@@ -434,7 +583,10 @@ class ToursController extends BaseController
             exit;
         }
 
-        $this->view('admin/tours/createCategory', ['category' => $category, 'isUpdate' => true]);
+        $this->view('admin/tours/editCategory', [
+            'category' => $category,
+            'categories' => $filteredCategories
+        ]);
     }
 
 

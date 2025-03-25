@@ -136,16 +136,18 @@ $router->get('/admin/tours/deleteTour/{id}', 'Admin\ToursController@deleteTour')
 //ADMIN/CATEGORIES/
 $router->get('/admin/tours/categories', 'Admin\ToursController@categories');
 $router->get('/admin/tours/createCategory', 'Admin\ToursController@createCategory');
+$router->get('/admin/tours/updateCategory/{id}', 'Admin\ToursController@updateCategory');
+$router->post('/admin/tours/updateCategory/{id}', 'Admin\ToursController@updateCategory');
+$router->get('/admin/tours/deleteCategory/{id}', 'Admin\ToursController@deleteCategory');
+$router->post('/admin/tours/deleteCategory/{id}', 'Admin\ToursController@deleteCategory');
 $router->post('/admin/tours/createCategory', 'Admin\ToursController@createCategory');
-$router->get('/admin/tours/categories/deleteCategory/{id}', 'Admin\ToursController@deleteCategory');
-$router->get('/admin/tours/categories/updateCategory/{id}', 'Admin\ToursController@updateCategory');
-$router->post('/admin/tours/categories/updateCategory/{id}', 'Admin\ToursController@updateCategory');
 
 
 //ADMIN/BOOKINGS
 $router->get('/admin/bookings', 'Admin\ToursController@bookings');
 $router->get('/admin/bookings/{id}', 'Admin\ToursController@bookingDetails');
 $router->get('/admin/bookings/updateBooking/{id}', 'Admin\ToursController@updateBooking');
+$router->get('/admin/bookings/updateStatus', 'Admin\ToursController@updateStatus');
 
 
 // ADMIN/LOCATIONS
