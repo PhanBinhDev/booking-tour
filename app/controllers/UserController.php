@@ -8,10 +8,6 @@ use App\Models\User;
 
 class UserController extends BaseController { 
     private $userModel;
-
-    public function __construct()
-    {
-
     
     public function __construct() {
         $this->userModel = new User();
