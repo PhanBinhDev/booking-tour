@@ -159,6 +159,11 @@ $router->post('/admin/locations/delete/{id}', 'Admin\LocationController@delete')
 $router->post('/admin/locations/change-status/{id}', 'Admin\LocationController@changeStatus');
 
 
+// ADMIN/CONTACT
+$router->get('/admin/contacts', 'Admin\ContactController@index');
+
+
+
 // ADMIN/SYSTEM
 $router->get('/admin/system/activity-logs', 'Admin\DashboardController@activityLogs');
 
