@@ -197,6 +197,24 @@ class ToursController extends BaseController
             $status = $_POST['status'] ?? 'active';
             $featured = isset($_POST['featured']) ? 1 : 0;
 
+            // if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
+            //     try {
+
+            //         // Upload ảnh và lưu thông tin
+            //         $uploadResult = CloudinaryHelper::upload($_FILES['featured_image']['tmp_name'], 'tour_image');
+
+            //         if (!isset($uploadResult['secure_url'])) {
+            //             throw new Exception('Lỗi khi upload ảnh');
+            //         }
+
+            //         $imageUrl = $uploadResult['secure_url'];
+            //         $formData['image'] = $imageUrl;
+            //     } catch (Exception $e) {
+            //         $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
+            //         return;
+            //     }
+            // }
+
             $tourData = [
                 'title' => $title,
                 'slug' => $slug ?: createSlug($title),
@@ -352,8 +370,8 @@ class ToursController extends BaseController
         // Lấy tham số từ URL
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
-        $sort = $_GET['sort'] ?? 'name';
-        $direction = $_GET['direction'] ?? 'asc';
+        $sort = $_GET['sort'] ?? 'created_at';
+        $direction = $_GET['direction'] ?? 'desc';
 
         // Xây dựng bộ lọc
         $filters = [
@@ -414,21 +432,26 @@ class ToursController extends BaseController
             $updated_at = date('Y-m-d H:i:s');
 
             $imageUrl = '';
+            // var_dump($_FILES);
+            // die;
 
-            // if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            //     try {
-            //         $image = CloudinaryHelper::upload($_FILES['image']['tmp_name'], 'categories');
-            //         if (!isset($image['secure_url'])) {
-            //             throw new Exception('Lỗi khi upload ảnh');
-            //         }
-            //         $imageUrl = $image['secure_url'];
-            //         $formData['image'] = $imageUrl;
-            //     } catch (Exception $e) {
-            //         $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
-            //         $this->view('admin/tours/createCategory', ['formData' => $formData]);
-            //         return;
-            //     }
-            // }
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                try {
+
+                    // Upload ảnh và lưu thông tin
+                    $uploadResult = CloudinaryHelper::upload($_FILES['image']['tmp_name'], 'categories');
+
+                    if (!isset($uploadResult['secure_url'])) {
+                        throw new Exception('Lỗi khi upload ảnh');
+                    }
+
+                    $imageUrl = $uploadResult['secure_url'];
+                    $formData['image'] = $imageUrl;
+                } catch (Exception $e) {
+                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
+                    return;
+                }
+            }
 
             if (!$formData['name'] || !$formData['description'] || !$formData['status']) {
                 $this->setFlashMessage('error', 'Vui lòng nhập đủ thông tin');
@@ -446,7 +469,7 @@ class ToursController extends BaseController
                 $formData['name'],
                 $formData['slug'],
                 $formData['description'],
-                $imageUrl,
+                $formData['image'],
                 $formData['status'],
                 $created_at,
                 $updated_at
@@ -493,8 +516,6 @@ class ToursController extends BaseController
             $formData['slug'] = trim($_POST['slug'] ?? $category['slug']);
             $formData['description'] = trim($_POST['description'] ?? $category['description']);
             $formData['status'] = $_POST['status'] ?? $category['status'];
-            $formData['meta_title'] = trim($_POST['meta_title'] ?? $category['meta_title'] ?? '');
-            $formData['meta_description'] = trim($_POST['meta_description'] ?? $category['meta_description'] ?? '');
             $formData['parent_id'] = $_POST['parent_id'] ? (int)$_POST['parent_id'] : null;
 
             // Giữ hình ảnh hiện tại
@@ -503,14 +524,6 @@ class ToursController extends BaseController
             // Xử lý upload hình ảnh mới nếu có
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 try {
-                    // Chuẩn bị dữ liệu cho ảnh
-                    $imageData = [
-                        'title' => $formData['name'],
-                        'description' => $formData['description'],
-                        'alt_text' => $formData['name'],
-                        'category' => 'tour_category',
-                        'user_id' => $currentUser['id'] ?? null
-                    ];
 
                     // Upload ảnh và lưu thông tin
                     $uploadResult = CloudinaryHelper::upload($_FILES['image']['tmp_name'], 'categories');
@@ -564,8 +577,6 @@ class ToursController extends BaseController
                 $formData['description'],
                 $imageUrl,
                 $formData['status'],
-                $formData['meta_title'],
-                $formData['meta_description'],
                 $formData['parent_id']
             );
 

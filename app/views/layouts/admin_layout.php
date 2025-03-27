@@ -185,13 +185,13 @@ ob_start();
             </button>
             <ul class="sidebar-dropdown-content hidden pl-10 py-1 bg-gray-900">
               <li>
-                <a href="<?= UrlHelper::route('admin/news') ?>"
+                <a href="<?= UrlHelper::route('admin/news/index') ?>"
                   class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'news' ? 'text-white' : '' ?>">
                   Tất cả Bài viết
                 </a>
               </li>
               <li>
-                <a href="<?= UrlHelper::route('admin/news/create') ?>"
+                <a href="<?= UrlHelper::route('admin/news/createNews') ?>"
                   class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'news-create' ? 'text-white' : '' ?>">
                   Thêm Bài viết
                 </a>
@@ -200,6 +200,10 @@ ob_start();
                 <a href="<?= UrlHelper::route('admin/news/categories') ?>"
                   class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'news-categories' ? 'text-white' : '' ?>">
                   Danh mục Tin tức
+                </a>
+                <a href="<?= UrlHelper::route('admin/news/createCategory') ?>"
+                  class="block py-2 px-4 text-sm text-gray-400 hover:text-white hover:bg-gray-700 rounded <?= $activePage === 'news-categories' ? 'text-white' : '' ?>">
+                  Thêm danh mục
                 </a>
               </li>
             </ul>

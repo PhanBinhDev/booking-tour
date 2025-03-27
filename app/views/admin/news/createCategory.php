@@ -2,18 +2,20 @@
 
 use App\Helpers\UrlHelper;
 
+$title = 'Danh Mục Tin Tức';
+
 ?>
 
 <div class="content-wrapper">
     <div class="mx-auto py-6 px-4">
         <!-- Tiêu đề trang -->
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Thêm Danh Mục Tour</h1>
-            <p class="text-gray-600">Điền thông tin để tạo danh mục tour mới </p>
+            <h1 class="text-2xl font-bold text-gray-800">Thêm Danh Mục Tin Tức</h1>
+            <p class="text-gray-600">Điền thông tin để tạo danh mục tin tức mới </p>
         </div>
 
         <!-- Form thêm danh mục -->
-        <form action="<?= UrlHelper::route('admin/tours/createCategory') ?>"
+        <form action="<?= UrlHelper::route('admin/news/createCategory') ?>"
             method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

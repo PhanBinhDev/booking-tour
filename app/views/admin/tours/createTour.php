@@ -13,7 +13,7 @@ use App\Helpers\UrlHelper;
         </div>
 
         <!-- Form thêm tour -->
-        <form action="<?= UrlHelper::route('admin/tours/createTour') ?>" method="POST" class="bg-white shadow-md rounded-lg overflow-hidden">
+        <form action="<?= UrlHelper::route('admin/tours/createTour') ?>" method="POST" class="bg-white shadow-md rounded-lg overflow-hidden" enctype="multipart/form-data">
             <!-- Tabs điều hướng -->
             <div class="border-b border-gray-200">
                 <nav class="flex -mb-px">
@@ -45,12 +45,11 @@ use App\Helpers\UrlHelper;
                         <div class="col-span-2">
                             <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
                             <div class="flex">
-                                <input type="text" id="slug" name="slug" class="w-full px-2.5 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                                <input type="text" id="slug" name="slug" required class="w-full px-2.5 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-150 shadow-sm text-sm leading-4 font-medium rounded-md  text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
                                     Tạo slug
                                 </button>
                             </div>
-                            <p class="mt-1 text-xs text-gray-500">Để trống để tự động tạo từ tên tour</p>
                         </div>
 
                         <div>
@@ -65,7 +64,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Thời gian tour</label>
-                            <input type="text" id="duration" name="duration" placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                            <input type="text" id="duration" name="duration" required placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
@@ -75,7 +74,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục tour</label>
-                            <select id="category_id" name="category_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                            <select id="category_id" name="category_id" required class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn danh mục --</option>
                                 <?php
                                 foreach ($categories as $value) { ?>
@@ -87,7 +86,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm đến</label>
-                            <select id="location_id" name="location_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                            <select id="location_id" name="location_id" required class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn điểm đến --</option>
                                 <?php
                                 foreach ($locations as $value) { ?>
@@ -99,7 +98,7 @@ use App\Helpers\UrlHelper;
 
                         <div>
                             <label for="departure_location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm khởi hành</label>
-                            <select id="departure_location_id" name="departure_location_id" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                            <select id="departure_location_id" required name="departure_location_id" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn điểm khởi hành --</option>
                                 <?php
                                 foreach ($locations as $value) { ?>
@@ -145,11 +144,11 @@ use App\Helpers\UrlHelper;
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <div class="flex text-sm text-gray-600">
-                                        <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500">
+                                        <label for="file-featured_image" class="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500">
                                             <span>Tải lên hình ảnh</span>
-                                            <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple>
+                                            <input type="file" id="featured_image" name="featured_image" multiple>
                                         </label>
-                                        <p class="pl-1">hoặc kéo thả vào đây</p>
+
                                     </div>
                                     <p class="text-xs text-gray-500">PNG, JPG, GIF tối đa 10MB</p>
                                 </div>

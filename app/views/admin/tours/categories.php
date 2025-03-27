@@ -70,9 +70,9 @@ use App\Helpers\UrlHelper;
                   class="flex items-center">
                   ID
                   <?php if ($sort == 'id'): ?>
-                  <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
-                  <i class="fas fa-sort ml-1 text-gray-300"></i>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
               </th>
@@ -84,9 +84,9 @@ use App\Helpers\UrlHelper;
                   class="flex items-center">
                   Tên danh mục
                   <?php if ($sort == 'name'): ?>
-                  <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
-                  <i class="fas fa-sort ml-1 text-gray-300"></i>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
               </th>
@@ -98,9 +98,9 @@ use App\Helpers\UrlHelper;
                   class="flex items-center">
                   Trạng thái
                   <?php if ($sort == 'status'): ?>
-                  <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
-                  <i class="fas fa-sort ml-1 text-gray-300"></i>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
               </th>
@@ -109,9 +109,9 @@ use App\Helpers\UrlHelper;
                   class="flex items-center">
                   Ngày tạo
                   <?php if ($sort == 'created_at'): ?>
-                  <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
-                  <i class="fas fa-sort ml-1 text-gray-300"></i>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
               </th>
@@ -122,68 +122,68 @@ use App\Helpers\UrlHelper;
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <?php if (!empty($categories)): ?>
-            <?php foreach ($categories as $item): ?>
-            <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["id"] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <?php if (!empty($item["image"])): ?>
-                <img src="<?= $item["image"] ?>" alt="<?= $item["name"] ?>" style='width: 50px; height: 50px'
-                  class="object-cover rounded">
-                <?php else: ?>
-                <div class="w-[50px] h-[50px] bg-gray-200 rounded flex items-center justify-center">
-                  <i class="fas fa-image text-gray-400"></i>
-                </div>
-                <?php endif; ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["name"] ?></div>
-                <div class="text-xs text-gray-500"><?= $item["slug"] ?? '' ?></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= mb_strimwidth($item["description"] ?? '', 0, 50, "...") ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <?php
-                                        $statusClass = $item['status'] === 'active'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800';
+              <?php foreach ($categories as $item): ?>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= $item["id"] ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <?php if (!empty($item["image"])): ?>
+                      <img src="<?= $item["image"] ?>" alt="<?= $item["name"] ?>" style='width: 50px; height: 50px'
+                        class="object-cover rounded">
+                    <?php else: ?>
+                      <div class="w-[50px] h-[50px] bg-gray-200 rounded flex items-center justify-center">
+                        <i class="fas fa-image text-gray-400"></i>
+                      </div>
+                    <?php endif; ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900"><?= $item["name"] ?></div>
+                    <div class="text-xs text-gray-500"><?= $item["slug"] ?? '' ?></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= mb_strimwidth($item["description"] ?? '', 0, 50, "...") ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <?php
+                    $statusClass = $item['status'] === 'active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800';
 
-                                        $statusLabel = $item['status'] === 'active'
-                                            ? 'Hoạt động'
-                                            : 'Tạm ngưng';
-                                        ?>
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
-                  <?= $statusLabel ?>
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= date('d/m/Y', strtotime($item["created_at"])) ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex space-x-2">
-                  <a href="<?= UrlHelper::route('admin/tours/updateCategory/' . $item['id']) ?>">
-                    <button class="text-teal-600 hover:text-teal-900">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </a>
-                  <a href="<?= UrlHelper::route('admin/tours/deleteCategory/' . $item['id']) ?>"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                    <button class="text-red-600 hover:text-red-900">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <?php endforeach; ?>
+                    $statusLabel = $item['status'] === 'active'
+                      ? 'Hoạt động'
+                      : 'Tạm ngưng';
+                    ?>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                      <?= $statusLabel ?>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= date('d/m/Y', strtotime($item["created_at"])) ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex space-x-2">
+                      <a href="<?= UrlHelper::route('admin/tours/updateCategory/' . $item['id']) ?>">
+                        <button class="text-teal-600 hover:text-teal-900">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                      </a>
+                      <a href="<?= UrlHelper::route('admin/tours/deleteCategory/' . $item['id']) ?>"
+                        onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                        <button class="text-red-600 hover:text-red-900">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
             <?php else: ?>
-            <tr>
-              <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
-                Không tìm thấy danh mục nào.
-              </td>
-            </tr>
+              <tr>
+                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                  Không tìm thấy danh mục nào.
+                </td>
+              </tr>
             <?php endif; ?>
           </tbody>
         </table>
@@ -191,61 +191,61 @@ use App\Helpers\UrlHelper;
 
       <!-- Phân trang -->
       <?php if (!empty($pagination) && $pagination['total'] > 0): ?>
-      <div class="px-6 py-4 bg-white border-t border-gray-200">
-        <div class="flex flex-col sm:flex-row justify-between items-center">
-          <div class="text-sm text-gray-600 mb-4 sm:mb-0">
-            Hiển thị <?= $pagination['from'] ?> đến <?= $pagination['to'] ?> trong số <?= $pagination['total'] ?> danh
-            mục
-          </div>
+        <div class="px-6 py-4 bg-white border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row justify-between items-center">
+            <div class="text-sm text-gray-600 mb-4 sm:mb-0">
+              Hiển thị <?= $pagination['from'] ?> đến <?= $pagination['to'] ?> trong số <?= $pagination['total'] ?> danh
+              mục
+            </div>
 
-          <!-- Các nút phân trang -->
-          <div class="flex flex-wrap items-center space-x-1">
-            <?php if ($pagination['has_prev_page']): ?>
-            <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] - 1]) ?>"
-              class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-              &laquo; Trước
-            </a>
-            <?php endif; ?>
+            <!-- Các nút phân trang -->
+            <div class="flex flex-wrap items-center space-x-1">
+              <?php if ($pagination['has_prev_page']): ?>
+                <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] - 1]) ?>"
+                  class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                  &laquo; Trước
+                </a>
+              <?php endif; ?>
 
-            <?php
-                            // Hiển thị các số trang
-                            $start = max(1, $pagination['current_page'] - 2);
-                            $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+              <?php
+              // Hiển thị các số trang
+              $start = max(1, $pagination['current_page'] - 2);
+              $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
 
-                            if ($start > 1) {
-                                echo '<a href="' . UrlHelper::buildQueryString(['page' => 1]) . '" 
+              if ($start > 1) {
+                echo '<a href="' . UrlHelper::buildQueryString(['page' => 1]) . '" 
                                     class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">1</a>';
-                                if ($start > 2) {
-                                    echo '<span class="px-2 text-gray-500">...</span>';
-                                }
-                            }
+                if ($start > 2) {
+                  echo '<span class="px-2 text-gray-500">...</span>';
+                }
+              }
 
-                            for ($i = $start; $i <= $end; $i++) {
-                                $isActive = $i === $pagination['current_page'];
-                                echo '<a href="' . UrlHelper::buildQueryString(['page' => $i]) . '" 
+              for ($i = $start; $i <= $end; $i++) {
+                $isActive = $i === $pagination['current_page'];
+                echo '<a href="' . UrlHelper::buildQueryString(['page' => $i]) . '" 
                                     class="px-3 py-1 border rounded-md text-sm ' .
-                                    ($isActive ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') .
-                                    '">' . $i . '</a>';
-                            }
+                  ($isActive ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') .
+                  '">' . $i . '</a>';
+              }
 
-                            if ($end < $pagination['total_pages']) {
-                                if ($end < $pagination['total_pages'] - 1) {
-                                    echo '<span class="px-2 text-gray-500">...</span>';
-                                }
-                                echo '<a href="' . UrlHelper::buildQueryString(['page' => $pagination['total_pages']]) . '" 
+              if ($end < $pagination['total_pages']) {
+                if ($end < $pagination['total_pages'] - 1) {
+                  echo '<span class="px-2 text-gray-500">...</span>';
+                }
+                echo '<a href="' . UrlHelper::buildQueryString(['page' => $pagination['total_pages']]) . '" 
                                     class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">' . $pagination['total_pages'] . '</a>';
-                            }
-                            ?>
+              }
+              ?>
 
-            <?php if ($pagination['has_next_page']): ?>
-            <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] + 1]) ?>"
-              class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-              Sau &raquo;
-            </a>
-            <?php endif; ?>
+              <?php if ($pagination['has_next_page']): ?>
+                <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] + 1]) ?>"
+                  class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                  Sau &raquo;
+                </a>
+              <?php endif; ?>
+            </div>
           </div>
         </div>
-      </div>
       <?php endif; ?>
     </div>
   </div>
