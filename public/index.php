@@ -158,6 +158,22 @@ $router->get('/admin/locations/show/{id}', 'Admin\LocationController@show');
 $router->post('/admin/locations/delete/{id}', 'Admin\LocationController@delete');
 $router->post('/admin/locations/change-status/{id}', 'Admin\LocationController@changeStatus');
 
+//ADMIN/NEWS//CATEGORIES
+$router->get('/admin/news/categories', 'Admin\NewsController@categories');
+$router->get('/admin/news/createCategory', 'Admin\NewsController@createCategory');
+$router->post('/admin/news/createCategory', 'Admin\NewsController@createCategory');
+$router->get('/admin/news/updateCategory/{id}', 'Admin\NewsController@updateCategory');
+$router->post('/admin/news/updateCategory/{id}', 'Admin\NewsController@updateCategory');
+$router->get('/admin/news/deleteCategory/{id}', 'Admin\NewsController@deleteCategory');
+
+//ADMIN/NEWS
+$router->get('/admin/news/index', 'Admin\NewsController@index');
+$router->get('/admin/news/createNews', 'Admin\NewsController@createNews');
+$router->post('/admin/news/createNews', 'Admin\NewsController@createNews');
+$router->get('/admin/news/deleteNews/{id}', 'Admin\NewsController@deleteNews');
+$router->get('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
+$router->post('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
+
 
 // ADMIN/SYSTEM
 $router->get('/admin/system/activity-logs', 'Admin\DashboardController@activityLogs');
