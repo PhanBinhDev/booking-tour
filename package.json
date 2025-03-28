@@ -1,0 +1,24 @@
+{
+  "name": "php-mvc-project",
+  "version": "1.0.0",
+  "description": "PHP MVC Project with Tailwind CSS",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css --watch",
+    "build": "npx tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css --minify"
+  },
+  "keywords": [
+    "php",
+    "mvc",
+    "tailwindcss"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.13",
+    "postcss": "^8.5.3"
+  }
+}

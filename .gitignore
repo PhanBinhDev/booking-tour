@@ -1,0 +1,9 @@
+/vendor/
+/node_modules/
+
+# LOGS
+composer.lock
+package-lock.json
+
+# ENV
+.env

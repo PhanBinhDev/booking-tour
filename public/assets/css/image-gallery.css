@@ -1,0 +1,90 @@
+/* Styles for image gallery */
+
+/* Image card styles */
+.image-card {
+  transition: all 0.3s ease;
+}
+
+.image-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Fix for images with different aspect ratios */
+.image-card .aspect-w-16.aspect-h-9 {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.image-card .aspect-w-16.aspect-h-9 img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This ensures images cover the area without distortion */
+}
+
+/* Modal styles */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease;
+}
+
+/* Dropzone styles */
+#dropzone {
+  transition: all 0.3s ease;
+}
+
+#dropzone:hover {
+  border-color: #14b8a6;
+  background-color: rgba(20, 184, 166, 0.05);
+}
+
+/* Preview container */
+#preview-container {
+  position: relative;
+}
+
+#image-preview {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Edit preview */
+#edit-preview {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Animation for flash messages */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-out-right {
+  animation: slideOut 0.5s ease-in-out forwards;
+}

@@ -1,0 +1,181 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.invoice-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.company-info {
+  max-width: 50%;
+}
+
+.company-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.invoice-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #008080;
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.invoice-details {
+  text-align: right;
+}
+
+.invoice-id {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.customer-supplier-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.customer-info,
+.supplier-info {
+  width: 48%;
+}
+
+.info-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #008080;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.info-content {
+  margin-bottom: 5px;
+}
+
+.invoice-items {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.invoice-items th {
+  background-color: #f2f2f2;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+.invoice-items td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.invoice-items .amount {
+  text-align: right;
+}
+
+.invoice-total {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.invoice-total td {
+  padding: 5px 10px;
+}
+
+.invoice-total .label {
+  text-align: right;
+  width: 80%;
+}
+
+.invoice-total .amount {
+  text-align: right;
+  width: 20%;
+}
+
+.invoice-total .total-row {
+  font-weight: bold;
+  font-size: 16px;
+  border-top: 2px solid #ddd;
+}
+
+.invoice-total .total-row .amount {
+  color: #008080;
+}
+
+.invoice-notes {
+  margin-bottom: 40px;
+}
+
+.invoice-footer {
+  text-align: center;
+  margin-top: 50px;
+  color: #666;
+  font-size: 12px;
+}
+
+.status-paid {
+  position: relative;
+}
+
+.status-paid::after {
+  content: 'ĐÃ THANH TOÁN';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 60px;
+  color: rgba(0, 128, 128, 0.15);
+  font-weight: bold;
+  z-index: -1;
+  border: 10px solid rgba(0, 128, 128, 0.15);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+@media print {
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none;
+  }
+}
+
+.print-button {
+  background-color: #008080;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.print-button:hover {
+  background-color: #006666;
+}
