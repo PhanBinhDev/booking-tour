@@ -54,7 +54,6 @@ class HomeController extends BaseController
         'subject' => $subject,
         'message' => $message,
       ];
-      //  var_dump($data); die();
       $this->contactModel->createContact($data);
     }
 

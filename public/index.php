@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 
 $projectFolder = basename(dirname(__DIR__));
 define('ROOT_PATH', dirname(__DIR__));
-
+define('ENVIRONMENT', 'development');
 // Cấu hình đường dẫn cơ sở
 define('BASE_URL', '/' . $projectFolder);
 define('PUBLIC_URL', BASE_URL . '/public');
@@ -178,7 +178,11 @@ $router->post('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
 
 // ADMIN/CONTACT
 $router->get('/admin/contacts', 'Admin\ContactController@index');
-
+$router->get('/admin/contacts/view/{id}', 'Admin\ContactController@details');
+$router->post('/admin/contacts/archive', 'Admin\ContactController@archive');
+$router->get('/admin/contacts/reply/{id}', 'Admin\ContactController@reply');
+$router->post('/admin/contacts/mark-read', 'Admin\ContactController@markRead');
+$router->post('/admin/contacts/send-reply', 'Admin\ContactController@sendReply');
 
 
 // ADMIN/SYSTEM
