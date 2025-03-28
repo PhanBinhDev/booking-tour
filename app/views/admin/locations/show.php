@@ -53,14 +53,14 @@ $title = 'Chi tiết địa điểm';
           <div class="p-6">
             <!-- Thumbnail -->
             <?php if (!empty($location['thumbnail'])): ?>
-            <div class="mb-6">
-              <div class="w-full h-52 rounded-lg overflow-hidden bg-gray-100">
-                <img
-                  src="<?= CloudinaryHelper::getImageUrl('locations', $location['slug'], ['width' => 800, 'height' => 400, 'crop' => 'fill']) ?>"
-                  alt="<?= htmlspecialchars($location['name']) ?>" class="w-full h-full object-cover"
-                  onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=No+Image';">
+              <div class="mb-6">
+                <div class="w-full h-52 rounded-lg overflow-hidden bg-gray-100">
+                  <img
+                    src="<?= CloudinaryHelper::getImageUrl('locations', $location['slug'], ['width' => 800, 'height' => 400, 'crop' => 'fill']) ?>"
+                    alt="<?= htmlspecialchars($location['name']) ?>" class="w-full h-full object-cover"
+                    onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=No+Image';">
+                </div>
               </div>
-            </div>
             <?php endif; ?>
 
             <!-- Location Details -->
@@ -108,12 +108,12 @@ $title = 'Chi tiết địa điểm';
                   <h3 class="text-sm font-medium text-gray-500">URL</h3>
                   <p class="mt-1 text-base text-gray-900">
                     <?php if (!empty($location['url'])): ?>
-                    <a href="<?= htmlspecialchars($location['url']) ?>" target="_blank"
-                      class="text-blue-600 hover:text-blue-800 hover:underline">
-                      <?= htmlspecialchars($location['url']) ?> <i class="fas fa-external-link-alt text-xs ml-1"></i>
-                    </a>
+                      <a href="<?= htmlspecialchars($location['url']) ?>" target="_blank"
+                        class="text-blue-600 hover:text-blue-800 hover:underline">
+                        <?= htmlspecialchars($location['url']) ?> <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                      </a>
                     <?php else: ?>
-                    <span class="text-gray-400">Chưa thiết lập</span>
+                      <span class="text-gray-400">Chưa thiết lập</span>
                     <?php endif; ?>
                   </p>
                 </div>
@@ -127,14 +127,25 @@ $title = 'Chi tiết địa điểm';
               </div>
             </div>
 
+            <!-- Image -->
+            <?php if (!empty($location['image'])): ?>
+              <div class="mb-6">
+                <div class="w-full h-52 rounded-lg overflow-hidden bg-gray-100">
+                  <img src="<?= htmlspecialchars($location['image']) ?>" alt="<?= htmlspecialchars($location['name']) ?>"
+                    class="w-full h-full object-cover"
+                    onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=No+Image';">
+                </div>
+              </div>
+            <?php endif; ?>
+
             <!-- Description -->
             <div class="mt-4">
               <h3 class="text-sm font-medium text-gray-500 mb-2">Mô tả</h3>
               <div class="p-4 bg-gray-50 rounded-md prose prose-sm max-w-none">
                 <?php if (!empty($location['description'])): ?>
-                <?= nl2br(htmlspecialchars($location['description'])) ?>
+                  <?= nl2br(htmlspecialchars($location['description'])) ?>
                 <?php else: ?>
-                <p class="text-gray-400 italic">Không có mô tả</p>
+                  <p class="text-gray-400 italic">Không có mô tả</p>
                 <?php endif; ?>
               </div>
             </div>
@@ -143,15 +154,15 @@ $title = 'Chi tiết địa điểm';
 
         <!-- Map Section -->
         <?php if (!empty($location['latitude']) && !empty($location['longitude'])): ?>
-        <div class="bg-white rounded-lg shadow-sm mb-6 overflow-hidden border border-gray-200">
-          <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <h2 class="text-lg font-medium text-gray-800">Vị trí bản đồ</h2>
-          </div>
+          <div class="bg-white rounded-lg shadow-sm mb-6 overflow-hidden border border-gray-200">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <h2 class="text-lg font-medium text-gray-800">Vị trí bản đồ</h2>
+            </div>
 
-          <div style="height: 400px; width: 100%; position: relative;">
-            <div id="map" style="position: absolute; top: 0; bottom: 0; width: 100%;"></div>
+            <div style="height: 400px; width: 100%; position: relative;">
+              <div id="map" style="position: absolute; top: 0; bottom: 0; width: 100%;"></div>
+            </div>
           </div>
-        </div>
         <?php endif; ?>
       </div>
 
@@ -174,17 +185,17 @@ $title = 'Chi tiết địa điểm';
                 <dt class="text-sm font-medium text-gray-500">Trạng thái</dt>
                 <dd class="mt-1">
                   <?php if ($location['status'] === 'active'): ?>
-                  <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <div class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></div>
-                    Hoạt động
-                  </span>
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <div class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></div>
+                      Hoạt động
+                    </span>
                   <?php else: ?>
-                  <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    <div class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></div>
-                    Vô hiệu
-                  </span>
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      <div class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></div>
+                      Vô hiệu
+                    </span>
                   <?php endif; ?>
                 </dd>
               </div>
@@ -204,17 +215,17 @@ $title = 'Chi tiết địa điểm';
               </div>
 
               <?php if (!empty($location['created_by'])): ?>
-              <div class="mb-4">
-                <dt class="text-sm font-medium text-gray-500">Tạo bởi</dt>
-                <dd class="mt-1 text-sm text-gray-900"><?= htmlspecialchars($location['created_by']) ?></dd>
-              </div>
+                <div class="mb-4">
+                  <dt class="text-sm font-medium text-gray-500">Tạo bởi</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><?= htmlspecialchars($location['created_by']) ?></dd>
+                </div>
               <?php endif; ?>
 
               <?php if (!empty($location['updated_by'])): ?>
-              <div class="mb-4">
-                <dt class="text-sm font-medium text-gray-500">Cập nhật bởi</dt>
-                <dd class="mt-1 text-sm text-gray-900"><?= htmlspecialchars($location['updated_by']) ?></dd>
-              </div>
+                <div class="mb-4">
+                  <dt class="text-sm font-medium text-gray-500">Cập nhật bởi</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><?= htmlspecialchars($location['updated_by']) ?></dd>
+                </div>
               <?php endif; ?>
             </dl>
           </div>
@@ -239,21 +250,21 @@ $title = 'Chi tiết địa điểm';
             </button>
 
             <?php if ($location['status'] === 'active'): ?>
-            <form action="<?= UrlHelper::route('admin/locations/change-status/' . $location['id']) ?>" method="POST">
-              <input type="hidden" name="status" value="inactive">
-              <button type="submit"
-                class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-                <i class="fas fa-ban mr-2"></i> Vô hiệu hóa
-              </button>
-            </form>
+              <form action="<?= UrlHelper::route('admin/locations/change-status/' . $location['id']) ?>" method="POST">
+                <input type="hidden" name="status" value="inactive">
+                <button type="submit"
+                  class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                  <i class="fas fa-ban mr-2"></i> Vô hiệu hóa
+                </button>
+              </form>
             <?php else: ?>
-            <form action="<?= UrlHelper::route('admin/locations/change-status/' . $location['id']) ?>" method="POST">
-              <input type="hidden" name="status" value="active">
-              <button type="submit"
-                class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-                <i class="fas fa-check-circle mr-2"></i> Kích hoạt
-              </button>
-            </form>
+              <form action="<?= UrlHelper::route('admin/locations/change-status/' . $location['id']) ?>" method="POST">
+                <input type="hidden" name="status" value="active">
+                <button type="submit"
+                  class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                  <i class="fas fa-check-circle mr-2"></i> Kích hoạt
+                </button>
+              </form>
             <?php endif; ?>
 
             <!-- Additional actions could go here -->
@@ -308,51 +319,51 @@ $title = 'Chi tiết địa điểm';
 </div>
 
 <script>
-// Khởi tạo map nếu có tọa độ
-<?php if (!empty($location['latitude']) && !empty($location['longitude'])): ?>
-document.addEventListener('DOMContentLoaded', function() {
-  // Thiết lập access token
-  mapboxgl.accessToken =
-    'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
+  // Khởi tạo map nếu có tọa độ
+  <?php if (!empty($location['latitude']) && !empty($location['longitude'])): ?>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Thiết lập access token
+      mapboxgl.accessToken =
+        'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
 
-  // Lấy tọa độ
-  const lat = <?= (float)$location['latitude'] ?>;
-  const lng = <?= (float)$location['longitude'] ?>;
+      // Lấy tọa độ
+      const lat = <?= (float)$location['latitude'] ?>;
+      const lng = <?= (float)$location['longitude'] ?>;
 
-  // Khởi tạo map
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [lng, lat],
-    zoom: 14
-  });
+      // Khởi tạo map
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [lng, lat],
+        zoom: 14
+      });
 
-  // Thêm controls
-  map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      // Thêm controls
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-  // Thêm marker
-  const popup = new mapboxgl.Popup({
-      offset: 25
-    })
-    .setHTML(`<h3 class="font-medium text-sm"><?= addslashes($location['name']) ?></h3>`);
+      // Thêm marker
+      const popup = new mapboxgl.Popup({
+          offset: 25
+        })
+        .setHTML(`<h3 class="font-medium text-sm"><?= addslashes($location['name']) ?></h3>`);
 
-  new mapboxgl.Marker({
-      color: "#e53e3e"
-    })
-    .setLngLat([lng, lat])
-    .setPopup(popup)
-    .addTo(map);
-});
-<?php endif; ?>
+      new mapboxgl.Marker({
+          color: "#e53e3e"
+        })
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map);
+    });
+  <?php endif; ?>
 
-// Xử lý modal xóa
-function confirmDelete(id, name) {
-  document.getElementById('deleteLocationName').textContent = name;
-  document.getElementById('deleteForm').action = '<?= UrlHelper::route('admin/locations/delete') ?>/' + id;
-  document.getElementById('deleteModal').classList.remove('hidden');
-}
+  // Xử lý modal xóa
+  function confirmDelete(id, name) {
+    document.getElementById('deleteLocationName').textContent = name;
+    document.getElementById('deleteForm').action = '<?= UrlHelper::route('admin/locations/delete') ?>/' + id;
+    document.getElementById('deleteModal').classList.remove('hidden');
+  }
 
-function closeDeleteModal() {
-  document.getElementById('deleteModal').classList.add('hidden');
-}
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+  }
 </script>

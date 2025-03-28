@@ -147,12 +147,13 @@ $router->post('/admin/tours/createCategory', 'Admin\ToursController@createCatego
 $router->get('/admin/bookings', 'Admin\ToursController@bookings');
 $router->get('/admin/bookings/{id}', 'Admin\ToursController@bookingDetails');
 $router->get('/admin/bookings/updateBooking/{id}', 'Admin\ToursController@updateBooking');
-$router->get('/admin/bookings/updateStatus', 'Admin\ToursController@updateStatus');
+$router->post('/admin/bookings/updateStatus/{id}', 'Admin\ToursController@updateStatus');
 
 
 // ADMIN/LOCATIONS
 $router->get('/admin/locations', 'Admin\LocationController@index');
 $router->get('/admin/locations/create', 'Admin\LocationController@create');
+$router->post('/admin/locations/create', 'Admin\LocationController@create');
 $router->get('/admin/locations/edit/{id}', 'Admin\LocationController@edit');
 $router->get('/admin/locations/show/{id}', 'Admin\LocationController@show');
 $router->post('/admin/locations/delete/{id}', 'Admin\LocationController@delete');

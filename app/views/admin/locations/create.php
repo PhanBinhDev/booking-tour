@@ -35,7 +35,7 @@ $title = 'Thêm mới địa điểm';
         <h2 class="text-lg font-medium text-gray-800">Thông tin địa điểm</h2>
       </div>
 
-      <form action="<?= UrlHelper::route('admin/locations/store') ?>" method="POST" class="p-6"
+      <form action="<?= UrlHelper::route('admin/locations/create') ?>" method="POST" class="p-6"
         enctype="multipart/form-data">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Tên địa điểm -->
@@ -182,7 +182,7 @@ $title = 'Thêm mới địa điểm';
           <h3 class="text-base font-medium text-gray-900 mb-3">Thư viện ảnh</h3>
           <div class="border rounded-md p-4 bg-gray-50">
             <label class="block text-sm font-medium text-gray-700 mb-2">Thêm ảnh vào thư viện</label>
-            <input type="file" name="gallery[]" id="gallery" multiple
+            <input type="file" name="galleries" id="gallery" multiple
               class="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500">
             <p class="mt-1 text-sm text-gray-500">Chọn nhiều ảnh cùng lúc cho thư viện (JPEG, PNG, tối đa 5MB mỗi ảnh)
             </p>
@@ -228,203 +228,203 @@ $title = 'Thêm mới địa điểm';
 </div>
 
 <script>
-// Auto-generate slug from name
-document.getElementById('name').addEventListener('input', function() {
-  const nameValue = this.value;
-  const slugInput = document.getElementById('slug');
+  // Auto-generate slug from name
+  document.getElementById('name').addEventListener('input', function() {
+    const nameValue = this.value;
+    const slugInput = document.getElementById('slug');
 
-  if (!slugInput.dataset.userModified || slugInput.dataset.userModified === 'false') {
-    slugInput.value = nameValue
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  }
-});
-
-// Set the flag to false when user manually edits the slug
-document.getElementById('slug').addEventListener('input', function() {
-  this.dataset.userModified = 'true';
-});
-
-// Thumbnail preview
-document.getElementById('thumbnail').addEventListener('change', function(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const previewImg = document.getElementById('thumbnailPreviewImg');
-      previewImg.src = e.target.result;
-      document.getElementById('thumbnailPreview').classList.remove('hidden');
+    if (!slugInput.dataset.userModified || slugInput.dataset.userModified === 'false') {
+      slugInput.value = nameValue
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
     }
-    reader.readAsDataURL(file);
-  } else {
-    document.getElementById('thumbnailPreview').classList.add('hidden');
-  }
-});
+  });
 
-// Gallery preview
-document.getElementById('gallery').addEventListener('change', function(event) {
-  const files = event.target.files;
-  const previewContainer = document.getElementById('galleryPreviewContainer');
-  previewContainer.innerHTML = ''; // Clear existing previews
+  // Set the flag to false when user manually edits the slug
+  document.getElementById('slug').addEventListener('input', function() {
+    this.dataset.userModified = 'true';
+  });
 
-  if (files.length > 0) {
-    document.getElementById('galleryPreview').classList.remove('hidden');
+  // Thumbnail preview
+  document.getElementById('thumbnail').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const previewImg = document.getElementById('thumbnailPreviewImg');
+        previewImg.src = e.target.result;
+        document.getElementById('thumbnailPreview').classList.remove('hidden');
+      }
+      reader.readAsDataURL(file);
+    } else {
+      document.getElementById('thumbnailPreview').classList.add('hidden');
+    }
+  });
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.type.match('image.*')) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const imgContainer = document.createElement('div');
-          imgContainer.className = 'aspect-w-1 aspect-h-1 overflow-hidden rounded-md bg-gray-100';
+  // Gallery preview
+  document.getElementById('gallery').addEventListener('change', function(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('galleryPreviewContainer');
+    previewContainer.innerHTML = ''; // Clear existing previews
 
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.className = 'object-cover w-full h-full';
-          img.alt = 'Gallery image preview';
+    if (files.length > 0) {
+      document.getElementById('galleryPreview').classList.remove('hidden');
 
-          imgContainer.appendChild(img);
-          previewContainer.appendChild(imgContainer);
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.match('image.*')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'aspect-w-1 aspect-h-1 overflow-hidden rounded-md bg-gray-100';
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'object-cover w-full h-full';
+            img.alt = 'Gallery image preview';
+
+            imgContainer.appendChild(img);
+            previewContainer.appendChild(imgContainer);
+          }
+          reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(file);
+      }
+    } else {
+      document.getElementById('galleryPreview').classList.add('hidden');
+    }
+  });
+
+  // Mapbox initialization
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thiết lập access token
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
+
+    // Mặc định hiển thị vị trí Hà Nội khi chưa có tọa độ
+    const defaultLat = 21.0278;
+    const defaultLng = 105.8342;
+
+    // Khởi tạo map
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [defaultLng, defaultLat],
+      zoom: 12
+    });
+
+    // Thêm controls
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    // Tạo marker có thể kéo
+    const marker = new mapboxgl.Marker({
+        color: "#e53e3e",
+        draggable: true
+      })
+      .setLngLat([defaultLng, defaultLat])
+      .addTo(map);
+
+    // Cập nhật lat, lng khi kéo marker
+    marker.on('dragend', function() {
+      const lngLat = marker.getLngLat();
+      document.getElementById('latitude').value = lngLat.lat.toFixed(6);
+      document.getElementById('longitude').value = lngLat.lng.toFixed(6);
+    });
+
+    // Click vào map để đặt marker
+    map.on('click', function(e) {
+      marker.setLngLat(e.lngLat);
+      document.getElementById('latitude').value = e.lngLat.lat.toFixed(6);
+      document.getElementById('longitude').value = e.lngLat.lng.toFixed(6);
+    });
+
+    // Cập nhật marker khi nhập tọa độ
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+
+    function updateMapFromInputs() {
+      const lat = parseFloat(latInput.value);
+      const lng = parseFloat(lngInput.value);
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        marker.setLngLat([lng, lat]);
+        map.flyTo({
+          center: [lng, lat],
+          zoom: 12,
+          essential: true
+        });
       }
     }
-  } else {
-    document.getElementById('galleryPreview').classList.add('hidden');
-  }
-});
 
-// Mapbox initialization
-document.addEventListener('DOMContentLoaded', function() {
-  // Thiết lập access token
-  mapboxgl.accessToken =
-    'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
+    latInput.addEventListener('change', updateMapFromInputs);
+    lngInput.addEventListener('change', updateMapFromInputs);
 
-  // Mặc định hiển thị vị trí Hà Nội khi chưa có tọa độ
-  const defaultLat = 21.0278;
-  const defaultLng = 105.8342;
+    // Thêm tìm kiếm địa điểm (geocoder)
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      marker: false,
+      placeholder: 'Tìm kiếm địa điểm...'
+    });
 
-  // Khởi tạo map
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [defaultLng, defaultLat],
-    zoom: 12
+    map.addControl(geocoder, 'top-left');
+
+    // Cập nhật marker khi tìm kiếm
+    geocoder.on('result', function(e) {
+      const coordinates = e.result.center;
+      marker.setLngLat(coordinates);
+
+      // Cập nhật input fields
+      document.getElementById('latitude').value = coordinates[1].toFixed(6);
+      document.getElementById('longitude').value = coordinates[0].toFixed(6);
+
+      // Hiển thị tên địa điểm
+      if (e.result.place_name && !document.getElementById('name').value) {
+        document.getElementById('name').value = e.result.text;
+        // Trigger slug generation
+        document.getElementById('name').dispatchEvent(new Event('input'));
+      }
+    });
   });
-
-  // Thêm controls
-  map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-  // Tạo marker có thể kéo
-  const marker = new mapboxgl.Marker({
-      color: "#e53e3e",
-      draggable: true
-    })
-    .setLngLat([defaultLng, defaultLat])
-    .addTo(map);
-
-  // Cập nhật lat, lng khi kéo marker
-  marker.on('dragend', function() {
-    const lngLat = marker.getLngLat();
-    document.getElementById('latitude').value = lngLat.lat.toFixed(6);
-    document.getElementById('longitude').value = lngLat.lng.toFixed(6);
-  });
-
-  // Click vào map để đặt marker
-  map.on('click', function(e) {
-    marker.setLngLat(e.lngLat);
-    document.getElementById('latitude').value = e.lngLat.lat.toFixed(6);
-    document.getElementById('longitude').value = e.lngLat.lng.toFixed(6);
-  });
-
-  // Cập nhật marker khi nhập tọa độ
-  const latInput = document.getElementById('latitude');
-  const lngInput = document.getElementById('longitude');
-
-  function updateMapFromInputs() {
-    const lat = parseFloat(latInput.value);
-    const lng = parseFloat(lngInput.value);
-
-    if (!isNaN(lat) && !isNaN(lng)) {
-      marker.setLngLat([lng, lat]);
-      map.flyTo({
-        center: [lng, lat],
-        zoom: 12,
-        essential: true
-      });
-    }
-  }
-
-  latInput.addEventListener('change', updateMapFromInputs);
-  lngInput.addEventListener('change', updateMapFromInputs);
-
-  // Thêm tìm kiếm địa điểm (geocoder)
-  const geocoder = new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
-    marker: false,
-    placeholder: 'Tìm kiếm địa điểm...'
-  });
-
-  map.addControl(geocoder, 'top-left');
-
-  // Cập nhật marker khi tìm kiếm
-  geocoder.on('result', function(e) {
-    const coordinates = e.result.center;
-    marker.setLngLat(coordinates);
-
-    // Cập nhật input fields
-    document.getElementById('latitude').value = coordinates[1].toFixed(6);
-    document.getElementById('longitude').value = coordinates[0].toFixed(6);
-
-    // Hiển thị tên địa điểm
-    if (e.result.place_name && !document.getElementById('name').value) {
-      document.getElementById('name').value = e.result.text;
-      // Trigger slug generation
-      document.getElementById('name').dispatchEvent(new Event('input'));
-    }
-  });
-});
 </script>
 
 <!-- Thêm Mapbox Geocoder -->
 
 
 <style>
-.required:after {
-  content: " *";
-  color: #f43f5e;
-}
-
-/* Fix aspect ratio for gallery previews */
-.aspect-w-1 {
-  position: relative;
-  padding-bottom: 100%;
-}
-
-.aspect-w-1>img {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* Mapbox style adjustments */
-.mapboxgl-ctrl-geocoder {
-  min-width: 100%;
-}
-
-@media (min-width: 640px) {
-  .mapboxgl-ctrl-geocoder {
-    min-width: 300px;
+  .required:after {
+    content: " *";
+    color: #f43f5e;
   }
-}
+
+  /* Fix aspect ratio for gallery previews */
+  .aspect-w-1 {
+    position: relative;
+    padding-bottom: 100%;
+  }
+
+  .aspect-w-1>img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Mapbox style adjustments */
+  .mapboxgl-ctrl-geocoder {
+    min-width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .mapboxgl-ctrl-geocoder {
+      min-width: 300px;
+    }
+  }
 </style>

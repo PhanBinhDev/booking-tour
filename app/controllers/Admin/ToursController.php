@@ -615,4 +615,9 @@ class ToursController extends BaseController
         header('location:' . UrlHelper::route('admin/tours/categories'));
         exit;
     }
+
+    public function updateStatus($id)
+    {
+        $this->view('admin/booking/index');
+    }
 }

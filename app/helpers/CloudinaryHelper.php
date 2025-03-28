@@ -70,6 +70,7 @@ class CloudinaryHelper extends BaseModel
             // Upload lên Cloudinary
             $result = self::upload($filePath, $folder);
 
+
             // Lấy thông tin từ file gốc
             $fileInfo = pathinfo($filePath);
             $fileSize = filesize($filePath);

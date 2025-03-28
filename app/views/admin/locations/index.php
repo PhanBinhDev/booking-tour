@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
 
 $title = 'Quản lý địa điểm';
@@ -42,12 +41,12 @@ $title = 'Quản lý địa điểm';
                 <i class="fas fa-search text-gray-400"></i>
               </div>
               <?php if (!empty($filters['search'])): ?>
-              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['search' => ''])) ?>"
-                  class="text-gray-400 hover:text-gray-600">
-                  <i class="fas fa-times"></i>
-                </a>
-              </div>
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['search' => ''])) ?>"
+                    class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                  </a>
+                </div>
               <?php endif; ?>
             </div>
           </div>
@@ -61,10 +60,10 @@ $title = 'Quản lý địa điểm';
                 onchange="this.form.submit()">
                 <option value="">Tất cả khu vực</option>
                 <?php foreach ($regions as $region): ?>
-                <option value="<?= htmlspecialchars($region) ?>"
-                  <?= ($filters['region'] ?? '') == $region ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($region) ?>
-                </option>
+                  <option value="<?= htmlspecialchars($region) ?>"
+                    <?= ($filters['region'] ?? '') == $region ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($region) ?>
+                  </option>
                 <?php endforeach; ?>
               </select>
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -82,10 +81,10 @@ $title = 'Quản lý địa điểm';
                 onchange="this.form.submit()" <?= empty($filters['region']) ? 'disabled' : '' ?>>
                 <option value="">Tất cả quốc gia</option>
                 <?php foreach ($countries as $country): ?>
-                <option value="<?= htmlspecialchars($country) ?>"
-                  <?= ($filters['country'] ?? '') == $country ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($country) ?>
-                </option>
+                  <option value="<?= htmlspecialchars($country) ?>"
+                    <?= ($filters['country'] ?? '') == $country ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($country) ?>
+                  </option>
                 <?php endforeach; ?>
               </select>
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -99,41 +98,41 @@ $title = 'Quản lý địa điểm';
         <div class="flex justify-between items-center pt-2">
           <div class="flex flex-wrap gap-2">
             <?php if (!empty($filters['region']) || !empty($filters['country']) || !empty($filters['search'])): ?>
-            <?php if (!empty($filters['search'])): ?>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-              Tìm kiếm: <?= htmlspecialchars($filters['search']) ?>
-              <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['search' => ''])) ?>"
-                class="ml-1 text-gray-500 hover:text-gray-700">
-                <i class="fas fa-times-circle"></i>
-              </a>
-            </span>
-            <?php endif; ?>
+              <?php if (!empty($filters['search'])): ?>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  Tìm kiếm: <?= htmlspecialchars($filters['search']) ?>
+                  <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['search' => ''])) ?>"
+                    class="ml-1 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times-circle"></i>
+                  </a>
+                </span>
+              <?php endif; ?>
 
-            <?php if (!empty($filters['region'])): ?>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-              Khu vực: <?= htmlspecialchars($filters['region']) ?>
-              <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['region' => '', 'country' => ''])) ?>"
-                class="ml-1 text-gray-500 hover:text-gray-700">
-                <i class="fas fa-times-circle"></i>
-              </a>
-            </span>
-            <?php endif; ?>
+              <?php if (!empty($filters['region'])): ?>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  Khu vực: <?= htmlspecialchars($filters['region']) ?>
+                  <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['region' => '', 'country' => ''])) ?>"
+                    class="ml-1 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times-circle"></i>
+                  </a>
+                </span>
+              <?php endif; ?>
 
-            <?php if (!empty($filters['country'])): ?>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-              Quốc gia: <?= htmlspecialchars($filters['country']) ?>
-              <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['country' => '']) + ['region' => $filters['region']]) ?>"
-                class="ml-1 text-gray-500 hover:text-gray-700">
-                <i class="fas fa-times-circle"></i>
-              </a>
-            </span>
-            <?php endif; ?>
+              <?php if (!empty($filters['country'])): ?>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  Quốc gia: <?= htmlspecialchars($filters['country']) ?>
+                  <a href="<?= UrlHelper::route('admin/locations', array_diff_key($filters, ['country' => '']) + ['region' => $filters['region']]) ?>"
+                    class="ml-1 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times-circle"></i>
+                  </a>
+                </span>
+              <?php endif; ?>
 
-            <a href="<?= UrlHelper::route('admin/locations') ?>" class="text-teal-600 hover:text-teal-800 text-sm">
-              <i class="fas fa-times mr-1"></i> Xóa bộ lọc
-            </a>
+              <a href="<?= UrlHelper::route('admin/locations') ?>" class="text-teal-600 hover:text-teal-800 text-sm">
+                <i class="fas fa-times mr-1"></i> Xóa bộ lọc
+              </a>
             <?php else: ?>
-            <span class="text-sm text-gray-500">Không có bộ lọc nào được áp dụng</span>
+              <span class="text-sm text-gray-500">Không có bộ lọc nào được áp dụng</span>
             <?php endif; ?>
           </div>
 
@@ -156,211 +155,211 @@ $title = 'Quản lý địa điểm';
       </div>
 
       <?php if (empty($locations)): ?>
-      <div class="p-8 text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-          <i class="fas fa-map-marker-alt text-gray-500 text-2xl"></i>
+        <div class="p-8 text-center">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+            <i class="fas fa-map-marker-alt text-gray-500 text-2xl"></i>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-1">Không tìm thấy địa điểm nào</h3>
+          <p class="text-gray-500">Thử thay đổi bộ lọc hoặc tìm kiếm với từ khóa khác</p>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-1">Không tìm thấy địa điểm nào</h3>
-        <p class="text-gray-500">Thử thay đổi bộ lọc hoặc tìm kiếm với từ khóa khác</p>
-      </div>
       <?php else: ?>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên
-                địa điểm</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Quốc gia</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khu
-                vực</th>
-              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tọa độ</th>
-              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Thao tác</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <?php foreach ($locations as $location): ?>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $location['id'] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <?php if (!empty($location['thumbnail'])): ?>
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <img class="h-10 w-10 rounded-md object-cover" src="<?= UrlHelper::asset($location['thumbnail']) ?>"
-                      alt="<?= htmlspecialchars($location['name']) ?>">
-                  </div>
-                  <?php else: ?>
-                  <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center">
-                    <i class="fas fa-map-marker-alt text-gray-400"></i>
-                  </div>
-                  <?php endif; ?>
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900"><?= htmlspecialchars($location['name']) ?></div>
-                    <div class="text-sm text-gray-500 truncate max-w-md">
-                      <?= htmlspecialchars(substr($location['description'] ?? '', 0, 60)) ?><?= strlen($location['description'] ?? '') > 60 ? '...' : '' ?>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên
+                  địa điểm</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Quốc gia</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khu
+                  vực</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tọa độ</th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Thao tác</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <?php foreach ($locations as $location): ?>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= $location['id'] ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <?php if (!empty($location['image'])): ?>
+                        <div class="flex-shrink-0 h-10 w-10">
+                          <img class="h-10 w-10 rounded-md object-cover" src="<?= $location['image'] ?>"
+                            alt="<?= htmlspecialchars($location['image']) ?>">
+                        </div>
+                      <?php else: ?>
+                        <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center">
+                          <i class="fas fa-map-marker-alt text-gray-400"></i>
+                        </div>
+                      <?php endif; ?>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900"><?= htmlspecialchars($location['name']) ?></div>
+                        <div class="text-sm text-gray-500 truncate max-w-md">
+                          <?= htmlspecialchars(substr($location['description'] ?? '', 0, 60)) ?><?= strlen($location['description'] ?? '') > 60 ? '...' : '' ?>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= htmlspecialchars($location['country']) ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= htmlspecialchars($location['region']) ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-                <?php if (!empty($location['latitude']) && !empty($location['longitude'])): ?>
-                <span class="text-xs text-gray-500">
-                  <?= number_format($location['latitude'], 6) ?>, <?= number_format($location['longitude'], 6) ?>
-                </span>
-                <?php else: ?>
-                <span class="text-xs text-gray-400">Không có</span>
-                <?php endif; ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right space-x-2">
-                <a href="<?= UrlHelper::route('admin/locations/edit/' . $location['id']) ?>"
-                  class="text-blue-600 hover:text-blue-900">
-                  <i class="fas fa-edit"></i>
-                </a>
-                <a href="<?= UrlHelper::route('admin/locations/show/' . $location['id']) ?>"
-                  class="text-gray-600 hover:text-gray-900">
-                  <i class="fas fa-eye"></i>
-                </a>
-                <a href="javascript:void(0)"
-                  onclick="confirmDelete(<?= $location['id'] ?>, '<?= addslashes($location['name']) ?>')"
-                  class="text-red-600 hover:text-red-900">
-                  <i class="fas fa-trash-alt"></i>
-                </a>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= htmlspecialchars($location['country']) ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= htmlspecialchars($location['region']) ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+                    <?php if (!empty($location['latitude']) && !empty($location['longitude'])): ?>
+                      <span class="text-xs text-gray-500">
+                        <?= number_format($location['latitude'], 6) ?>, <?= number_format($location['longitude'], 6) ?>
+                      </span>
+                    <?php else: ?>
+                      <span class="text-xs text-gray-400">Không có</span>
+                    <?php endif; ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right space-x-2">
+                    <a href="<?= UrlHelper::route('admin/locations/edit/' . $location['id']) ?>"
+                      class="text-blue-600 hover:text-blue-900">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="<?= UrlHelper::route('admin/locations/show/' . $location['id']) ?>"
+                      class="text-gray-600 hover:text-gray-900">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="javascript:void(0)"
+                      onclick="confirmDelete(<?= $location['id'] ?>, '<?= addslashes($location['name']) ?>')"
+                      class="text-red-600 hover:text-red-900">
+                      <i class="fas fa-trash-alt"></i>
+                    </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       <?php endif; ?>
 
       <!-- Pagination -->
       <?php if ($pagination['total_pages'] > 1): ?>
-      <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-        <div class="flex-1 flex justify-between sm:hidden">
-          <?php if ($pagination['has_prev_page']): ?>
-          <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] - 1]))) ?>"
-            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-            Trước
-          </a>
-          <?php else: ?>
-          <span
-            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-gray-50 cursor-not-allowed">
-            Trước
-          </span>
-          <?php endif; ?>
-
-          <?php if ($pagination['has_next_page']): ?>
-          <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] + 1]))) ?>"
-            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-            Tiếp
-          </a>
-          <?php else: ?>
-          <span
-            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-gray-50 cursor-not-allowed">
-            Tiếp
-          </span>
-          <?php endif; ?>
-        </div>
-        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-          <div>
-            <p class="text-sm text-gray-700">
-              Hiển thị <span class="font-medium"><?= $pagination['from'] ?></span> đến
-              <span class="font-medium"><?= $pagination['to'] ?></span> trong tổng số
-              <span class="font-medium"><?= $pagination['total'] ?></span> kết quả
-            </p>
-          </div>
-          <div>
-            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <!-- Previous Button -->
-              <?php if ($pagination['has_prev_page']): ?>
+        <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+          <div class="flex-1 flex justify-between sm:hidden">
+            <?php if ($pagination['has_prev_page']): ?>
               <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] - 1]))) ?>"
-                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                <span class="sr-only">Trang trước</span>
-                <i class="fas fa-chevron-left"></i>
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Trước
               </a>
-              <?php else: ?>
+            <?php else: ?>
               <span
-                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-300 cursor-not-allowed">
-                <span class="sr-only">Trang trước</span>
-                <i class="fas fa-chevron-left"></i>
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-gray-50 cursor-not-allowed">
+                Trước
               </span>
-              <?php endif; ?>
+            <?php endif; ?>
 
-              <!-- Page Numbers -->
-              <?php
+            <?php if ($pagination['has_next_page']): ?>
+              <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] + 1]))) ?>"
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Tiếp
+              </a>
+            <?php else: ?>
+              <span
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-gray-50 cursor-not-allowed">
+                Tiếp
+              </span>
+            <?php endif; ?>
+          </div>
+          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700">
+                Hiển thị <span class="font-medium"><?= $pagination['from'] ?></span> đến
+                <span class="font-medium"><?= $pagination['to'] ?></span> trong tổng số
+                <span class="font-medium"><?= $pagination['total'] ?></span> kết quả
+              </p>
+            </div>
+            <div>
+              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <!-- Previous Button -->
+                <?php if ($pagination['has_prev_page']): ?>
+                  <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] - 1]))) ?>"
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="sr-only">Trang trước</span>
+                    <i class="fas fa-chevron-left"></i>
+                  </a>
+                <?php else: ?>
+                  <span
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-300 cursor-not-allowed">
+                    <span class="sr-only">Trang trước</span>
+                    <i class="fas fa-chevron-left"></i>
+                  </span>
+                <?php endif; ?>
+
+                <!-- Page Numbers -->
+                <?php
                 $startPage = max(1, $pagination['current_page'] - 2);
                 $endPage = min($pagination['total_pages'], $pagination['current_page'] + 2);
 
                 if ($startPage > 1): ?>
-              <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] + 1]))) ?>"
-                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                1
-              </a>
-              <?php if ($startPage > 2): ?>
-              <span
-                class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                ...
-              </span>
-              <?php endif; ?>
-              <?php endif; ?>
+                  <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] + 1]))) ?>"
+                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    1
+                  </a>
+                  <?php if ($startPage > 2): ?>
+                    <span
+                      class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      ...
+                    </span>
+                  <?php endif; ?>
+                <?php endif; ?>
 
-              <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-              <?php if ($i == $pagination['current_page']): ?>
-              <span
-                class="relative inline-flex items-center px-4 py-2 border border-teal-500 bg-teal-50 text-sm font-medium text-teal-600 hover:bg-teal-100">
-                <?= $i ?>
-              </span>
-              <?php else: ?>
-              <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' =>  $i]))) ?>"
-                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                <?= $i ?>
-              </a>
-              <?php endif; ?>
-              <?php endfor; ?>
+                <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                  <?php if ($i == $pagination['current_page']): ?>
+                    <span
+                      class="relative inline-flex items-center px-4 py-2 border border-teal-500 bg-teal-50 text-sm font-medium text-teal-600 hover:bg-teal-100">
+                      <?= $i ?>
+                    </span>
+                  <?php else: ?>
+                    <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' =>  $i]))) ?>"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                      <?= $i ?>
+                    </a>
+                  <?php endif; ?>
+                <?php endfor; ?>
 
-              <?php if ($endPage < $pagination['total_pages']): ?>
-              <?php if ($endPage < $pagination['total_pages'] - 1): ?>
-              <span
-                class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                ...
-              </span>
-              <?php endif; ?>
-              <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['total_pages']]))) ?>"
-                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                <?= $pagination['total_pages'] ?>
-              </a>
-              <?php endif; ?>
+                <?php if ($endPage < $pagination['total_pages']): ?>
+                  <?php if ($endPage < $pagination['total_pages'] - 1): ?>
+                    <span
+                      class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      ...
+                    </span>
+                  <?php endif; ?>
+                  <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['total_pages']]))) ?>"
+                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <?= $pagination['total_pages'] ?>
+                  </a>
+                <?php endif; ?>
 
-              <!-- Next Button -->
-              <?php if ($pagination['has_next_page']): ?>
-              <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] + 1]))) ?>"
-                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                <span class="sr-only">Trang sau</span>
-                <i class="fas fa-chevron-right"></i>
-              </a>
-              <?php else: ?>
-              <span
-                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-300 cursor-not-allowed">
-                <span class="sr-only">Trang sau</span>
-                <i class="fas fa-chevron-right"></i>
-              </span>
-              <?php endif; ?>
-            </nav>
+                <!-- Next Button -->
+                <?php if ($pagination['has_next_page']): ?>
+                  <a href="<?= UrlHelper::route('admin/locations?' . http_build_query(array_merge($filters, ['page' => $pagination['current_page'] + 1]))) ?>"
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="sr-only">Trang sau</span>
+                    <i class="fas fa-chevron-right"></i>
+                  </a>
+                <?php else: ?>
+                  <span
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-300 cursor-not-allowed">
+                    <span class="sr-only">Trang sau</span>
+                    <i class="fas fa-chevron-right"></i>
+                  </span>
+                <?php endif; ?>
+              </nav>
+            </div>
           </div>
         </div>
-      </div>
       <?php endif; ?>
     </div>
   </div>
@@ -410,35 +409,35 @@ $title = 'Quản lý địa điểm';
 </div>
 
 <script>
-// Functions to handle delete confirmation modal
-function confirmDelete(id, name) {
-  document.getElementById('deleteLocationName').textContent = name;
-  document.getElementById('deleteForm').action = '<?= UrlHelper::route('admin/locations/delete') ?>/' + id;
-  document.getElementById('deleteModal').classList.remove('hidden');
-}
-
-function closeDeleteModal() {
-  document.getElementById('deleteModal').classList.add('hidden');
-}
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-  if (event.target === document.getElementById('deleteModal')) {
-    closeDeleteModal();
+  // Functions to handle delete confirmation modal
+  function confirmDelete(id, name) {
+    document.getElementById('deleteLocationName').textContent = name;
+    document.getElementById('deleteForm').action = '<?= UrlHelper::route('admin/locations/delete') ?>/' + id;
+    document.getElementById('deleteModal').classList.remove('hidden');
   }
-});
 
-// Region change to update countries dropdown
-document.getElementById('region').addEventListener('change', function() {
-  const countrySelect = document.getElementById('country');
-  if (this.value === '') {
-    countrySelect.disabled = true;
-    countrySelect.value = '';
-  } else {
-    countrySelect.disabled = false;
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
   }
-  this.form.submit();
-});
+
+  // Close modal when clicking outside
+  window.addEventListener('click', function(event) {
+    if (event.target === document.getElementById('deleteModal')) {
+      closeDeleteModal();
+    }
+  });
+
+  // Region change to update countries dropdown
+  document.getElementById('region').addEventListener('change', function() {
+    const countrySelect = document.getElementById('country');
+    if (this.value === '') {
+      countrySelect.disabled = true;
+      countrySelect.value = '';
+    } else {
+      countrySelect.disabled = false;
+    }
+    this.form.submit();
+  });
 </script>
 
 <?php

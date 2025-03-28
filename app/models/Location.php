@@ -276,4 +276,16 @@ class Location extends BaseModel
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_COLUMN);
     }
+
+    public function findBySlug($slug)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE slug = :slug LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':slug', $slug);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $result ?: false;
+    }
 }

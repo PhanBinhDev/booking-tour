@@ -354,98 +354,103 @@ $title = 'Quản lý đặt tours';
     <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
     <div
       class="inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-          Đổi trạng thái đặt tour
-        </h3>
-        <div class="mt-2">
-          <p class="text-sm text-gray-500">
-            Chọn trạng thái mới cho đặt tour:
-          </p>
-          <div class="relative" x-data="{ statusOpen: false, selectedStatus: '', disableChange: false }"
-            x-init="selectedStatus = ''; $watch('selectedStatus', value => { document.getElementById('hidden-status').value = value; })">
-            <!-- Hidden input để lưu giá trị -->
-            <input type="hidden" id="hidden-status" name="status" x-model="selectedStatus">
 
-            <!-- Dropdown trigger -->
-            <button type="button" @click="!disableChange && (statusOpen = !statusOpen)"
-              :class="{ 'opacity-50 cursor-not-allowed': disableChange }"
-              class="w-full flex items-center justify-between rounded-md border border-gray-300 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500 focus:ring-opacity-30 pl-10 pr-10 py-2.5 text-gray-700 bg-white hover:border-gray-400 transition-all duration-200">
-              <span x-text="selectedStatus === 'pending' ? 'Chờ xử lý' : 
-                    selectedStatus === 'confirmed' ? 'Đã xác nhận' : 
-                    selectedStatus === 'cancelled' ? 'Đã hủy' : 
-                    selectedStatus === 'completed' ? 'Hoàn thành' : 'Chọn trạng thái'"></span>
-              <i class="fas fa-chevron-down text-gray-400" :class="{ 'transform rotate-180': statusOpen }"></i>
-            </button>
+      <form action="<?= UrlHelper::route('admin/bookings/updateStatus') ?>" method="POST">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+            Đổi trạng thái đặt tour
+          </h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">
+              Chọn trạng thái mới cho đặt tour:
+            </p>
+            <input type="hidden" id="booking-id-input" name="id" value="">
 
-            <!-- Status icon -->
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i class="fas fa-exchange-alt" :class="{
-                'text-yellow-500': selectedStatus === 'pending',
-                'text-blue-500': selectedStatus === 'confirmed',
-                'text-green-500': selectedStatus === 'completed',
-                'text-red-500': selectedStatus === 'cancelled',
-                'text-gray-400': !selectedStatus
-              }"></i>
-            </div>
+            <div class="relative" x-data="{ statusOpen: false, selectedStatus: '', disableChange: false }"
+              x-init="selectedStatus = ''; $watch('selectedStatus', value => { document.getElementById('hidden-status').value = value; })">
+              <!-- Hidden input để lưu giá trị -->
+              <input type="hidden" id="hidden-status" name="status" x-model="selectedStatus">
 
-            <!-- Dropdown options -->
-            <div x-show="statusOpen" @click.away="statusOpen = false"
-              class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 overflow-auto focus:outline-none"
-              x-transition:enter="transition ease-out duration-100"
-              x-transition:enter-start="transform opacity-0 scale-95"
-              x-transition:enter-end="transform opacity-100 scale-100"
-              x-transition:leave="transition ease-in duration-75"
-              x-transition:leave-start="transform opacity-100 scale-100"
-              x-transition:leave-end="transform opacity-0 scale-95">
+              <!-- Dropdown trigger -->
+              <button type="button" @click="!disableChange && (statusOpen = !statusOpen)"
+                :class="{ 'opacity-50 cursor-not-allowed': disableChange }"
+                class="w-full flex items-center justify-between rounded-md border border-gray-300 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500 focus:ring-opacity-30 pl-10 pr-10 py-2.5 text-gray-700 bg-white hover:border-gray-400 transition-all duration-200">
+                <span x-text="selectedStatus === 'pending' ? 'Chờ xử lý' : 
+                      selectedStatus === 'confirmed' ? 'Đã xác nhận' : 
+                      selectedStatus === 'cancelled' ? 'Đã hủy' : 
+                      selectedStatus === 'completed' ? 'Hoàn thành' : 'Chọn trạng thái'"></span>
+                <i class="fas fa-chevron-down text-gray-400" :class="{ 'transform rotate-180': statusOpen }"></i>
+              </button>
 
-              <!-- Status options -->
-              <div @click="selectedStatus = 'pending'; statusOpen = false"
-                class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                :class="{ 'bg-teal-50': selectedStatus === 'pending' }">
-                <span class="flex items-center">
-                  <span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span>
-                  Chờ xử lý
-                </span>
+              <!-- Status icon -->
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-exchange-alt" :class="{
+                  'text-yellow-500': selectedStatus === 'pending',
+                  'text-blue-500': selectedStatus === 'confirmed',
+                  'text-green-500': selectedStatus === 'completed',
+                  'text-red-500': selectedStatus === 'cancelled',
+                  'text-gray-400': !selectedStatus
+                }"></i>
               </div>
-              <div @click="selectedStatus = 'confirmed'; statusOpen = false"
-                class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                :class="{ 'bg-teal-50': selectedStatus === 'confirmed' }">
-                <span class="flex items-center">
-                  <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
-                  Đã xác nhận
-                </span>
-              </div>
-              <div @click="selectedStatus = 'cancelled'; statusOpen = false"
-                class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                :class="{ 'bg-teal-50': selectedStatus === 'cancelled' }">
-                <span class="flex items-center">
-                  <span class="w-2 h-2 rounded-full bg-red-400 mr-2"></span>
-                  Đã hủy
-                </span>
-              </div>
-              <div @click="selectedStatus = 'completed'; statusOpen = false"
-                class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                :class="{ 'bg-teal-50': selectedStatus === 'completed' }">
-                <span class="flex items-center">
-                  <span class="w-2 h-2 rounded-full bg-green-600 mr-2"></span>
-                  Hoàn thành
-                </span>
+
+              <!-- Dropdown options -->
+              <div x-show="statusOpen" @click.away="statusOpen = false"
+                class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 overflow-auto focus:outline-none"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95">
+
+                <!-- Status options -->
+                <div @click="selectedStatus = 'pending'; statusOpen = false"
+                  class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                  :class="{ 'bg-teal-50': selectedStatus === 'pending' }">
+                  <span class="flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span>
+                    Chờ xử lý
+                  </span>
+                </div>
+                <div @click="selectedStatus = 'confirmed'; statusOpen = false"
+                  class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                  :class="{ 'bg-teal-50': selectedStatus === 'confirmed' }">
+                  <span class="flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
+                    Đã xác nhận
+                  </span>
+                </div>
+                <div @click="selectedStatus = 'cancelled'; statusOpen = false"
+                  class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                  :class="{ 'bg-teal-50': selectedStatus === 'cancelled' }">
+                  <span class="flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-red-400 mr-2"></span>
+                    Đã hủy
+                  </span>
+                </div>
+                <div @click="selectedStatus = 'completed'; statusOpen = false"
+                  class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                  :class="{ 'bg-teal-50': selectedStatus === 'completed' }">
+                  <span class="flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-green-600 mr-2"></span>
+                    Hoàn thành
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button type="button" id="confirm-status-change"
-          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm">
-          Xác nhận
-        </button>
-        <button type="button" id="cancel-status-change"
-          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-          Hủy
-        </button>
-      </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="submit"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm">
+            Xác nhận
+          </button>
+          <button type="button" id="cancel-status-change"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            Hủy
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -454,25 +459,22 @@ $title = 'Quản lý đặt tours';
   document.addEventListener('DOMContentLoaded', function() {
     const changeStatusBtns = document.querySelectorAll('.change-status-btn');
     const modal = document.getElementById('change-status-modal');
-    const confirmBtn = document.getElementById('confirm-status-change');
     const cancelBtn = document.getElementById('cancel-status-change');
 
     // Debug - Kiểm tra các phần tử
     console.log("Modal:", modal);
     console.log("Change status buttons:", changeStatusBtns.length);
-    console.log("Confirm button:", confirmBtn);
     console.log("Cancel button:", cancelBtn);
-
-    let currentBookingId = null;
 
     changeStatusBtns.forEach(btn => {
       btn.addEventListener('click', function() {
-        currentBookingId = this.dataset.id;
+        const bookingId = this.dataset.id;
         const currentStatus = this.dataset.currentStatus;
-        console.log("Button clicked, status:", currentStatus, "ID:", currentBookingId);
+        console.log("Button clicked, status:", currentStatus, "ID:", bookingId);
 
-        // Thiết lập giá trị cho input ẩn
+        // Thiết lập giá trị cho các input ẩn
         document.getElementById('hidden-status').value = currentStatus;
+        document.getElementById('booking-id-input').value = bookingId;
 
         // Mở modal
         modal.style.display = 'block';
@@ -483,38 +485,6 @@ $title = 'Quản lý đặt tours';
     cancelBtn.addEventListener('click', function() {
       modal.style.display = 'none';
       modal.classList.add('hidden');
-    });
-
-    confirmBtn.addEventListener('click', function() {
-      const newStatus = document.getElementById('hidden-status').value;
-      // Gửi yêu cầu AJAX để cập nhật trạng thái
-      fetch(`<?= UrlHelper::route('admin/bookings/updateStatus') ?>`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: currentBookingId,
-            status: newStatus
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          if (data.success) {
-            // Cập nhật UI hoặc reload trang
-            location.reload();
-          } else {
-            alert('Có lỗi xảy ra khi cập nhật trạng thái.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Có lỗi xảy ra khi cập nhật trạng thái.');
-        })
-        .finally(() => {
-          modal.classList.add('hidden');
-        });
     });
   });
 </script>
