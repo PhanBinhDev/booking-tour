@@ -77,6 +77,10 @@ $title = 'Thông tin cá nhân';
                 <input type="text" value="<?= htmlspecialchars($currentUser['username']) ?>"
                   class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   disabled>
+                <p class="text-xs text-gray-500">
+                  Tên đăng nhập không thể thay đổi.
+                </p>
+                
               </div>
 
               <div>
@@ -84,6 +88,9 @@ $title = 'Thông tin cá nhân';
                 <input type="email" value="<?= htmlspecialchars($currentUser['email']) ?>"
                   class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   disabled>
+                <p class="text-xs text-gray-500">
+                  Email không thể thay đổi.
+                </p>
               </div>
 
               <div>

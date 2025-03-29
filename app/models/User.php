@@ -358,8 +358,8 @@ class User extends BaseModel
      */
     private function logActivity($userId, $action, $entityType, $entityId, $description)
     {
-        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent, created_at) 
-                VALUES (:user_id, :action, :entity_type, :entity_id, :description, :ip_address, :user_agent, NOW())";
+        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent) 
+                VALUES (:user_id, :action, :entity_type, :entity_id, :description, :ip_address, :user_agent NOW())";
 
         $stmt = $this->db->prepare($sql);
 
