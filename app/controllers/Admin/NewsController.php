@@ -93,7 +93,7 @@ class NewsController extends BaseController
 
             if ($insertId) {
                 $this->setFlashMessage('success', 'Thêm tin tức thành công');
-                header('location:' . UrlHelper::route('admin/news/index'));
+                $this->redirect(UrlHelper::route('admin/news/index'));
                 exit;
             } else {
                 $this->setFlashMessage('error', 'Thêm tin tức thất bại!');
@@ -102,6 +102,14 @@ class NewsController extends BaseController
         }
 
         $this->view('admin/news/createNews', ['categories' => $categories]);
+    }
+
+    public function createByEditor()
+    {
+        $categories = $this->NewsCategories->getAll();
+        $this->view('admin/news/createByEditor', [
+            'categories' => $categories
+        ]);
     }
 
     public function updateNews($id)
@@ -389,13 +397,18 @@ class NewsController extends BaseController
         $category = $this->NewsCategories->getById($id);
         if (!$category) {
             $this->setFlashMessage('error', 'Danh mục không tồn tại');
-            header('location:' . UrlHelper::route('admin/news/categories'));
-            exit;
+            $this->redirect(UrlHelper::route('admin/news/categories'));
         }
 
         $this->NewsCategories->deleteById($id, 'news_categories');
         $this->setFlashMessage('success', 'Xóa danh mục thành công');
-        header('location:' . UrlHelper::route('admin/news/categories'));
-        exit;
+        $this->redirect(UrlHelper::route('admin/news/categories'));
+    }
+
+    public function store()
+    {
+        // TODO: Implement this method
+        $this->setFlashMessage('error', 'Chức năng này chưa được hỗ trợ');
+        $this->redirect(UrlHelper::route('admin/news/index'));
     }
 }

@@ -27,41 +27,45 @@ class ContactController extends BaseController
 
     public function index()
     {
+        // Get query parameters for filtering and pagination
+        $status = $_GET['status'] ?? '';
+        $search = $_GET['search'] ?? '';
+        $page = (int)($_GET['page'] ?? 1);
+        $limit = (int)($_GET['limit'] ?? 10);
 
-        $contacts = $this->contactModel->getContacts();
-
-        // $contactById = $this->contactModel->getContactById($id);
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id'] ?? '';
-            $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $phone = $_POST['phone'] ?? '';
-            $subject = $_POST['subject'] ?? '';
-            $message = $_POST['message'] ?? '';
-            $status = $_POST['status'] ?? '';
-            $ip_address = $_POST['ip_address'] ?? '';
-            $user_agent = $_POST['user_agent'] ?? '';
-            $created_at = $_POST['created_at'] ?? '';
-
-            $data = [
-                'id' => $id,
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
-                'subject' => $subject,
-                'message' => $message,
-                'status' => $status,
-                'ip_address' => $ip_address,
-                'user_agent' => $user_agent,
-                'created_at' => $created_at,
-            ];
-
-            $this->contactModel->createContact($data);
+        // Prepare filters
+        $filters = [];
+        if (!empty($status)) {
+            $filters['status'] = $status;
         }
 
+        // Configure pagination options
+        $options = [
+            'table_alias' => 'c', // Alias for the contacts table
+            'columns' => 'c.*', // Select all columns from contacts table
+            'filters' => $filters,
+            'sort' => 'created_at',
+            'direction' => 'desc', // Newest contacts first
+            'page' => $page,
+            'limit' => $limit,
+            'search_term' => !empty($search) ? "%$search%" : "",
+            'search_fields' => ['name', 'email', 'phone', 'subject', 'message'], // Fields to search in
+        ];
 
-        $this->view('admin/contact/index', ["contacts" => $contacts]);
+        // Get paginated contacts
+        $result = $this->contactModel->getPaginatedCustom($options);
+
+        // Extract data
+        $contacts = $result['items'];
+        $pagination = $result['pagination'];
+
+        // Pass data to view
+        $this->view('admin/contact/index', [
+            "contacts" => $contacts,
+            "pagination" => $pagination,
+            "currentStatus" => $status,
+            "currentSearch" => $search
+        ]);
     }
 
     public function getStatusLabel($status)

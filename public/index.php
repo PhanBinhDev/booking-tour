@@ -45,6 +45,11 @@ use App\Config\Router;
 
 $router = new Router();
 
+// Image Upload for Editor.js
+$router->post('/upload-image', 'UploadController@uploadImage');
+$router->post('/fetch-image', 'UploadController@fetchImage');
+
+
 $router->get('/', 'HomeController@index');
 $router->get('/home/about', 'HomeController@about');
 $router->get('/home/contact', 'HomeController@contact');
@@ -162,6 +167,8 @@ $router->post('/admin/locations/change-status/{id}', 'Admin\LocationController@c
 //ADMIN/NEWS//CATEGORIES
 $router->get('/admin/news/categories', 'Admin\NewsController@categories');
 $router->get('/admin/news/createCategory', 'Admin\NewsController@createCategory');
+$router->post('/admin/news/store', 'Admin\NewsController@store');
+
 $router->post('/admin/news/createCategory', 'Admin\NewsController@createCategory');
 $router->get('/admin/news/updateCategory/{id}', 'Admin\NewsController@updateCategory');
 $router->post('/admin/news/updateCategory/{id}', 'Admin\NewsController@updateCategory');
@@ -169,7 +176,7 @@ $router->get('/admin/news/deleteCategory/{id}', 'Admin\NewsController@deleteCate
 
 //ADMIN/NEWS
 $router->get('/admin/news/index', 'Admin\NewsController@index');
-$router->get('/admin/news/createNews', 'Admin\NewsController@createNews');
+$router->get('/admin/news/createNews', 'Admin\NewsController@createByEditor');
 $router->post('/admin/news/createNews', 'Admin\NewsController@createNews');
 $router->get('/admin/news/deleteNews/{id}', 'Admin\NewsController@deleteNews');
 $router->get('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');

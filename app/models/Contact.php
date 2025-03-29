@@ -8,6 +8,12 @@ class Contact extends BaseModel
 {
     protected $table = 'contacts';
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->table = 'contacts'; // Set the table name
+    }
+
     public function createContact($data)
     {
         try {
