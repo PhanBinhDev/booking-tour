@@ -234,10 +234,10 @@ class AuthController extends BaseController
         if ($this->isAuthenticated()) {
             $this->redirect(UrlHelper::route(''));
         }
+        $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
-            $errors = [];
 
             if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors['email'] = 'Vui lòng nhập email hợp lệ';
@@ -248,9 +248,9 @@ class AuthController extends BaseController
 
                 if ($user) {
                     $token = $this->userModel->createPasswordResetToken($email);
-
+// echo $token; die();
                     if ($token) {
-                        // EmailHelper::sendPasswordResetEmail($email, $user['username'], $token);
+                        EmailHelper::sendPasswordResetEmail($email, $user['username'], $token);
                     }
                 }
 
@@ -258,26 +258,20 @@ class AuthController extends BaseController
                 $this->setFlashMessage('success', 'Nếu email tồn tại trong hệ thống, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu.');
                 $this->redirect(UrlHelper::route('auth/login'));
             }
-
-            $this->view('auth/forgot-password', [
-                'errors' => $errors,
-                'email' => $email
-            ]);
-        } else {
-            $this->view('/auth/forgot-password');
         }
+        $this->view('/auth/forgot-password', [
+            'errors' => $errors,
+        ]);
     }
 
     /**
      * Hiển thị và xử lý form đặt lại mật khẩu
      */
-    public function resetPassword()
+    public function resetPassword($token)
     {
         if ($this->isAuthenticated()) {
             $this->redirect(UrlHelper::route(''));
         }
-
-        $token = $_GET['token'] ?? '';
 
         if (empty($token)) {
             $this->setFlashMessage('error', 'Token đặt lại mật khẩu không hợp lệ');
@@ -304,8 +298,10 @@ class AuthController extends BaseController
                 if ($result) {
                     $this->setFlashMessage('success', 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.');
                     $this->redirect(UrlHelper::route('auth/login'));
+
                 } else {
                     $errors['reset'] = 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn';
+                    $this->setFlashMessage('error', 'Đặt lại mật khẩu không thành công!');
                 }
             }
 

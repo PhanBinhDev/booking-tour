@@ -2,9 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
 use App\Models\User;
-
+use Exception;
 
 class UserController extends BaseController
 {
@@ -45,75 +46,6 @@ class UserController extends BaseController
 
         $currentUser = $this->getCurrentUser();
 
-        // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        //     $username = $_POST['username'] ?? '';
-        //     $email = $_POST['email'] ?? '';
-        //     $currentPassword = $_POST['current_password'] ?? '';
-        //     $newPassword = $_POST['new_password'] ?? '';
-        //     $confirmPassword = $_POST['confirm_password'] ?? '';
-
-        //     $errors = [];
-
-        //     // Kiểm tra username
-        //     if (empty($username) || strlen($username) < 3) {
-        //         $errors['username'] = 'Username must be at least 3 characters';
-        //     } elseif ($username !== $currentUser['username']) {
-        //         // Kiểm tra username đã tồn tại chưa nếu được thay đổi
-        //         $existingUser = $this->userModel->findByUsername($username);
-        //         if ($existingUser && $existingUser['id'] != $currentUser['id']) {
-        //             $errors['username'] = 'Username is already taken';
-        //         }
-        //     }
-
-        //     // Kiểm tra email
-        //     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        //         $errors['email'] = 'Please enter a valid email';
-        //     } elseif ($email !== $currentUser['email']) {
-        //         // Kiểm tra email đã tồn tại chưa nếu được thay đổi
-        //         $existingUser = $this->userModel->findByEmail($email);
-        //         if ($existingUser && $existingUser['id'] != $currentUser['id']) {
-        //             $errors['email'] = 'Email is already registered';
-        //         }
-        //     }
-
-        //     // Nếu đang cập nhật mật khẩu
-        //     $updatingPassword = !empty($currentPassword) || !empty($newPassword) || !empty($confirmPassword);
-
-        //     if ($updatingPassword) {
-        //         if (empty($currentPassword)) {
-        //             $errors['current_password'] = 'Current password is required';
-        //         } elseif (!password_verify($currentPassword, $currentUser['password'])) {
-        //             $errors['current_password'] = 'Current password is incorrect';
-        //         }
-
-        //         if (empty($newPassword) || strlen($newPassword) < 6) {
-        //             $errors['new_password'] = 'New password must be at least 6 characters';
-        //         }
-
-        //         if ($newPassword !== $confirmPassword) {
-        //             $errors['confirm_password'] = 'Passwords do not match';
-        //         }
-        //     }
-
-        //     if (empty($errors)) {
-        //         $userData = [
-        //             'username' => $username,
-        //             'email' => $email
-        //         ];
-
-        //         if ($updatingPassword) {
-        //             $userData['password'] = password_hash($newPassword, PASSWORD_DEFAULT);
-        //         }
-
-        //         if ($this->userModel->update($currentUser['id'], $userData)) {
-        //             $_SESSION['username'] = $username;
-        //             $this->redirect(UrlHelper::route('user/profile?success=1'));
-        //             $this->setFlashMessage('success', 'message');
-        //         } else {
-        //             $errors['update'] = 'Failed to update profile';
-        //         }
-        //     }
-        // }
         $userProfile = $this->userModel->getUserProfile($currentUser['id']);
 
 
@@ -129,7 +61,24 @@ class UserController extends BaseController
             $facebook = $_POST['facebook'] ?? '';
             $twitter = $_POST['twitter'] ?? '';
             $instagram = $_POST['instagram'] ?? '';
+            $avatar =  '';
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                try {
 
+                    // Upload ảnh và lưu thông tin
+                    $uploadResult = CloudinaryHelper::upload($_FILES['avatar']['tmp_name'], 'categories');
+
+                    if (!isset($uploadResult['secure_url'])) {
+                        throw new Exception('Lỗi khi upload ảnh');
+                    }
+
+                    $avatar = $uploadResult['secure_url'];
+                } catch (Exception $e) {
+                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
+                    return;
+                }
+            }
+            
             $data = [
                 'full_name' => $full_name,
                 'phone' => $phone,
@@ -141,7 +90,8 @@ class UserController extends BaseController
                 'facebook' => $facebook,
                 'twitter' => $twitter,
                 'instagram' => $instagram,
-                'user_id' => $currentUser['id']
+                'user_id' => $currentUser['id'],
+                'avatar' => $avatar
             ];
 
 
@@ -156,8 +106,42 @@ class UserController extends BaseController
         if (!$this->isAuthenticated()) {
             $this->redirect(UrlHelper::route('auth/login'));
         }
+        $errors = [];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $currentPassword = $_POST['current_password'] ?? '';
+            $newPassword = $_POST['new_password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
 
-        $this->view('user/change-password');
+            
+
+            if (empty($currentPassword)) {
+                $errors['current_password'] = 'Mật khẩu hiện tại là bắt buộc';
+            } elseif (!password_verify($currentPassword, $this->getCurrentUser()['password'])) {
+                $errors['current_password'] = 'Mật khẩu không chính xác';
+            }
+
+            if (empty($newPassword) || strlen($newPassword) < 6) {
+                $errors['new_password'] = 'Mật khẩu mới phải có ít nhất 6 ký tự';
+            }
+
+            if ($newPassword !== $confirmPassword) {
+                $errors['confirm_password'] = 'Mât khẩu không khớp';
+            }
+            // var_dump($newPassword, $currentPassword);
+            
+            if (empty($errors)) {
+                if ($this->userModel->updatePassword($this->getCurrentUser()['id'], password_hash($newPassword, PASSWORD_DEFAULT))) {
+                    $this->setFlashMessage('success', 'Cập nhật mật khẩu thành công');
+                        
+                } else {
+                    $errors['update'] = 'Cập nhật mật khẩu thất bại';
+                }
+            }
+        }
+
+        $this->view('user/change-password',[
+            'errors' => $errors,
+        ]);
     }
 
     public function userBookings()

@@ -240,4 +240,45 @@ class EmailHelper
             ];
         }
     }
+    public static function sendPasswordResetEmail($email, $username, $token){
+        $subject = "Đặt lại mật khẩu - Di Travel";
+
+        $resetUrl = UrlHelper::route('/auth/reset-password/' . $token)  ;
+        // echo $resetUrl; die();
+        $message = "
+            <html>
+            <head>
+                <title>Đặt lại mật khẩu</title>         
+            </head>
+            <body>
+                <div style='max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;'>
+                    <div style=\"background: linear-gradient(135deg, #06beb6 0%, #48b1bf 100%); padding: 30px 20px; text-align: center;\">
+                        <img src=\"https://res.cloudinary.com/dr1naxx72/image/upload/v1743134201/logo_rbocpz.png\" alt=\"Di Travel Logo\" style=\"max-width: 180px; height: auto;\">
+                    </div>
+                    
+                    <div style='background-color: #f8f9fa; padding: 20px; border-radius: 5px;'>
+                        <h2 style='color: #333; margin-top: 0;'>Đặt lại mật khẩu</h2>
+                        
+                        <p>Xin chào $username,</p>
+                        
+                        <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Để đặt lại mật khẩu, vui lòng nhấp vào nút bên dưới:</p>
+                        
+                        <p style='text-align: center;'>
+                            <a href='http://localhost$resetUrl' style='display: inline-block; background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;'>Đặt lại mật khẩu</a>
+                        </p>
+                        
+                        <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+                    </div>
+                    
+                    <div style='margin-top: 20px; text-align: center; color: #6c757d; font-size: 12px;'>
+                        <p>© " . date('Y') . " Di Travel. Tất cả các quyền được bảo lưu.</p>
+                        <p>Địa chỉ: 123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh, Việt Nam</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+
+        return self::sendEmail($email, $subject, $message);
+    }
 }

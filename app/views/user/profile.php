@@ -2,7 +2,6 @@
 use App\Helpers\UrlHelper;
 
 $title = 'Thông tin cá nhân';
-
 ?>
 
 
@@ -73,7 +72,7 @@ $title = 'Thông tin cá nhân';
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
                 <input type="text" value="<?= htmlspecialchars($currentUser['username']) ?>"
                   class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   disabled>
