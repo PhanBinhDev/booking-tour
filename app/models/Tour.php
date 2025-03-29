@@ -128,6 +128,7 @@ class Tour extends BaseModel
                 tours.*, 
                 locations.name AS location_name,
                 locations.description AS location_des,
+                locations.latitude AS location_la,
                 tour_categories.name AS category_name, 
                 tour_dates.start_date, 
                 tour_dates.end_date 

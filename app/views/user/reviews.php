@@ -9,8 +9,8 @@ $title = 'Danh sách đặt tour';
     <div class="max-w-7xl mx-auto">
         <!-- Page Header -->
         <div class="mb-10">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Đơn đặt tour của bạn</h1>
-            <p class="text-gray-600">Danh sách các tour du lịch bạn đã đặt</p>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Đánh giá tour của bạn</h1>
+            <p class="text-gray-600">Danh sách các đánh giá của bạn về các tour du lịch của chúng tôi</p>
         </div>
 
         <!-- Filters and Sorting -->
@@ -32,8 +32,8 @@ $title = 'Danh sách đặt tour';
                 <span class="text-gray-700 font-medium">Sắp xếp:</span>
                 <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
                     <option>Mới nhất</option>
-                    <option>Giá: Thấp đến cao</option>
-                    <option>Giá: Cao đến thấp</option>
+                    <option>Sao: Thấp đến cao</option>
+                    <option>Sao: Cao đến thấp</option>
                     <option>Đánh giá cao nhất</option>
                 </select>
             </div>
@@ -46,27 +46,22 @@ $title = 'Danh sách đặt tour';
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Mã đặt tour
+                                STT
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Thông tin tour
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Số lượng
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tổng tiền
-                            </th>
-
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Thanh toán
+                                Đánh giá
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Ngày tạo
                             </th>
+
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Thao tác
                             </th>
+
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -80,33 +75,27 @@ $title = 'Danh sách đặt tour';
                             </td>
 
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900"> người lớn</div>
-                                <div class="text-xs text-gray-500"> trẻ em</div>
+                                <div class="text-sm font-medium text-gray-900">
+                                    <div class="flex text-yellow-400">
+                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-500"> nội dung</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
                                     0000đ
                                 </div>
                             </td>
-
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                đã thanh toán
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                00/00/00
-                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
-                                    <a href="">
-                                        <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </a>
-                                    <a href="">
-                                        <button class="text-red-600 hover:text-red-900" title="Xóa">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </a>
+                                    <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <button class="text-red-600 hover:text-red-900" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>

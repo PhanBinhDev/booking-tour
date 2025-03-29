@@ -69,7 +69,9 @@ $router->get('/home/tour-details/{id}', 'HomeController@tourDetail');
 // USERS
 $router->get('/user/profile', 'UserController@profile');
 $router->post('/user/profile', 'UserController@profile');
+$router->get('/user/wishlist', 'UserController@wishlist');
 $router->get('/user/bookings', 'UserController@userBookings');
+$router->get('/user/reviews', 'UserController@reviews');
 $router->get('/user/change-password', 'UserController@changePassword');
 $router->post('/user/change-password', 'UserController@changePassword');
 

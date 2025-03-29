@@ -43,7 +43,7 @@ use App\Helpers\UrlHelper;
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Trang chủ
           </a>
-          <a href="<?= UrlHelper::route('home/tours') ?>" <a href="<?= UrlHelper::route('home/tours') ?>"
+          <a href="<?= UrlHelper::route('home/tours') ?>"
             class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
             Tours
           </a>
@@ -114,23 +114,23 @@ use App\Helpers\UrlHelper;
       </div>
     </div>
   </header>
-  <main class="container mx-auto flex-grow flex flex-col">
+  <main class=" flex-grow flex flex-col">
     <!-- Flash messages -->
-   <?php
-      // Check if flash message exists AND has the required keys
-      if (
-        isset($_SESSION['flash_message']) &&
-        isset($_SESSION['flash_message']['message']) &&
-        isset($_SESSION['flash_message']['type'])
-      ):
-        $type = $_SESSION['flash_message']['type'];
-        $message = $_SESSION['flash_message']['message'];
-        $bgColor = ($type === 'error') ? 'bg-red-100' : 'bg-green-100';
-        $borderColor = ($type === 'error') ? 'border-red-400' : 'border-green-400';
-        $textColor = ($type === 'error') ? 'text-red-700' : 'text-green-700';
-        $iconColor = ($type === 'error') ? 'text-red-500' : 'text-green-500';
-        $icon = ($type === 'error') ? 'fa-circle-exclamation' : 'fa-circle-check';
-      ?>
+    <?php
+    // Check if flash message exists AND has the required keys
+    if (
+      isset($_SESSION['flash_message']) &&
+      isset($_SESSION['flash_message']['message']) &&
+      isset($_SESSION['flash_message']['type'])
+    ):
+      $type = $_SESSION['flash_message']['type'];
+      $message = $_SESSION['flash_message']['message'];
+      $bgColor = ($type === 'error') ? 'bg-red-100' : 'bg-green-100';
+      $borderColor = ($type === 'error') ? 'border-red-400' : 'border-green-400';
+      $textColor = ($type === 'error') ? 'text-red-700' : 'text-green-700';
+      $iconColor = ($type === 'error') ? 'text-red-500' : 'text-green-500';
+      $icon = ($type === 'error') ? 'fa-circle-exclamation' : 'fa-circle-check';
+    ?>
       <div id="flash-message"
         class="fixed z-[100] top-4 right-4 w-80 rounded-lg border <?= $borderColor ?> <?= $bgColor ?> p-4 shadow-lg animate-fade-in flex items-start">
         <div class="flex-shrink-0 mr-3">
@@ -152,70 +152,70 @@ use App\Helpers\UrlHelper;
       </div>
 
       <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const flashMessage = document.getElementById('flash-message');
-        const progressBar = document.getElementById('flash-progress');
+        document.addEventListener('DOMContentLoaded', function() {
+          const flashMessage = document.getElementById('flash-message');
+          const progressBar = document.getElementById('flash-progress');
 
-        if (flashMessage) {
-          // Animate progress bar
-          let width = 100;
-          const duration = 5000; // 5 seconds before auto-dismiss
-          const interval = 50; // Update every 50ms
-          const step = 100 / (duration / interval);
+          if (flashMessage) {
+            // Animate progress bar
+            let width = 100;
+            const duration = 5000; // 5 seconds before auto-dismiss
+            const interval = 50; // Update every 50ms
+            const step = 100 / (duration / interval);
 
-          const timer = setInterval(() => {
-            width -= step;
-            progressBar.style.width = width + '%';
-
-            if (width <= 0) {
-              clearInterval(timer);
-              closeFlashMessage();
-            }
-          }, interval);
-
-          // Allow hovering to pause the timer
-          flashMessage.addEventListener('mouseenter', () => {
-            clearInterval(timer);
-          });
-
-          flashMessage.addEventListener('mouseleave', () => {
-            // Restart timer with remaining time
-            const remainingPercentage = parseFloat(progressBar.style.width) || 100;
-            const remainingTime = (remainingPercentage / 100) * duration;
-
-            width = remainingPercentage;
-            const newTimer = setInterval(() => {
+            const timer = setInterval(() => {
               width -= step;
               progressBar.style.width = width + '%';
 
               if (width <= 0) {
-                clearInterval(newTimer);
+                clearInterval(timer);
                 closeFlashMessage();
               }
             }, interval);
-          });
+
+            // Allow hovering to pause the timer
+            flashMessage.addEventListener('mouseenter', () => {
+              clearInterval(timer);
+            });
+
+            flashMessage.addEventListener('mouseleave', () => {
+              // Restart timer with remaining time
+              const remainingPercentage = parseFloat(progressBar.style.width) || 100;
+              const remainingTime = (remainingPercentage / 100) * duration;
+
+              width = remainingPercentage;
+              const newTimer = setInterval(() => {
+                width -= step;
+                progressBar.style.width = width + '%';
+
+                if (width <= 0) {
+                  clearInterval(newTimer);
+                  closeFlashMessage();
+                }
+              }, interval);
+            });
+          }
+        });
+
+        function closeFlashMessage() {
+          const flashMessage = document.getElementById('flash-message');
+
+          if (flashMessage) {
+            // Add slide-out animation
+            flashMessage.classList.add('animate-slide-out-right');
+
+            // Remove element after animation completes
+            setTimeout(() => {
+              flashMessage.remove();
+            }, 500); // 500ms matches animation duration
+          }
         }
-      });
-
-      function closeFlashMessage() {
-        const flashMessage = document.getElementById('flash-message');
-
-        if (flashMessage) {
-          // Add slide-out animation
-          flashMessage.classList.add('animate-slide-out-right');
-
-          // Remove element after animation completes
-          setTimeout(() => {
-            flashMessage.remove();
-          }, 500); // 500ms matches animation duration
-        }
-      }
       </script>
-      <?php
-        // Unset the entire flash message array
-        unset($_SESSION['flash_message']);
-      endif;
-      ?>
+    <?php
+      // Unset the entire flash message array
+      unset($_SESSION['flash_message']);
+    endif;
+    ?>
 
     <!-- Content will be inserted here -->
     <?php if (isset($content)) echo $content; ?>

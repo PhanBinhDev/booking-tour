@@ -91,10 +91,15 @@ class HomeController extends BaseController
     $categories = $this->categoriesModel->getAll();
     $join = [
       "JOIN tour_categories ON tour_categories.id = tours.category_id",
-      "JOIN locations ON locations.id = tours.location_id"
+      "JOIN locations ON locations.id = tours.location_id",
+      "JOIN tour_dates ON tour_dates.tour_id = tours.id"
     ];
 
-    $columns = "tours.id, tours.title, tours.price, tour_categories.name AS category_name, locations.name AS location_name";
+    $columns = "tours.id, 
+    tours.title, tours.price, tours.duration,
+    tour_dates.start_date, tour_dates.end_date, 
+    tour_categories.name AS category_name, 
+    locations.name AS location_name";
 
     $allTours = $this->tourModel->getAll($columns, [], 'tours.id DESC', null, null, $join);
 
