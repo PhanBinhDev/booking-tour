@@ -29,7 +29,6 @@ $activePage = 'tours';
             <div class="lg:w-3/4">
                 <!-- grid tour 4 collum -->
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Popular Tours</h2>
                     <div class="flex items-center">
                         <span class="text-sm text-gray-500 mr-2">Sort by:</span>
                         <select class="text-sm border border-gray-300 rounded py-1 px-2 focus:ring-teal-500 focus:border-teal-500">
@@ -41,37 +40,69 @@ $activePage = 'tours';
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <?php foreach ($allTours as $tour) { ?>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <?php
+                    foreach ($allTours as $tour) { ?>
                         <input type="hidden" name="" id="<?= $tour["id"] ?>">
 
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
                             <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&h=300&fit=crop" alt="Beach Tour" class="w-full h-48 object-cover">
-                                <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-2 py-1 rounded text-red-500 font-semibold text-sm">
-                                    <?= number_format($tour['price'], 0, ',', '.') . ' VND' ?>
+                                <!-- Tour Image -->
+                                <div class="h-56 overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                </div>
+
+                                <!-- Discount Badge -->
+                                <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    -13%
+                                </div>
+
+                                <!-- Favorite Button -->
+                                <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg>
+                                </button>
+
+                                <!-- Duration Badge -->
+                                <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    <?= $tour['duration'] ?>
                                 </div>
                             </div>
-                            <div class="p-4">
-                                <div class="flex items-center text-xs text-gray-500 mb-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <?= $tour['location_name'] ?>
-                                </div>
+
+                            <div class="p-5">
+                                <!-- Tour Title -->
                                 <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>">
-                                    <h3 class="font-medium text-gray-800 mb-2"><?= $tour['title'] ?></h3>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                                        <?= $tour['title'] ?>
+                                    </h3>
                                 </a>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <span class="text-sm font-medium ml-1">4.8</span>
-                                        <span class="text-xs text-gray-500 ml-1">(124)</span>
+
+                                <!-- Rating -->
+                                <div class="flex items-center mb-3">
+                                    <div class="flex text-yellow-400">
+                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                                     </div>
-                                    <button class="text-sm font-medium text-teal-500 hover:text-teal-600">View</button>
+                                    <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
+                                </div>
+
+                                <!-- Departure Date -->
+                                <div class="flex items-center mb-4 text-sm text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Khởi hành: <?= $tour['start_date'] ?>
+                                </div>
+
+                                <!-- Price and Action -->
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                                        <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                                    </div>
+                                    <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                                        Đặt ngay
+                                    </a>
                                 </div>
                             </div>
                         </div>

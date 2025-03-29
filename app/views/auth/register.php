@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\UrlHelper;
 
 $title = 'Register';
@@ -17,10 +18,10 @@ $activePage = 'register';
 
       <!-- Form Card -->
       <div class="bg-white rounded-xl shadow-md p-8 border border-gray-100">
-        <?php if(isset($errors['register'])): ?>
-        <div class="mb-6 p-4 rounded-md bg-red-50 text-red-600 text-sm border-l-4 border-red-500">
-          <?= $errors['register'] ?>
-        </div>
+        <?php if (isset($errors['register'])): ?>
+          <div class="mb-6 p-4 rounded-md bg-red-50 text-red-600 text-sm border-l-4 border-red-500">
+            <?= $errors['register'] ?>
+          </div>
         <?php endif; ?>
 
         <form action="<?= UrlHelper::route('auth/register') ?>" method="POST" class="space-y-5">
@@ -39,11 +40,11 @@ $activePage = 'register';
                 class="bg-white border <?= isset($errors['username']) ? 'border-red-500' : 'border-gray-300' ?> text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all"
                 value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '' ?>" required>
             </div>
-            <?php if(isset($errors['username'])): ?>
-            <p class="mt-1 text-xs text-red-600"><?= $errors['username'] ?></p>
+            <?php if (isset($errors['username'])): ?>
+              <p class="mt-1 text-xs text-red-600"><?= $errors['username'] ?></p>
             <?php else: ?>
-            <p class="mt-1 text-xs text-gray-500">Username must be at least 3 characters and can only contain letters,
-              numbers, and underscores</p>
+              <p class="mt-1 text-xs text-gray-500">Username must be at least 3 characters and can only contain letters,
+                numbers, and underscores</p>
             <?php endif; ?>
           </div>
 
@@ -79,8 +80,8 @@ $activePage = 'register';
                 class="bg-white border <?= isset($errors['email']) ? 'border-red-500' : 'border-gray-300' ?> text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all"
                 value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
             </div>
-            <?php if(isset($errors['email'])): ?>
-            <p class="mt-1 text-xs text-red-600"><?= $errors['email'] ?></p>
+            <?php if (isset($errors['email'])): ?>
+              <p class="mt-1 text-xs text-red-600"><?= $errors['email'] ?></p>
             <?php endif; ?>
           </div>
 
@@ -117,10 +118,10 @@ $activePage = 'register';
                 class="bg-white border <?= isset($errors['password']) ? 'border-red-500' : 'border-gray-300' ?> text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all"
                 required>
             </div>
-            <?php if(isset($errors['password'])): ?>
-            <p class="mt-1 text-xs text-red-600"><?= $errors['password'] ?></p>
+            <?php if (isset($errors['password'])): ?>
+              <p class="mt-1 text-xs text-red-600"><?= $errors['password'] ?></p>
             <?php else: ?>
-            <p class="mt-1 text-xs text-gray-500">Password must be at least 6 characters</p>
+              <p class="mt-1 text-xs text-gray-500">Password must be at least 6 characters</p>
             <?php endif; ?>
           </div>
 
@@ -141,23 +142,23 @@ $activePage = 'register';
                 class="bg-white border <?= isset($errors['password_confirm']) ? 'border-red-500' : 'border-gray-300' ?> text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all"
                 required>
             </div>
-            <?php if(isset($errors['password_confirm'])): ?>
-            <p class="mt-1 text-xs text-red-600"><?= $errors['password_confirm'] ?></p>
+            <?php if (isset($errors['password_confirm'])): ?>
+              <p class="mt-1 text-xs text-red-600"><?= $errors['password_confirm'] ?></p>
             <?php endif; ?>
           </div>
 
           <!-- Terms and Conditions -->
           <div class="flex items-start mt-6">
             <div class="flex items-center h-5">
-              <input id="agree_terms" name="agree_terms" type="checkbox" required
+              <input id="agree_terms" name="agree_terms" type="checkbox"
                 class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 <?= isset($errors['agree_terms']) ? 'border-red-500' : '' ?>">
             </div>
             <div class="ml-3 text-sm">
               <label for="agree_terms" class="text-gray-600">I agree to the <a href="#"
                   class="text-teal-600 hover:underline">Terms and Conditions</a> and <a href="#"
                   class="text-teal-600 hover:underline">Privacy Policy</a></label>
-              <?php if(isset($errors['agree_terms'])): ?>
-              <p class="mt-1 text-xs text-red-600"><?= $errors['agree_terms'] ?></p>
+              <?php if (isset($errors['agree_terms'])): ?>
+                <p class="mt-1 text-xs text-red-600"><?= $errors['agree_terms'] ?></p>
               <?php endif; ?>
             </div>
           </div>
@@ -169,7 +170,7 @@ $activePage = 'register';
 
           <div class="text-center mt-4">
             <p class="text-sm text-gray-600">
-              Already have an account? <a href="<?= UrlHelper::route('auth/login')?>"
+              Already have an account? <a href="<?= UrlHelper::route('auth/login') ?>"
                 class="text-teal-600 hover:underline font-medium">Sign in</a>
             </p>
           </div>

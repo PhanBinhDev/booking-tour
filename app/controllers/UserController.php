@@ -7,10 +7,10 @@ use App\Helpers\UrlHelper;
 use App\Models\User;
 use Exception;
 
+
 class UserController extends BaseController
 {
     private $userModel;
-
     public function __construct()
     {
         $this->userModel = new User();
@@ -25,6 +25,7 @@ class UserController extends BaseController
         $currentUser = $this->getCurrentUser();
 
 
+
         // Chuyển hướng dựa vào vai trò
         if ($currentUser['role_name'] === 'admin') {
             $this->redirect(UrlHelper::route('admin/dashboard'));
@@ -34,6 +35,7 @@ class UserController extends BaseController
 
         $this->view('user/dashboard', [
             'user' => $currentUser,
+
 
         ]);
     }
@@ -45,7 +47,6 @@ class UserController extends BaseController
         }
 
         $currentUser = $this->getCurrentUser();
-
         $userProfile = $this->userModel->getUserProfile($currentUser['id']);
 
 
@@ -55,6 +56,13 @@ class UserController extends BaseController
             $date_of_birth = $_POST['date_of_birth'] ?? '';
             $full_name = $_POST['full_name'] ?? '';
             $gender = $_POST['gender'] ?? '';
+            $date_of_birth = $_POST['date_of_birth'] ?? '';
+            $bio = $_POST['bio'] ?? '';
+            $website = $_POST['website'] ?? '';
+            $facebook = $_POST['facebook'] ?? '';
+            $twitter = $_POST['twitter'] ?? '';
+            $instagram = $_POST['instagram'] ?? '';
+
             $date_of_birth = $_POST['date_of_birth'] ?? '';
             $bio = $_POST['bio'] ?? '';
             $website = $_POST['website'] ?? '';
@@ -78,10 +86,12 @@ class UserController extends BaseController
                     return;
                 }
             }
-            
+
             $data = [
                 'full_name' => $full_name,
                 'phone' => $phone,
+                'gender' => $gender,
+                'address' => $address,
                 'gender' => $gender,
                 'address' => $address,
                 'date_of_birth' => $date_of_birth,
@@ -93,9 +103,6 @@ class UserController extends BaseController
                 'user_id' => $currentUser['id'],
                 'avatar' => $avatar
             ];
-
-
-
             $this->userModel->updateProfile($data);
         }
         $this->view('user/profile', ["currentUser" => $currentUser, "userProfile" => $userProfile]);
@@ -107,12 +114,12 @@ class UserController extends BaseController
             $this->redirect(UrlHelper::route('auth/login'));
         }
         $errors = [];
-        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentPassword = $_POST['current_password'] ?? '';
             $newPassword = $_POST['new_password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
-            
+
 
             if (empty($currentPassword)) {
                 $errors['current_password'] = 'Mật khẩu hiện tại là bắt buộc';
@@ -128,18 +135,17 @@ class UserController extends BaseController
                 $errors['confirm_password'] = 'Mât khẩu không khớp';
             }
             // var_dump($newPassword, $currentPassword);
-            
+
             if (empty($errors)) {
                 if ($this->userModel->updatePassword($this->getCurrentUser()['id'], password_hash($newPassword, PASSWORD_DEFAULT))) {
                     $this->setFlashMessage('success', 'Cập nhật mật khẩu thành công');
-                        
                 } else {
                     $errors['update'] = 'Cập nhật mật khẩu thất bại';
                 }
             }
         }
 
-        $this->view('user/change-password',[
+        $this->view('user/change-password', [
             'errors' => $errors,
         ]);
     }
@@ -147,5 +153,15 @@ class UserController extends BaseController
     public function userBookings()
     {
         $this->view('user/user-bookings');
+    }
+
+    public function wishlist()
+    {
+        $this->view('user/wishlist');
+    }
+
+    public function reviews()
+    {
+        $this->view('user/reviews');
     }
 }

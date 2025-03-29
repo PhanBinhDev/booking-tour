@@ -9,9 +9,9 @@ $title = 'Trang chủ - Di Travel';
 <body class="bg-gray-50">
   <!-- Your header goes here -->
 
-  <main class="min-h-screen bg-gray-50">
+  <main class=" min-h-screen bg-gray-50">
     <!-- Hero Section -->
-    <section class="relative h-[500px] overflow-hidden">
+    <section class="relative overflow-hidden" style="height: calc(100vh - 80px);">
       <div class="absolute inset-0">
         <video autoplay muted loop class="w-full h-full object-cover">
           <source
@@ -29,13 +29,40 @@ $title = 'Trang chủ - Di Travel';
             và những thông tin hữu ích để bạn có thể lên kế hoạch cho chuyến đi hoàn hảo.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <!-- Button nổi bật chính -->
             <button
-              class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-8 rounded-lg transition duration-300">
-              Xem ngay
+              class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-lg transform hover:-translate-y-1 hover:shadow-xl">
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Khám phá ngay
+              </span>
             </button>
 
+            <!-- Button đặt lịch -->
+            <button
+              class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-lg transform hover:-translate-y-1 hover:shadow-xl">
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Liên hệ
+              </span>
+            </button>
           </div>
+
+          <!-- Thêm section nhỏ với các link nhanh -->
+          <!-- <div class="mt-6 flex justify-center space-x-4">
+            <a href="#" class="text-white hover:text-yellow-300 transition duration-300 text-sm underline">Điểm đến hot</a>
+            <span class="text-gray-400">|</span>
+            <a href="#" class="text-white hover:text-yellow-300 transition duration-300 text-sm underline">Ưu đãi</a>
+            <span class="text-gray-400">|</span>
+            <a href="#" class="text-white hover:text-yellow-300 transition duration-300 text-sm underline">Đánh giá</a>
+          </div> -->
         </div>
+      </div>
       </div>
     </section>
 
@@ -80,6 +107,8 @@ $title = 'Trang chủ - Di Travel';
         </div>
       </div>
     </section>
+    </section>
+
 
     <!-- Featured Destinations -->
     <section class="py-12 px-4 bg-white">
@@ -93,89 +122,199 @@ $title = 'Trang chủ - Di Travel';
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Destination Card 1 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-            <div class="relative h-64">
-              <img src="https://via.placeholder.com/400x300" alt="Bali, Indonesia" class="w-full h-full object-cover" />
-              <div class="absolute top-4 right-4 bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                Popular
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
               </div>
             </div>
-            <div class="p-6">
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Bali, Indonesia</h3>
-              <div class="flex items-center mb-4">
+
+            <div class="p-5">
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
                 <div class="flex text-yellow-400">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
-                <span class="text-gray-600 ml-2">5.0 (120 reviews)</span>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <p class="text-gray-600 mb-4">
-                Experience the perfect blend of beautiful beaches, vibrant culture, and spiritual retreats.
+
+              <!-- Description -->
+              <p class="text-gray-600 mb-4 text-sm line-clamp-2 h-10">
+                Khám phá vẻ đẹp của Đà Nẵng, thành phố đáng sống nhất Việt Nam cùng phố cổ Hội An và khu du lịch Bà Nà Hills.
               </p>
-              <div class="flex justify-between items-center">
-                <span class="text-teal-500 font-bold text-xl">$1,299</span>
-                <button
-                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                  View Details
-                </button>
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
+              </div>
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                  Đặt ngay
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Destination Card 2 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-            <div class="relative h-64">
-              <img src="https://via.placeholder.com/400x300" alt="Santorini, Greece"
-                class="w-full h-full object-cover" />
-              <div class="absolute top-4 right-4 bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                Trending
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
               </div>
             </div>
-            <div class="p-6">
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Santorini, Greece</h3>
-              <div class="flex items-center mb-4">
+
+            <div class="p-5">
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
                 <div class="flex text-yellow-400">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
-                <span class="text-gray-600 ml-2">4.9 (98 reviews)</span>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <p class="text-gray-600 mb-4">
-                Discover the iconic white buildings, blue domes, and breathtaking sunsets over the Aegean Sea.
+
+              <!-- Description -->
+              <p class="text-gray-600 mb-4 text-sm line-clamp-2 h-10">
+                Khám phá vẻ đẹp của Đà Nẵng, thành phố đáng sống nhất Việt Nam cùng phố cổ Hội An và khu du lịch Bà Nà Hills.
               </p>
-              <div class="flex justify-between items-center">
-                <span class="text-teal-500 font-bold text-xl">$1,599</span>
-                <button
-                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                  View Details
-                </button>
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
+              </div>
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                  Đặt ngay
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Destination Card 3 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-            <div class="relative h-64">
-              <img src="https://via.placeholder.com/400x300" alt="Kyoto, Japan" class="w-full h-full object-cover" />
-              <div class="absolute top-4 right-4 bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                New
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
               </div>
             </div>
-            <div class="p-6">
-              <h3 class="text-xl font-bold text-gray-800 mb-2">Kyoto, Japan</h3>
-              <div class="flex items-center mb-4">
+
+            <div class="p-5">
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
                 <div class="flex text-yellow-400">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
-                <span class="text-gray-600 ml-2">4.8 (85 reviews)</span>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <p class="text-gray-600 mb-4">
-                Immerse yourself in Japanese culture with ancient temples, traditional gardens, and tea ceremonies.
+
+              <!-- Description -->
+              <p class="text-gray-600 mb-4 text-sm line-clamp-2 h-10">
+                Khám phá vẻ đẹp của Đà Nẵng, thành phố đáng sống nhất Việt Nam cùng phố cổ Hội An và khu du lịch Bà Nà Hills.
               </p>
-              <div class="flex justify-between items-center">
-                <span class="text-teal-500 font-bold text-xl">$1,899</span>
-                <button
-                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                  View Details
-                </button>
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
+              </div>
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                  Đặt ngay
+                </a>
               </div>
             </div>
           </div>
@@ -202,241 +341,505 @@ $title = 'Trang chủ - Di Travel';
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Offer 1 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&h=300&fit=crop" alt="Summer Beach Getaway" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative"> mb-2
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                25% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Summer Beach Getaway</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Enjoy a relaxing beach vacation with our all-inclusive package.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$1,999</span>
-                <span class="text-teal-500 font-bold text-xl">$1,499</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 2 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=300&fit=crop" alt="Mountain Retreat" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                30% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Mountain Retreat</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Explore breathtaking mountain views with guided hiking tours.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$2,899</span>
-                <span class="text-teal-500 font-bold text-xl">$1,999</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 3 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&h=300&fit=crop" alt="Paris Explorer" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                20% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Paris Explorer</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Experience the romance and culture of Paris with guided tours.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$2,199</span>
-                <span class="text-teal-500 font-bold text-xl">$1,759</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 4 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=500&h=300&fit=crop" alt="Safari Adventure" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                15% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Safari Adventure</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Witness incredible wildlife on this African safari adventure.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$3,499</span>
-                <span class="text-teal-500 font-bold text-xl">$2,974</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 5 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=500&h=300&fit=crop" alt="Island Hopping" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                35% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Island Hopping</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Explore multiple tropical islands in this 8-day adventure.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$2,499</span>
-                <span class="text-teal-500 font-bold text-xl">$1,624</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 6 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=500&h=300&fit=crop" alt="Cultural Immersion" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                25% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Cultural Immersion</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Immerse yourself in local traditions with this cultural tour.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$1,899</span>
-                <span class="text-teal-500 font-bold text-xl">$1,424</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 7 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop" alt="Luxury Retreat" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                40% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Luxury Retreat</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Indulge in a luxury retreat with premium accommodations.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$4,999</span>
-                <span class="text-teal-500 font-bold text-xl">$2,999</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Offer 8 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=500&h=300&fit=crop" alt="Family Fun" class="w-full h-full object-cover" />
+          <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group mb-2">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="Đà Nẵng - Hội An" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              </div>
+
+              <!-- Discount Badge -->
+              <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                -13%
+              </div>
+
+              <!-- Favorite Button -->
+              <button class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+
+              <!-- Duration Badge -->
+              <div class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                4 ngày 3 đêm
+              </div>
             </div>
+
             <div class="p-5">
-              <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
-                30% OFF
+              <!-- Tour Title -->
+              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                Khám phá Đà Nẵng - Hội An - Bà Nà Hills
+              </h3>
+
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <span class="text-gray-600 ml-2">4.8 (124 đánh giá)</span>
               </div>
-              <h3 class="text-lg font-bold text-gray-800 mb-2">Family Fun Package</h3>
-              <p class="text-gray-600 mb-4 text-sm">
-                Create lasting memories with this family-friendly vacation.
-              </p>
-              <div class="flex items-center mb-4">
-                <span class="text-gray-400 line-through mr-2">$3,299</span>
-                <span class="text-teal-500 font-bold text-xl">$2,309</span>
+
+
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Khởi hành: 15/06/2025
               </div>
-              <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
+                  <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
+                </div>
+                <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                   Đặt ngay
-                </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -444,8 +847,162 @@ $title = 'Trang chủ - Di Travel';
       </div>
     </section>
 
+    <section class="explore-section relative">
+      <!-- Hero Banner with Maldives Image -->
+      <div class="relative h-[600px] overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1600&h=900&fit=crop" alt="Maldives Aerial View" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+
+        <div class="absolute inset-0 flex flex-col justify-center items-center text-white px-4">
+          <div class="container mx-auto max-w-6xl">
+            <h2 class="text-5xl md:text-6xl font-bold mb-6 text-center md:text-left">EXPLORE MALDIVES</h2>
+            <div class="w-full h-px bg-white/30 my-6"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+              <div class="md:col-span-1">
+                <p class="text-white/90 mb-8 max-w-md">
+                  Khám phá thiên đường biển đảo Maldives với những bãi cát trắng mịn, làn nước trong xanh và những khu nghỉ dưỡng sang trọng trên mặt nước. Trải nghiệm kỳ nghỉ đáng nhớ tại một trong những điểm đến đẹp nhất hành tinh.
+                </p>
+                <a href="#" class="inline-flex items-center bg-white text-gray-800 px-6 py-3 rounded-full font-medium hover:bg-teal-500 hover:text-white transition-colors">
+                  Xem tất cả
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+              </div>
+
+              <div class="md:col-span-2 grid grid-cols-3 gap-4">
+                <!-- Destination Card 1 -->
+                <div class="group">
+                  <div class="rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1540202404-a2f29016b523?w=500&h=350&fit=crop" alt="Azure Haven" class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500">
+                  </div>
+                  <h3 class="text-center text-white font-medium mt-3">Azure Haven</h3>
+                </div>
+
+                <!-- Destination Card 2 -->
+                <div class="group">
+                  <div class="rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=500&h=350&fit=crop" alt="Serene Sanctuary" class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500">
+                  </div>
+                  <h3 class="text-center text-white font-medium mt-3">Serene Sanctuary</h3>
+                </div>
+
+                <!-- Destination Card 3 -->
+                <div class="group">
+                  <div class="rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=500&h=350&fit=crop" alt="Verdant Vista" class="w-full h-36 object-cover group-hover:scale-110 transition-transform duration-500">
+                  </div>
+                  <h3 class="text-center text-white font-medium mt-3">Verdant Vista</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature News Section -->
+      <div class="bg-white py-16">
+        <div class="container mx-auto max-w-6xl px-4">
+          <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Tin tức</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- News Card 1 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+              <div class="h-48 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop" alt="Restaurant" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+              </div>
+              <div class="p-5">
+                <div class="flex items-center text-gray-500 text-sm mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  February 20, 2024
+                </div>
+                <h3 class="font-bold text-gray-800 text-lg mb-2">Delicious restaurant at Hanalei Bay</h3>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                  Lorem ipsum is simply dummy text of the printing and typeset industry. Lorem ipsum has been lorem ipsum is simply dummy text of the printing.
+                </p>
+                <a href="#" class="inline-flex items-center text-teal-500 hover:text-teal-600 font-medium text-sm">
+                  <span class="w-6 h-6 rounded-full border border-teal-500 flex items-center justify-center mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  Xem chi tiết
+                </a>
+              </div>
+            </div>
+
+            <!-- News Card 2 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+              <div class="h-48 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=600&h=400&fit=crop" alt="Beach" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+              </div>
+              <div class="p-5">
+                <div class="flex items-center text-gray-500 text-sm mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  February 20, 2024
+                </div>
+                <h3 class="font-bold text-gray-800 text-lg mb-2">Top 10 most beautiful check-in spots in Ph...</h3>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                  Lorem ipsum is simply dummy text of the printing and typeset industry. Lorem ipsum has been lorem ipsum is simply dummy text of the printing.
+                </p>
+                <a href="#" class="inline-flex items-center text-teal-500 hover:text-teal-600 font-medium text-sm">
+                  <span class="w-6 h-6 rounded-full border border-teal-500 flex items-center justify-center mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  Xem chi tiết
+                </a>
+              </div>
+            </div>
+
+            <!-- News Card 3 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+              <div class="h-48 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1540202404-a2f29016b523?w=600&h=400&fit=crop" alt="Resort" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+              </div>
+              <div class="p-5">
+                <div class="flex items-center text-gray-500 text-sm mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  February 20, 2024
+                </div>
+                <h3 class="font-bold text-gray-800 text-lg mb-2">Top 5 newest services at Navagio Beach</h3>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                  Lorem ipsum is simply dummy text of the printing and typeset industry. Lorem ipsum has been lorem ipsum is simply dummy text of the printing.
+                </p>
+                <a href="#" class="inline-flex items-center text-teal-500 hover:text-teal-600 font-medium text-sm">
+                  <span class="w-6 h-6 rounded-full border border-teal-500 flex items-center justify-center mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  Xem chi tiết
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-12">
+            <button
+              class="bg-white border-2 border-teal-500 hover:bg-teal-50 text-teal-500 font-semibold py-3 px-8 rounded-lg transition duration-300">
+              Xem tất cả
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Testimonials -->
-    <section class="py-12 px-4 bg-white">
+    <section class="py-12 px-4 bg-teal-50">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
           <h2 class="text-3xl font-bold text-gray-800 mb-4">Khách hàng nói gì về chúng tôi</h2>
@@ -528,7 +1085,7 @@ $title = 'Trang chủ - Di Travel';
     </section>
 
     <!-- Why Choose Us -->
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-teal-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
       <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Tại Sao Chọn Di Travel</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Reason 1 -->
