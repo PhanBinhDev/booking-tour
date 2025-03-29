@@ -381,6 +381,7 @@ class User extends BaseModel
                         SET full_name = :full_name, 
                             phone = :phone,
                             address = :address,
+                            avatar = :avatar,
                             updated_at = NOW()
                         WHERE id = :user_id";
             
@@ -388,6 +389,7 @@ class User extends BaseModel
             $userStmt->bindValue(':full_name', $data['full_name']);
             $userStmt->bindValue(':phone', $data['phone']);
             $userStmt->bindValue(':address', $data['address'] ?? null);
+            $userStmt->bindValue(':avatar', $data['avatar'] ?? null);
             $userStmt->bindValue(':user_id', $data['user_id']);
             $userResult = $userStmt->execute();
             
@@ -465,6 +467,17 @@ class User extends BaseModel
             error_log("Error fetching user profile: " . $e->getMessage());
             return false;
         }
+    }
+    public function updatePassword($id, $newPassword)
+    {
+
+        $sql = "UPDATE {$this->table} SET password = :password WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':password', $newPassword);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+
     }
 
 }

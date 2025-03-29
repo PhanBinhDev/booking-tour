@@ -71,6 +71,8 @@ $router->get('/user/profile', 'UserController@profile');
 $router->post('/user/profile', 'UserController@profile');
 $router->get('/user/bookings', 'UserController@userBookings');
 $router->get('/user/change-password', 'UserController@changePassword');
+$router->post('/user/change-password', 'UserController@changePassword');
+
 
 // AUTH
 $router->get('/auth/login', 'AuthController@login');
@@ -79,6 +81,10 @@ $router->get('/auth/register', 'AuthController@register');
 $router->post('/auth/register', 'AuthController@register');
 $router->get('/auth/logout', 'AuthController@logout');
 $router->get('/auth/forgot-password', 'AuthController@forgotPassword');
+$router->post('/auth/forgot-password', 'AuthController@forgotPassword');
+$router->get('/auth/reset-password/{token}', 'AuthController@resetPassword');
+$router->post('/auth/reset-password/{token}', 'AuthController@resetPassword');
+
 
 // ADMIN
 $router->get('/admin/dashboard', 'Admin\DashboardController@dashboard');
