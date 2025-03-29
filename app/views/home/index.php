@@ -11,29 +11,67 @@ $title = 'Trang chủ - Di Travel';
 
   <main class="min-h-screen bg-gray-50">
     <!-- Hero Section -->
-    <section class="relative h-[500px] overflow-hidden">
+
+    <!-- Hero Section -->
+    <section class="relative h-screen overflow-hidden">
+      <!-- Background Image/Video with Overlay -->
       <div class="absolute inset-0">
-        <video autoplay muted loop class="w-full h-full object-cover">
-          <source
-            src="https://storage.googleapis.com/teko-gae.appspot.com/media/video/2023/11/19/22451432-c310-4081-858c-cfb57570e249/6487d1c5c3473ff5e5376abd_camelia-transcode.webm">
-        </video>
-        <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?q=80&w=2068&auto=format&fit=crop"
+          alt="Beach Paradise" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-teal-900/30"></div>
       </div>
-      <div class="relative h-full flex items-center justify-center px-4">
-        <div class="text-center max-w-3xl">
-          <h1 class="text-xl md:text-5xl lg:text-6xl font-bold text-white mb-3">
-            Di Travel
+
+      <!-- Content Container -->
+      <div class="relative h-full container mx-auto px-4 flex flex-col justify-center items-start">
+        <div class="max-w-2xl">
+          <!-- Main Heading -->
+          <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
+            EXPLORE <span class="text-teal-400">PARADISE</span>
           </h1>
-          <p class="text-l text-white mb-5">
+
+          <!-- Description -->
+          <p class="text-lg text-white/90 mb-8 max-w-xl">
             Tại DiTravel, chúng tôi cam kết mang đến cho bạn những trải nghiệm du lịch độc đáo, những dịch vụ chất lượng
             và những thông tin hữu ích để bạn có thể lên kế hoạch cho chuyến đi hoàn hảo.
           </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-8 rounded-lg transition duration-300">
-              Xem ngay
-            </button>
 
+          <!-- CTA Button -->
+          <button
+            class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-md transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            Xem ngay
+          </button>
+        </div>
+
+        <!-- Featured Destinations Cards -->
+        <div class="absolute bottom-16 right-4 md:right-16 flex gap-4 overflow-x-auto pb-4 max-w-xl">
+          <!-- Destination Card 1 -->
+          <div
+            class="bg-white/10 backdrop-blur-md rounded-lg overflow-hidden w-32 md:w-40 flex-shrink-0 group hover:bg-white/20 transition duration-300">
+            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop"
+              alt="Luxury Resort" class="w-full h-24 object-cover" />
+            <div class="p-2">
+              <p class="text-white text-xs md:text-sm font-medium">Luxury Resort</p>
+            </div>
+          </div>
+
+          <!-- Destination Card 2 -->
+          <div
+            class="bg-white/10 backdrop-blur-md rounded-lg overflow-hidden w-32 md:w-40 flex-shrink-0 group hover:bg-white/20 transition duration-300">
+            <img src="https://images.unsplash.com/photo-1602002418082-dd0e2857e0a0?w=500&h=300&fit=crop"
+              alt="Seaside Sanctuary" class="w-full h-24 object-cover" />
+            <div class="p-2">
+              <p class="text-white text-xs md:text-sm font-medium">Seaside Sanctuary</p>
+            </div>
+          </div>
+
+          <!-- Destination Card 3 -->
+          <div
+            class="bg-white/10 backdrop-blur-md rounded-lg overflow-hidden w-32 md:w-40 flex-shrink-0 group hover:bg-white/20 transition duration-300">
+            <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=500&h=300&fit=crop"
+              alt="Vacation Villa" class="w-full h-24 object-cover" />
+            <div class="p-2">
+              <p class="text-white text-xs md:text-sm font-medium">Vacation Villa</p>
+            </div>
           </div>
         </div>
       </div>
@@ -41,13 +79,11 @@ $title = 'Trang chủ - Di Travel';
 
     <!-- Search Section -->
     <section class="py-8 px-4 bg-teal-50">
-      <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg -mt-16 relative z-10 p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Tìm kiếm </h2>
+      <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-xl -mt-16 relative z-10 p-6 border border-teal-100">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Tìm kiếm chuyến đi mơ ước</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-
           <div>
-            <label class="block text-gray-700 mb-2">Danh mục</label>
+            <label class="block text-gray-700 mb-2 font-medium">Danh mục</label>
             <select
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
               <option>1 Person</option>
@@ -58,7 +94,7 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <div>
-            <label class="block text-gray-700 mb-2">Địa điểm</label>
+            <label class="block text-gray-700 mb-2 font-medium">Địa điểm</label>
             <select
               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
               <option>Any Destination</option>
@@ -73,7 +109,7 @@ $title = 'Trang chủ - Di Travel';
 
           <div class="flex items-end">
             <button
-              class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300">
+              class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 shadow-md">
               Search
             </button>
           </div>
@@ -87,7 +123,8 @@ $title = 'Trang chủ - Di Travel';
         <div class="text-center mb-12">
           <h2 class="text-3xl font-bold text-gray-800 mb-2">Điểm đến nổi bật</h2>
           <p class="text-gray-600 max-w-2xl mx-auto">
-            Hãy cùng chúng tôi hòa mình vào văn hóa bản địa, thưởng thức ẩm thực đặc sắc và tạo nên những kỷ niệm khó quên.
+            Hãy cùng chúng tôi hòa mình vào văn hóa bản địa, thưởng thức ẩm thực đặc sắc và tạo nên những kỷ niệm khó
+            quên.
           </p>
         </div>
 
@@ -202,9 +239,11 @@ $title = 'Trang chủ - Di Travel';
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Offer 1 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&h=300&fit=crop" alt="Summer Beach Getaway" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&h=300&fit=crop"
+                alt="Summer Beach Getaway" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -219,12 +258,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$1,499</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -232,9 +275,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 2 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=300&fit=crop" alt="Mountain Retreat" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=300&fit=crop"
+                alt="Mountain Retreat" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -249,12 +294,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$1,999</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -262,9 +311,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 3 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&h=300&fit=crop" alt="Paris Explorer" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&h=300&fit=crop"
+                alt="Paris Explorer" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -279,12 +330,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$1,759</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -292,9 +347,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 4 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=500&h=300&fit=crop" alt="Safari Adventure" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=500&h=300&fit=crop"
+                alt="Safari Adventure" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -309,12 +366,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$2,974</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -322,9 +383,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 5 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=500&h=300&fit=crop" alt="Island Hopping" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=500&h=300&fit=crop"
+                alt="Island Hopping" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -339,12 +402,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$1,624</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -352,9 +419,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 6 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=500&h=300&fit=crop" alt="Cultural Immersion" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=500&h=300&fit=crop"
+                alt="Cultural Immersion" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -369,12 +438,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$1,424</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -382,9 +455,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 7 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop" alt="Luxury Retreat" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop"
+                alt="Luxury Retreat" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -399,12 +474,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$2,999</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -412,9 +491,11 @@ $title = 'Trang chủ - Di Travel';
           </div>
 
           <!-- Offer 8 -->
-          <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="h-48">
-              <img src="https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=500&h=300&fit=crop" alt="Family Fun" class="w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=500&h=300&fit=crop"
+                alt="Family Fun" class="w-full h-full object-cover" />
             </div>
             <div class="p-5">
               <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold inline-block mb-3">
@@ -429,12 +510,16 @@ $title = 'Trang chủ - Di Travel';
                 <span class="text-teal-500 font-bold text-xl">$2,309</span>
               </div>
               <div class="flex gap-2">
-                <button class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
+                <button
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex-1">
                   Đặt ngay
                 </button>
-                <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <button
+                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-2 px-3 rounded-lg transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
               </div>
@@ -542,7 +627,8 @@ $title = 'Trang chủ - Di Travel';
           </div>
           <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Đặt Tour An Toàn 100%</h3>
           <p class="text-gray-600 text-center">
-            Thanh toán dễ dàng, thông tin cá nhân của bạn luôn được bảo vệ với hệ thống đặt tour an toàn và bảo mật của chúng tôi.
+            Thanh toán dễ dàng, thông tin cá nhân của bạn luôn được bảo vệ với hệ thống đặt tour an toàn và bảo mật của
+            chúng tôi.
           </p>
         </div>
 

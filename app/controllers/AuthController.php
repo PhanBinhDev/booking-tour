@@ -186,6 +186,7 @@ class AuthController extends BaseController
                         $this->redirect(UrlHelper::route(''));
                     }
                 } else {
+                    var_dump($errors);
                     $errors['register'] = 'Đăng ký thất bại. Vui lòng thử lại.';
                 }
             }
