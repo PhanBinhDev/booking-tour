@@ -815,6 +815,10 @@ h1,
   margin: 1rem;
 }
 
+.m-2{
+  margin: 0.5rem;
+}
+
 .mx-0{
   margin-left: 0px;
   margin-right: 0px;
@@ -848,6 +852,11 @@ h1,
 .my-8{
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+.mx-1{
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .-mb-px{
@@ -1012,6 +1021,14 @@ h1,
 
 .mt-auto{
   margin-top: auto;
+}
+
+.mb-24{
+  margin-bottom: 6rem;
+}
+
+.mb-20{
+  margin-bottom: 5rem;
 }
 
 .line-clamp-2{
@@ -1379,6 +1396,10 @@ h1,
 
 .max-w-xs{
   max-width: 20rem;
+}
+
+.max-w-5xl{
+  max-width: 64rem;
 }
 
 .flex-1{
@@ -1829,6 +1850,11 @@ h1,
   border-width: 4px;
 }
 
+.border-y{
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
 .border-b{
   border-bottom-width: 1px;
 }
@@ -1959,6 +1985,11 @@ h1,
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
+}
+
+.border-gray-400{
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
 }
 
 .border-opacity-20{
@@ -2198,6 +2229,16 @@ h1,
   background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
 }
 
+.bg-blue-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 64 175 / var(--tw-bg-opacity, 1));
+}
+
+.bg-sky-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(14 165 233 / var(--tw-bg-opacity, 1));
+}
+
 .bg-opacity-10{
   --tw-bg-opacity: 0.1;
 }
@@ -2370,6 +2411,10 @@ h1,
 
 .to-transparent{
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
+
+.to-blue-50{
+  --tw-gradient-to: #eff6ff var(--tw-gradient-to-position);
 }
 
 .bg-cover{
@@ -2799,6 +2844,10 @@ h1,
   font-style: italic;
 }
 
+.not-italic{
+  font-style: normal;
+}
+
 .leading-4{
   line-height: 1rem;
 }
@@ -2813,6 +2862,10 @@ h1,
 
 .leading-tight{
   line-height: 1.25;
+}
+
+.leading-relaxed{
+  line-height: 1.625;
 }
 
 .tracking-tight{
@@ -3506,6 +3559,11 @@ h1,
 .hover\:bg-yellow-600:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(202 138 4 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-gray-300:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-opacity-100:hover{

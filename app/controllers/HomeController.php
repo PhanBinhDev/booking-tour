@@ -66,6 +66,11 @@ class HomeController extends BaseController
     $this->view('home/news');
   }
 
+  function newsDetail()
+  {
+    $this->view('home/news-detail');
+  }
+
   function faq()
   {
     $this->view('home/faq');
@@ -96,22 +101,34 @@ class HomeController extends BaseController
     ];
 
     $columns = "tours.id, 
-    tours.title, tours.price, tours.duration,
-    tour_dates.start_date, tour_dates.end_date, 
-    tour_categories.name AS category_name, 
-    locations.name AS location_name";
+                tours.title, tours.price, tours.duration,
+                MAX(tour_dates.start_date) as start_date, MAX(tour_dates.end_date) as end_date, 
+                tour_categories.name AS category_name, 
+                locations.name AS location_name";
 
-    $allTours = $this->tourModel->getAll($columns, [], 'tours.id DESC', null, null, $join);
+    $allTours = $this->tourModel->getAll(
+      $columns,
+      [],
+      'tours.id DESC',
+      null,
+      null,
+      $join,
+      "GROUP BY tours.id, tours.title, tours.price, tours.duration, tour_categories.name, locations.name"
+    );
 
     $this->view('home/tours', ['allTours' => $allTours, 'categories' => $categories]);
   }
 
 
-
   function tourDetail($id)
   {
-
     $tourDetails = $this->tourModel->getTourDetails($id);
     $this->view('home/tour-details', ['tourDetails' => $tourDetails]);
+  }
+
+  function bookings($id)
+  {
+    $tourDetails = $this->tourModel->getTourDetails($id);
+    $this->view('home/bookings', ['tourDetails' => $tourDetails]);
   }
 }

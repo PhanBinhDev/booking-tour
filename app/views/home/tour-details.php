@@ -35,7 +35,7 @@
         </div>
 
         <!-- Image Gallery Slideshow -->
-        <div class="mb-18">
+        <div style="margin-bottom: 2rem;">
             <div class="grid grid-cols-4 grid-rows-2 gap-2 h-[500px]">
                 <div class="col-span-2 row-span-2 relative">
                     <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop" alt="Bali Beach" class="w-full h-full object-cover rounded-l-lg" />
@@ -378,7 +378,7 @@
             <!-- Right Column - Booking & Info -->
             <div class="lg:col-span-1">
                 <!-- Pricing Card -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6 sticky top-6">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6 top-6">
                     <?php $tourDetails['sale_price'] ? '
                         <div class=" bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold w-20">
                             25% OFF

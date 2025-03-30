@@ -43,8 +43,6 @@ $activePage = 'tours';
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <?php
                     foreach ($allTours as $tour) { ?>
-                        <input type="hidden" name="" id="<?= $tour["id"] ?>">
-
                         <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
                             <div class="relative">
                                 <!-- Tour Image -->
@@ -100,7 +98,7 @@ $activePage = 'tours';
                                         <span class="text-gray-400 line-through text-sm block">4.590.000đ</span>
                                         <span class="text-teal-500 font-bold text-xl">3.990.000đ</span>
                                     </div>
-                                    <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                                    <a href="<?= UrlHelper::route('home/bookings/' . $tour['id']) ?>" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
                                         Đặt ngay
                                     </a>
                                 </div>
