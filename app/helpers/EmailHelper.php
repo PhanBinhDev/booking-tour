@@ -97,8 +97,13 @@ class EmailHelper
                 <div style=\"max-width: 650px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; margin-bottom: 20px;\">
                     
                     <!-- Header with Gradient -->
-                    <div style=\"background: linear-gradient(135deg, #06beb6 0%, #48b1bf 100%); padding: 30px 20px; text-align: center;\">
-                        <img src=\"https://res.cloudinary.com/dr1naxx72/image/upload/v1743134201/logo_rbocpz.png\" alt=\"Di Travel Logo\" style=\"max-width: 180px; height: auto;\">
+                    // <div style=\"background: linear-gradient(135deg, #06beb6 0%, #48b1bf 100%); padding: 30px 20px; text-align: center;\">
+                    //     <img src=\"https://res.cloudinary.com/dr1naxx72/image/upload/v1743134201/logo_rbocpz.png\" alt=\"Di Travel Logo\" style=\"max-width: 180px; height: auto;\">
+                    // </div>
+
+                    <div style=\"display: inline-block; background-color: white; padding: 7px 18px; border-radius: 40px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);\">
+                        <img src=\"https://res.cloudinary.com/dr1naxx72/image/upload/v1743134201/logo_rbocpz.png\" alt=\"Di Travel Logo\"
+                            style=\"max-width: 150px; height: auto; vertical-align: middle;\">
                     </div>
                     
                     <!-- Content Section -->
@@ -240,10 +245,11 @@ class EmailHelper
             ];
         }
     }
-    public static function sendPasswordResetEmail($email, $username, $token){
+    public static function sendPasswordResetEmail($email, $username, $token)
+    {
         $subject = "Đặt lại mật khẩu - Di Travel";
 
-        $resetUrl = UrlHelper::route('/auth/reset-password/' . $token)  ;
+        $resetUrl = UrlHelper::route('/auth/reset-password/' . $token);
         // echo $resetUrl; die();
         $message = "
             <html>

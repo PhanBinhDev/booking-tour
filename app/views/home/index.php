@@ -72,46 +72,93 @@ $title = 'Trang chủ - Di Travel';
     </section>
 
     <!-- Search Section -->
-    <section class="py-8 px-4 bg-teal-50">
-      <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg -mt-16 relative z-10 p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Tìm kiếm </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <section class="p-8 bg-gradient-to-r from-teal-50 bg-teal-50">
+      <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-xl relative z-10 p-8 border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Tìm kiếm tour du lịch
+          </h2>
+          <div class="text-sm text-gray-500 hidden md:block">Tìm kiếm nhanh chóng tour phù hợp với bạn</div>
+        </div>
 
-
-          <div>
-            <label class="block text-gray-700 mb-2">Danh mục</label>
-            <select
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              <option>1 Person</option>
-              <option>2 People</option>
-              <option>3 People</option>
-              <option>4+ People</option>
-            </select>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div class="md:col-span-1">
+            <label class="block text-gray-700 font-medium mb-2">Danh mục</label>
+            <div class="relative">
+              <select class="w-full p-3 pl-4 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none">
+                <option>Tour tất cả</option>
+                <option>Tour biển</option>
+                <option>Tour núi</option>
+                <option>Tour thành phố</option>
+                <option>Tour văn hóa</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-gray-700 mb-2">Địa điểm</label>
-            <select
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-              <option>Any Destination</option>
-              <option>Europe</option>
-              <option>Asia</option>
-              <option>North America</option>
-              <option>South America</option>
-              <option>Africa</option>
-              <option>Australia</option>
-            </select>
+          <div class="md:col-span-1">
+            <label class="block text-gray-700 font-medium mb-2">Địa điểm</label>
+            <div class="relative">
+              <select class="w-full p-3 pl-4 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none">
+                <option>Tất cả địa điểm</option>
+                <option>Miền Bắc</option>
+                <option>Miền Trung</option>
+                <option>Miền Nam</option>
+                <option>Đảo</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
-          <div class="flex items-end">
-            <button
-              class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300">
-              Search
+          <div class="md:col-span-1">
+            <label class="block text-gray-700 font-medium mb-2">Thời gian</label>
+            <div class="relative">
+              <select class="w-full p-3 pl-4 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none">
+                <option>Bất kỳ</option>
+                <option>1-3 ngày</option>
+                <option>4-7 ngày</option>
+                <option>8-14 ngày</option>
+                <option>Trên 14 ngày</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:col-span-1 flex items-end">
+            <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Tìm kiếm
             </button>
           </div>
         </div>
+
+        <!-- Quick filters -->
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="text-sm text-gray-600 mr-2 self-center hidden md:block">Phổ biến:</span>
+          <a href="#" class="text-xs bg-gray-100 hover:bg-teal-100 text-gray-800 px-3 py-1 rounded-full transition-colors">Hạ Long</a>
+          <a href="#" class="text-xs bg-gray-100 hover:bg-teal-100 text-gray-800 px-3 py-1 rounded-full transition-colors">Đà Nẵng</a>
+          <a href="#" class="text-xs bg-gray-100 hover:bg-teal-100 text-gray-800 px-3 py-1 rounded-full transition-colors">Phú Quốc</a>
+          <a href="#" class="text-xs bg-gray-100 hover:bg-teal-100 text-gray-800 px-3 py-1 rounded-full transition-colors">Nha Trang</a>
+          <a href="#" class="text-xs bg-gray-100 hover:bg-teal-100 text-gray-800 px-3 py-1 rounded-full transition-colors">Đà Lạt</a>
+        </div>
       </div>
-    </section>
     </section>
 
 

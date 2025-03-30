@@ -33,7 +33,7 @@ abstract class BaseModel
      * @param int $offset Vị trí bắt đầu
      * @return array Danh sách bản ghi
      */
-    public function getAll($columns = "*", $conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null, $joins = [])
+    public function getAll($columns = "*", $conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null, $joins = [], $groupBy = '')
     {
         $sql = "SELECT {$columns} FROM {$this->table}";
 
@@ -52,6 +52,10 @@ abstract class BaseModel
             }
 
             $sql .= implode(' AND ', $whereClauses);
+        }
+
+        if (!empty($groupBy)) {
+            $sql .= " " . $groupBy;
         }
 
         if ($orderBy) {
