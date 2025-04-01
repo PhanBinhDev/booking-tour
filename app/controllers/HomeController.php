@@ -123,7 +123,8 @@ class HomeController extends BaseController
   function tourDetail($id)
   {
     $tourDetails = $this->tourModel->getTourDetails($id);
-    $this->view('home/tour-details', ['tourDetails' => $tourDetails]);
+    $itinerary = json_decode($tourDetails['itinerary'], true);
+    $this->view('home/tour-details', ['tourDetails' => $tourDetails, 'itinerary' => $itinerary]);
   }
 
   function bookings($id)
