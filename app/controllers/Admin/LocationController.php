@@ -34,7 +34,8 @@ class LocationController extends BaseController
     $filters = [
       'region' => $_GET['region'] ?? '',
       'country' => $_GET['country'] ?? '',
-      'search' => $_GET['search'] ?? ''
+      'search' => $_GET['search'] ?? '',
+      'isDeleted' => '0',
     ];
 
     // Lấy danh sách locations đã phân trang và lọc

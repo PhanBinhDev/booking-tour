@@ -1,13 +1,12 @@
 <?php
 
 use App\Helpers\UrlHelper;
-use App\Helpers\FormatHelper;
 
 ?>
 
 <div>
   <!-- Main Content -->
-  <main class="flex-1 p-6 ml-64">
+  <main class="flex-1 p-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-6">
       <div class="flex items-center">
@@ -104,18 +103,18 @@ use App\Helpers\FormatHelper;
 
             <div class="max-h-48 overflow-y-auto">
               <?php foreach ($categories ?? [] as $category): ?>
-              <div class="flex items-center mb-2">
-                <input type="checkbox" id="category-<?= $category['id'] ?>" name="categories[]"
-                  value="<?= $category['id'] ?>" class="w-4 h-4 text-teal-600 rounded focus:ring-teal-500">
-                <label for="category-<?= $category['id'] ?>" class="ml-2 text-sm text-gray-700">
-                  <?= htmlspecialchars($category['name']) ?>
-                </label>
-              </div>
+                <div class="flex items-center mb-2">
+                  <input type="checkbox" id="category-<?= $category['id'] ?>" name="categories[]"
+                    value="<?= $category['id'] ?>" class="w-4 h-4 text-teal-600 rounded focus:ring-teal-500">
+                  <label for="category-<?= $category['id'] ?>" class="ml-2 text-sm text-gray-700">
+                    <?= htmlspecialchars($category['name']) ?>
+                  </label>
+                </div>
               <?php endforeach; ?>
             </div>
 
             <?php if (empty($categories)): ?>
-            <p class="text-sm text-gray-500">Chưa có danh mục nào.</p>
+              <p class="text-sm text-gray-500">Chưa có danh mục nào.</p>
             <?php endif; ?>
           </div>
 
@@ -139,14 +138,6 @@ use App\Helpers\FormatHelper;
               </div>
               <input type="file" id="featured_image" name="featured_image" accept="image/*" class="hidden">
             </div>
-
-            <div class="mb-4">
-              <label for="image_alt" class="block text-sm font-medium text-gray-700 mb-2">Alt text</label>
-              <input type="text" id="image_alt" name="image_alt"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                placeholder="Mô tả ảnh...">
-              <p class="mt-1 text-xs text-gray-500">Mô tả này giúp tối ưu SEO và hỗ trợ người dùng khiếm thị.</p>
-            </div>
           </div>
         </div>
       </div>
@@ -157,234 +148,233 @@ use App\Helpers\FormatHelper;
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Fix editorjs container styling to make sure it's visible
-  const editorContainer = document.getElementById('editorjs');
+  document.addEventListener('DOMContentLoaded', function() {
+    // Fix editorjs container styling to make sure it's visible
+    const editorContainer = document.getElementById('editorjs');
 
-  console.log('Editor container exists:', editorContainer !== null);
+    console.log('Editor container exists:', editorContainer !== null);
 
-  if (!editorContainer) {
-    console.error('Editor container not found! Cannot initialize Editor.js');
-    return; // Stop execution if container doesn't exist
-  }
+    if (!editorContainer) {
+      console.error('Editor container not found! Cannot initialize Editor.js');
+      return; // Stop execution if container doesn't exist
+    }
 
-  editorContainer.style.minHeight = '800px';
-  editorContainer.style.border = '1px solid #e2e8f0';
-  editorContainer.style.padding = '1rem';
-  editorContainer.style.borderRadius = '0.375rem';
-  editorContainer.style.backgroundColor = '#ffffff';
+    editorContainer.style.minHeight = '800px';
+    editorContainer.style.border = '1px solid #e2e8f0';
+    editorContainer.style.padding = '1rem';
+    editorContainer.style.borderRadius = '0.375rem';
+    editorContainer.style.backgroundColor = '#ffffff';
 
-  // Initialize Editor.js
-  try {
-    const editor = new EditorJS({
-      holder: 'editorjs',
-      autofocus: false,
-      placeholder: 'Bắt đầu viết nội dung của bạn...',
-      tools: {
-        header: {
-          class: Header,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Nhập tiêu đề',
-            levels: [2, 3, 4],
-            defaultLevel: 2
-          }
-        },
-        paragraph: {
-          class: Paragraph,
-          inlineToolbar: true
-        },
-        list: {
-          class: List,
-          inlineToolbar: true,
-          config: {
-            defaultStyle: 'unordered'
-          }
-        },
-        checklist: {
-          class: Checklist,
-          inlineToolbar: true
-        },
-        quote: {
-          class: Quote,
-          inlineToolbar: true,
-          config: {
-            quotePlaceholder: 'Nhập trích dẫn',
-            captionPlaceholder: 'Người trích dẫn',
+    // Initialize Editor.js
+    try {
+      const editor = new EditorJS({
+        holder: 'editorjs',
+        autofocus: false,
+        placeholder: 'Bắt đầu viết nội dung của bạn...',
+        tools: {
+          header: {
+            class: Header,
+            inlineToolbar: true,
+            config: {
+              placeholder: 'Nhập tiêu đề',
+              levels: [2, 3, 4],
+              defaultLevel: 2
+            }
+          },
+          paragraph: {
+            class: Paragraph,
+            inlineToolbar: true
+          },
+          list: {
+            class: List,
+            inlineToolbar: true,
+            config: {
+              defaultStyle: 'unordered'
+            }
+          },
+          checklist: {
+            class: Checklist,
+            inlineToolbar: true
+          },
+          quote: {
+            class: Quote,
+            inlineToolbar: true,
+            config: {
+              quotePlaceholder: 'Nhập trích dẫn',
+              captionPlaceholder: 'Người trích dẫn',
+            },
+          },
+          delimiter: Delimiter,
+          image: {
+            class: ImageTool,
+            config: {
+              endpoints: {
+                byFile: '<?= UrlHelper::route('/upload-image') ?>', // Update this with your actual image upload endpoint
+                byUrl: '<?= UrlHelper::route('/fetch-image') ?>' // Update this with your actual image fetch endpoint
+              },
+              field: 'image',
+              types: 'image/*'
+            }
+          },
+          embed: {
+            class: Embed,
+            inlineToolbar: true,
+            config: {
+              services: {
+                youtube: true,
+                coub: true,
+                facebook: true,
+                instagram: true,
+                twitter: true
+              }
+            }
+          },
+          warning: {
+            class: Warning,
+            inlineToolbar: true,
+            config: {
+              titlePlaceholder: 'Tiêu đề',
+              messagePlaceholder: 'Nội dung'
+            }
           },
         },
-        delimiter: Delimiter,
-        image: {
-          class: ImageTool,
-          config: {
-            endpoints: {
-              byFile: '<?= UrlHelper::route('/upload-image') ?>', // Update this with your actual image upload endpoint
-              byUrl: '<?= UrlHelper::route('/fetch-image') ?>' // Update this with your actual image fetch endpoint
-            },
-            field: 'image',
-            types: 'image/*'
+        onReady: () => {
+          // Add a default block if editor is empty
+          if (editor.blocks.getBlocksCount() === 0) {
+            editor.blocks.insert('paragraph');
           }
         },
-        embed: {
-          class: Embed,
-          inlineToolbar: true,
-          config: {
-            services: {
-              youtube: true,
-              coub: true,
-              facebook: true,
-              instagram: true,
-              twitter: true
-            }
-          }
-        },
-        warning: {
-          class: Warning,
-          inlineToolbar: true,
-          config: {
-            titlePlaceholder: 'Tiêu đề',
-            messagePlaceholder: 'Nội dung'
-          }
-        },
-      },
-      onReady: () => {
-        // Add a default block if editor is empty
-        if (editor.blocks.getBlocksCount() === 0) {
-          editor.blocks.insert('paragraph');
+        onChange: function() {
+          editor.save().then((outputData) => {
+            document.getElementById('content-data').value = JSON.stringify(outputData);
+          }).catch((error) => {
+            console.error('Saving failed: ', error);
+          });
         }
-      },
-      onChange: function() {
-        editor.save().then((outputData) => {
-          console.log(outputData);
-          document.getElementById('content-data').value = JSON.stringify(outputData);
-          console.log('Content saved to hidden field');
-        }).catch((error) => {
-          console.error('Saving failed: ', error);
-        });
+      });
+
+
+      // Featured image handling
+      const featuredImageUpload = document.getElementById('featured-image-upload');
+      const featuredImageInput = document.getElementById('featured_image');
+      const featuredImagePreview = document.getElementById('featured-image-preview');
+      const featuredImagePreviewImg = document.getElementById('featured-image-preview-img');
+      const removeFeaturedImage = document.getElementById('remove-featured-image');
+
+      featuredImageUpload.addEventListener('click', () => {
+        featuredImageInput.click();
+      });
+
+      featuredImageInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function(event) {
+            featuredImagePreviewImg.src = event.target.result;
+            featuredImagePreview.classList.remove('hidden');
+            featuredImageUpload.classList.add('hidden');
+          };
+
+          reader.readAsDataURL(file);
+        }
+      });
+
+      removeFeaturedImage.addEventListener('click', () => {
+        featuredImageInput.value = '';
+        featuredImagePreviewImg.src = '';
+        featuredImagePreview.classList.add('hidden');
+        featuredImageUpload.classList.remove('hidden');
+      });
+
+      // Slug generation
+      const titleInput = document.getElementById('title');
+      const slugInput = document.getElementById('slug');
+      const generateSlugBtn = document.getElementById('generate-slug');
+
+      function createSlug(text) {
+        return text
+          .toString()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/[^\w\-]+/g, '')
+          .replace(/\-\-+/g, '-');
       }
-    });
 
+      generateSlugBtn.addEventListener('click', () => {
+        if (titleInput.value) {
+          slugInput.value = createSlug(titleInput.value);
+        }
+      });
 
-    // Featured image handling
-    const featuredImageUpload = document.getElementById('featured-image-upload');
-    const featuredImageInput = document.getElementById('featured_image');
-    const featuredImagePreview = document.getElementById('featured-image-preview');
-    const featuredImagePreviewImg = document.getElementById('featured-image-preview-img');
-    const removeFeaturedImage = document.getElementById('remove-featured-image');
+      titleInput.addEventListener('blur', () => {
+        if (titleInput.value && !slugInput.value) {
+          slugInput.value = createSlug(titleInput.value);
+        }
+      });
 
-    featuredImageUpload.addEventListener('click', () => {
-      featuredImageInput.click();
-    });
+      // Form submission handling
+      const form = document.getElementById('news-form');
+      const saveDraftBtn = document.getElementById('save-draft-btn');
+      const publishBtn = document.getElementById('publish-btn');
+      const formAction = document.getElementById('form-action');
+      const statusSelect = document.getElementById('status');
 
-    featuredImageInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
+      saveDraftBtn.addEventListener('click', (e) => {
+        formAction.value = 'draft';
+        statusSelect.value = 'draft';
+        form.submit();
+      });
 
-        reader.onload = function(event) {
-          featuredImagePreviewImg.src = event.target.result;
-          featuredImagePreview.classList.remove('hidden');
-          featuredImageUpload.classList.add('hidden');
-        };
+      publishBtn.addEventListener('click', (e) => {
+        formAction.value = 'publish';
+        statusSelect.value = 'published';
+        form.submit();
+      });
 
-        reader.readAsDataURL(file);
+      // Drag and drop for featured image
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        featuredImageUpload.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
       }
-    });
 
-    removeFeaturedImage.addEventListener('click', () => {
-      featuredImageInput.value = '';
-      featuredImagePreviewImg.src = '';
-      featuredImagePreview.classList.add('hidden');
-      featuredImageUpload.classList.remove('hidden');
-    });
+      ['dragenter', 'dragover'].forEach(eventName => {
+        featuredImageUpload.addEventListener(eventName, highlight, false);
+      });
 
-    // Slug generation
-    const titleInput = document.getElementById('title');
-    const slugInput = document.getElementById('slug');
-    const generateSlugBtn = document.getElementById('generate-slug');
+      ['dragleave', 'drop'].forEach(eventName => {
+        featuredImageUpload.addEventListener(eventName, unhighlight, false);
+      });
 
-    function createSlug(text) {
-      return text
-        .toString()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-');
-    }
-
-    generateSlugBtn.addEventListener('click', () => {
-      if (titleInput.value) {
-        slugInput.value = createSlug(titleInput.value);
+      function highlight() {
+        featuredImageUpload.classList.add('border-teal-300', 'bg-teal-50');
       }
-    });
 
-    titleInput.addEventListener('blur', () => {
-      if (titleInput.value && !slugInput.value) {
-        slugInput.value = createSlug(titleInput.value);
+      function unhighlight() {
+        featuredImageUpload.classList.remove('border-teal-300', 'bg-teal-50');
       }
-    });
 
-    // Form submission handling
-    const form = document.getElementById('news-form');
-    const saveDraftBtn = document.getElementById('save-draft-btn');
-    const publishBtn = document.getElementById('publish-btn');
-    const formAction = document.getElementById('form-action');
-    const statusSelect = document.getElementById('status');
+      featuredImageUpload.addEventListener('drop', handleDrop, false);
 
-    saveDraftBtn.addEventListener('click', () => {
-      formAction.value = 'draft';
-      statusSelect.value = 'draft';
-      submitForm();
-    });
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
 
-    publishBtn.addEventListener('click', () => {
-      formAction.value = 'publish';
-      statusSelect.value = 'published';
-    });
-
-    // Drag and drop for featured image
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      featuredImageUpload.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      featuredImageUpload.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      featuredImageUpload.addEventListener(eventName, unhighlight, false);
-    });
-
-    function highlight() {
-      featuredImageUpload.classList.add('border-teal-300', 'bg-teal-50');
-    }
-
-    function unhighlight() {
-      featuredImageUpload.classList.remove('border-teal-300', 'bg-teal-50');
-    }
-
-    featuredImageUpload.addEventListener('drop', handleDrop, false);
-
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-
-      if (files.length > 0 && files[0].type.match('image.*')) {
-        featuredImageInput.files = files;
-        const event = new Event('change');
-        featuredImageInput.dispatchEvent(event);
+        if (files.length > 0 && files[0].type.match('image.*')) {
+          featuredImageInput.files = files;
+          const event = new Event('change');
+          featuredImageInput.dispatchEvent(event);
+        }
       }
+    } catch (error) {
+      alert('Editor initialization failed. Please check the console for details.');
     }
-  } catch (error) {
-    alert('Editor initialization failed. Please check the console for details.');
-  }
-});
+  });
 </script>

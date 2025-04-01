@@ -279,6 +279,18 @@ CREATE TABLE IF NOT EXISTS `news_categories` (
 );
 
 -- -----------------------------------------------------
+-- Table `news_category_relations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `news_category_relations` (
+  `news_id` INT NOT NULL,
+  `category_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`news_id`, `category_id`),
+  FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`category_id`) REFERENCES `news_categories` (`id`) ON DELETE CASCADE
+);
+
+-- -----------------------------------------------------
 -- Table `news`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `news` (

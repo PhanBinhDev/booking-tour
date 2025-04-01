@@ -6,7 +6,7 @@ use App\Helpers\FormatHelper;
 
 <div>
   <!-- Main Content -->
-  <main class="flex-1 p-6 ml-64">
+  <main class="flex-1 p-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-semibold text-gray-800">Quản Lý Liên Hệ</h1>

@@ -6,7 +6,7 @@ use App\Helpers\FormatHelper;
 
 <div>
   <!-- Main Content -->
-  <main class="flex-1 p-6 ml-64">
+  <main class="flex-1 p-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-6">
       <div class="flex items-center">

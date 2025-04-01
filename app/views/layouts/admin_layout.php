@@ -343,86 +343,86 @@ ob_start();
         $iconColor = ($type === 'error') ? 'text-red-500' : 'text-green-500';
         $icon = ($type === 'error') ? 'fa-circle-exclamation' : 'fa-circle-check';
       ?>
-      <div id="flash-message"
-        class="fixed z-[100] top-4 right-4 w-80 rounded-lg border <?= $borderColor ?> <?= $bgColor ?> p-4 shadow-lg animate-fade-in flex items-start">
-        <div class="flex-shrink-0 mr-3">
-          <i class="fas <?= $icon ?> <?= $iconColor ?>"></i>
-        </div>
-        <div class="flex-grow <?= $textColor ?>">
-          <?= $message ?>
-        </div>
-        <button type="button" onclick="closeFlashMessage()"
-          class="ml-2 -mt-1 flex-shrink-0 <?= $textColor ?> hover:<?= $textColor ?> focus:outline-none">
-          <i class="fas fa-times"></i>
-        </button>
+        <div id="flash-message"
+          class="fixed z-[100] top-4 right-4 w-80 rounded-lg border <?= $borderColor ?> <?= $bgColor ?> p-4 shadow-lg animate-fade-in flex items-start">
+          <div class="flex-shrink-0 mr-3">
+            <i class="fas <?= $icon ?> <?= $iconColor ?>"></i>
+          </div>
+          <div class="flex-grow <?= $textColor ?>">
+            <?= $message ?>
+          </div>
+          <button type="button" onclick="closeFlashMessage()"
+            class="ml-2 -mt-1 flex-shrink-0 <?= $textColor ?> hover:<?= $textColor ?> focus:outline-none">
+            <i class="fas fa-times"></i>
+          </button>
 
-        <!-- Progress bar -->
-        <div class="absolute bottom-0 left-0 h-1 bg-gray-300 w-full rounded-b-lg">
-          <div id="flash-progress" class="h-1 <?= ($type === 'error') ? 'bg-red-500' : 'bg-green-500' ?> rounded-b-lg">
+          <!-- Progress bar -->
+          <div class="absolute bottom-0 left-0 h-1 bg-gray-300 w-full rounded-b-lg">
+            <div id="flash-progress" class="h-1 <?= ($type === 'error') ? 'bg-red-500' : 'bg-green-500' ?> rounded-b-lg">
+            </div>
           </div>
         </div>
-      </div>
 
-      <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const flashMessage = document.getElementById('flash-message');
-        const progressBar = document.getElementById('flash-progress');
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const flashMessage = document.getElementById('flash-message');
+            const progressBar = document.getElementById('flash-progress');
 
-        if (flashMessage) {
-          // Animate progress bar
-          let width = 100;
-          const duration = 5000; // 5 seconds before auto-dismiss
-          const interval = 50; // Update every 50ms
-          const step = 100 / (duration / interval);
+            if (flashMessage) {
+              // Animate progress bar
+              let width = 100;
+              const duration = 5000; // 5 seconds before auto-dismiss
+              const interval = 50; // Update every 50ms
+              const step = 100 / (duration / interval);
 
-          const timer = setInterval(() => {
-            width -= step;
-            progressBar.style.width = width + '%';
+              const timer = setInterval(() => {
+                width -= step;
+                progressBar.style.width = width + '%';
 
-            if (width <= 0) {
-              clearInterval(timer);
-              closeFlashMessage();
+                if (width <= 0) {
+                  clearInterval(timer);
+                  closeFlashMessage();
+                }
+              }, interval);
+
+              // Allow hovering to pause the timer
+              flashMessage.addEventListener('mouseenter', () => {
+                clearInterval(timer);
+              });
+
+              flashMessage.addEventListener('mouseleave', () => {
+                // Restart timer with remaining time
+                const remainingPercentage = parseFloat(progressBar.style.width) || 100;
+                const remainingTime = (remainingPercentage / 100) * duration;
+
+                width = remainingPercentage;
+                const newTimer = setInterval(() => {
+                  width -= step;
+                  progressBar.style.width = width + '%';
+
+                  if (width <= 0) {
+                    clearInterval(newTimer);
+                    closeFlashMessage();
+                  }
+                }, interval);
+              });
             }
-          }, interval);
-
-          // Allow hovering to pause the timer
-          flashMessage.addEventListener('mouseenter', () => {
-            clearInterval(timer);
           });
 
-          flashMessage.addEventListener('mouseleave', () => {
-            // Restart timer with remaining time
-            const remainingPercentage = parseFloat(progressBar.style.width) || 100;
-            const remainingTime = (remainingPercentage / 100) * duration;
+          function closeFlashMessage() {
+            const flashMessage = document.getElementById('flash-message');
 
-            width = remainingPercentage;
-            const newTimer = setInterval(() => {
-              width -= step;
-              progressBar.style.width = width + '%';
+            if (flashMessage) {
+              // Add slide-out animation
+              flashMessage.classList.add('animate-slide-out-right');
 
-              if (width <= 0) {
-                clearInterval(newTimer);
-                closeFlashMessage();
-              }
-            }, interval);
-          });
-        }
-      });
-
-      function closeFlashMessage() {
-        const flashMessage = document.getElementById('flash-message');
-
-        if (flashMessage) {
-          // Add slide-out animation
-          flashMessage.classList.add('animate-slide-out-right');
-
-          // Remove element after animation completes
-          setTimeout(() => {
-            flashMessage.remove();
-          }, 500); // 500ms matches animation duration
-        }
-      }
-      </script>
+              // Remove element after animation completes
+              setTimeout(() => {
+                flashMessage.remove();
+              }, 500); // 500ms matches animation duration
+            }
+          }
+        </script>
       <?php
         // Unset the entire flash message array
         unset($_SESSION['flash_message']);
@@ -460,9 +460,9 @@ ob_start();
         <div class="mb-6">
           <h1 class="text-2xl font-bold text-gray-800"><?= $pageTitle ?? 'Dashboard' ?></h1>
           <?php if (isset($breadcrumbs)): ?>
-          <nav class="text-sm text-gray-500 mt-1">
-            <?= $breadcrumbs ?>
-          </nav>
+            <nav class="text-sm text-gray-500 mt-1">
+              <?= $breadcrumbs ?>
+            </nav>
           <?php endif; ?>
         </div>
 
@@ -476,61 +476,61 @@ ob_start();
 
   <!-- JavaScript for sidebar functionality -->
   <script>
-  // Toggle sidebar
-  const sidebarToggle = document.getElementById('sidebar-toggle');
-  const sidebar = document.getElementById('sidebar');
+    // Toggle sidebar
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
 
-  sidebarToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('hidden');
-    sidebar.classList.toggle('-ml-64');
-  });
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('-ml-64');
+    });
 
-  // Dropdown functionality
-  const dropdownButtons = document.querySelectorAll('.sidebar-dropdown-btn');
+    // Dropdown functionality
+    const dropdownButtons = document.querySelectorAll('.sidebar-dropdown-btn');
 
-  dropdownButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const dropdownContent = this.nextElementSibling;
-      const icon = this.querySelector('.fas.fa-chevron-down');
+    dropdownButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const dropdownContent = this.nextElementSibling;
+        const icon = this.querySelector('.fas.fa-chevron-down');
 
-      // Toggle dropdown visibility
-      dropdownContent.classList.toggle('hidden');
+        // Toggle dropdown visibility
+        dropdownContent.classList.toggle('hidden');
 
-      // Rotate icon when dropdown is open
-      if (dropdownContent.classList.contains('hidden')) {
-        icon.style.transform = 'rotate(0deg)';
-      } else {
-        icon.style.transform = 'rotate(180deg)';
-      }
-
-      // Close other dropdowns
-      dropdownButtons.forEach(otherButton => {
-        if (otherButton !== button) {
-          const otherDropdown = otherButton.nextElementSibling;
-          const otherIcon = otherButton.querySelector('.fas.fa-chevron-down');
-
-          if (!otherDropdown.classList.contains('hidden')) {
-            otherDropdown.classList.add('hidden');
-            otherIcon.style.transform = 'rotate(0deg)';
-          }
+        // Rotate icon when dropdown is open
+        if (dropdownContent.classList.contains('hidden')) {
+          icon.style.transform = 'rotate(0deg)';
+        } else {
+          icon.style.transform = 'rotate(180deg)';
         }
+
+        // Close other dropdowns
+        dropdownButtons.forEach(otherButton => {
+          if (otherButton !== button) {
+            const otherDropdown = otherButton.nextElementSibling;
+            const otherIcon = otherButton.querySelector('.fas.fa-chevron-down');
+
+            if (!otherDropdown.classList.contains('hidden')) {
+              otherDropdown.classList.add('hidden');
+              otherIcon.style.transform = 'rotate(0deg)';
+            }
+          }
+        });
       });
     });
-  });
 
-  // Auto-expand active dropdown
-  document.addEventListener('DOMContentLoaded', function() {
-    const activeLinks = document.querySelectorAll('.sidebar-dropdown-content a.text-white');
+    // Auto-expand active dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+      const activeLinks = document.querySelectorAll('.sidebar-dropdown-content a.text-white');
 
-    activeLinks.forEach(link => {
-      const dropdownContent = link.closest('.sidebar-dropdown-content');
-      const button = dropdownContent.previousElementSibling;
-      const icon = button.querySelector('.fas.fa-chevron-down');
+      activeLinks.forEach(link => {
+        const dropdownContent = link.closest('.sidebar-dropdown-content');
+        const button = dropdownContent.previousElementSibling;
+        const icon = button.querySelector('.fas.fa-chevron-down');
 
-      dropdownContent.classList.remove('hidden');
-      icon.style.transform = 'rotate(180deg)';
+        dropdownContent.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      });
     });
-  });
   </script>
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>

@@ -188,9 +188,10 @@ $router->get('/admin/news/deleteCategory/{id}', 'Admin\NewsController@deleteCate
 $router->get('/admin/news/index', 'Admin\NewsController@index');
 $router->get('/admin/news/createNews', 'Admin\NewsController@createByEditor');
 $router->post('/admin/news/createNews', 'Admin\NewsController@createNews');
-$router->get('/admin/news/deleteNews/{id}', 'Admin\NewsController@deleteNews');
+$router->post('/admin/news/deleteNews/{id}', 'Admin\NewsController@deleteNews');
 $router->get('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
 $router->post('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
+$router->get('/admin/news/preview/{id}', 'Admin\NewsController@preview');
 
 
 // ADMIN/CONTACT
