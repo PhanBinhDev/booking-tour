@@ -561,6 +561,35 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 );
 
+-- -----------------------------------------------------
+-- Table `favorites`
+-- -----------------------------------------------------
+
+CREATE TABLE `favorites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `tour_id` int(11) NOT NULL,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
+  KEY `fk_1` (`user_id`),
+  KEY `fk_2` (`tour_id`),
+  CONSTRAINT `fk_1` FOREIGN KEY (`user_id`) REFERENCES `booking_travel`.`users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_2` FOREIGN KEY (`tour_id`) REFERENCES `booking_travel`.`tours` (`id`) ON DELETE CASCADE
+);
+
+
+-- -----------------------------------------------------
+-- Table `news_category_relations`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `news_category_relations` (
+  `news_id` INT NOT NULL,
+  `category_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`news_id`, `category_id`),
+  FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`category_id`) REFERENCES `news_categories` (`id`) ON DELETE CASCADE
+);
+
 -- Update transactions foreign key to reference payments
 UPDATE `transactions` SET `payment_id` = NULL;
 ALTER TABLE `transactions` 

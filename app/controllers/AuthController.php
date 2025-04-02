@@ -249,7 +249,7 @@ class AuthController extends BaseController
 
                 if ($user) {
                     $token = $this->userModel->createPasswordResetToken($email);
-// echo $token; die();
+                    // echo $token; die();
                     if ($token) {
                         EmailHelper::sendPasswordResetEmail($email, $user['username'], $token);
                     }
@@ -299,7 +299,6 @@ class AuthController extends BaseController
                 if ($result) {
                     $this->setFlashMessage('success', 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.');
                     $this->redirect(UrlHelper::route('auth/login'));
-
                 } else {
                     $errors['reset'] = 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn';
                     $this->setFlashMessage('error', 'Đặt lại mật khẩu không thành công!');
