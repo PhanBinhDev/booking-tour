@@ -166,7 +166,11 @@
                 <div class="bg-white rounded-xl shadow-md p-6 mb-8">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Lịch trình chi tiết</h2>
 
-                    <?php foreach ($itinerary as $details): ?>
+                    <?php
+
+                    use App\Helpers\UrlHelper;
+
+                    foreach ($itinerary as $details): ?>
                         <div class="mb-6 border-l-4 border-teal-500 pl-4">
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">
                                 <?= $details["day"] ?>: <?= htmlspecialchars($details["title"] ?? "Chưa có tiêu đề") ?>
@@ -463,43 +467,110 @@
                         </div>
                     <?php endif; ?>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">Chọn ngày</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="date" class="w-full border rounded-lg py-2 px-3">
-                            <input type="date" class="w-full border rounded-lg py-2 px-3">
+                    <div class="mb-6">
+                        <label for="tour_date_id" class="block text-gray-700 font-medium mb-2">Chọn ngày khởi hành</label>
+                        <select id="tour_date_id" name="tour_date_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">-- Chọn ngày --</option>
+                        </select>
+                    </div>
+
+                    <script>
+                        async function fetchTourDates(tourId) {
+                            try {
+                                const response = await fetch(`/api/getTourDates?tourId=${tourId}`);
+                                const dates = await response.json();
+                                console.log('Dữ liệu nhận được:', dates); // Kiểm tra dữ liệu trong console
+
+                                if (!Array.isArray(dates) || dates.length === 0) {
+                                    console.warn('Không có ngày tour nào khả dụng');
+                                    return;
+                                }
+
+                                const dateSelect = document.getElementById('tour_date_id');
+                                dateSelect.innerHTML = '<option value="">-- Chọn ngày --</option>';
+                                dates.forEach(date => {
+                                    if (date.start_date && date.end_date && date.id && date.available_seats !== undefined) {
+                                        const option = document.createElement('option');
+                                        option.value = date.id;
+                                        option.textContent = `${date.start_date} - ${date.end_date} (${date.available_seats} chỗ trống)`;
+                                        dateSelect.appendChild(option);
+                                    } else {
+                                        console.warn('Dữ liệu ngày không hợp lệ:', date);
+                                    }
+                                });
+                            } catch (error) {
+                                console.error('Lỗi lấy dữ liệu ngày tour:', error);
+                            }
+                        }
+
+                        // Gọi API với ID tour cụ thể (thay đổi theo nhu cầu)
+                        fetchTourDates(1);
+                    </script>
+
+
+
+                    <div class="flex space-x-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Người lớn (>12 tuổi)</label>
+                            <div class="flex items-center border rounded-lg">
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('adult', -1)">-</button>
+                                <input id="adult" type="text" value="1" class="w-12 text-center border-none" readonly>
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('adult', 1)">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Trẻ em (5-12 tuổi)</label>
+                            <div class="flex items-center border rounded-lg">
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('child', -1)">-</button>
+                                <input id="child" type="text" value="0" class="w-12 text-center border-none" readonly>
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('child', 1)">+</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2">Số lượng khách</label>
-                        <select class="w-full border rounded-lg py-2 px-3">
-                            <option>1 Người lớn</option>
-                            <option>2 Người lớn</option>
-                            <option>2 Người lớn, 1 Trẻ em</option>
-                            <option>2 Người lớn, 2 Trẻ em</option>
-                        </select>
-                    </div>
+                    <script>
+                        function changeValue(id, delta) {
+                            let input = document.getElementById(id);
+                            let value = parseInt(input.value) + delta;
+                            if (value >= 0) {
+                                input.value = value;
+                            }
+                        }
+                    </script>
+
 
                     <div class="border-t border-b border-gray-200 py-4 mb-6">
                         <div class="flex justify-between mb-2">
                             <span class="text-gray-600">Giá cơ bản</span>
-                            <span><?= number_format($tourDetails['sale_price'] ?? $tourDetails['price'], 0, ',', '.') ?> VND</span>
+                            <span>
+                                <?= number_format($tourDetails['price'] ?? 0, 0, ',', '.') ?> VND
+                            </span>
                         </div>
                         <div class="flex justify-between mb-2">
                             <span class="text-gray-600">Thuế & phí</span>
-                            <span><?= number_format($tourDetails['taxes'] ?? 300000, 0, ',', '.') ?> VND</span>
+                            <span>
+                                <?= number_format($tourDetails['taxes'] ?? 300000, 0, ',', '.') ?> VND
+                            </span>
                         </div>
+                        <?php
+                        $price = $tourDetails['price'] ?? 0;
+                        $sale_price = $tourDetails['sale_price'] ?? $price;
+                        $taxes = $tourDetails['taxes'] ?? 300000;
+                        $total = $sale_price + $taxes;
+                        ?>
                         <div class="flex justify-between font-bold mt-3 pt-3 border-t border-gray-200">
                             <span>Tổng cộng</span>
-                            <span><?= number_format(($tourDetails['sale_price'] ?? $tourDetails['price']) - 500000 + 300000, 0, ',', '.') . ' VND' ?></span>
+                            <span>
+                                <?= number_format($total, 0, ',', '.') ?> VND
+                            </span>
                         </div>
                     </div>
 
+
                     <div class="space-y-3">
-                        <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center">
-                            Book Now
-                        </button>
+                        <a href="<?= UrlHelper::route('home/bookings/' . $tourDetails['id']) ?>"> <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center">
+                                Đặt ngay
+                            </button></a>
                         <div class="flex gap-2">
                             <button class="flex-1 border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-3 px-4 rounded-lg transition duration-300">
                                 Reserve
