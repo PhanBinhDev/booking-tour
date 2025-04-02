@@ -254,6 +254,19 @@ $childPrice = $displayPrice * 0.7;
                                             <h3 class="text-base font-semibold text-gray-800 mb-2">
                                                 <?= htmlspecialchars($details["title"] ?? "Ngày {$details["day"]}") ?>
                                             </h3>
+                <!-- Lịch trình Tour -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Lịch trình chi tiết</h2>
+
+                    <?php
+
+                    use App\Helpers\UrlHelper;
+
+                    foreach ($itinerary as $details): ?>
+                        <div class="mb-6 border-l-4 border-teal-500 pl-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                                <?= $details["day"] ?>: <?= htmlspecialchars($details["title"] ?? "Chưa có tiêu đề") ?>
+                            </h3>
 
                                             <?php if (!empty($details["description"])): ?>
                                                 <p class="text-gray-600 text-sm mb-3"><?= htmlspecialchars($details["description"]) ?></p>

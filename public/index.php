@@ -61,7 +61,7 @@ $router->get('/home/activities', 'HomeController@activities');
 
 $router->get('/home/tours/{tourId}', 'HomeController@tourDetails');
 $router->get('/home/news', 'HomeController@news');
-$router->get('/home/news-detail', 'HomeController@newsDetail');
+$router->get('/home/news-detail/{id}', 'HomeController@newsDetail');
 $router->get('/home/tours', 'HomeController@tours');
 $router->get('/home/home', 'HomeController@home');
 $router->get('/home/tour-details/{id}', 'HomeController@tourDetail');

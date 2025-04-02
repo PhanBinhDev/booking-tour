@@ -52,6 +52,9 @@ $title = 'Danh sách đặt tour';
                                 Thông tin tour
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Thời gian
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Số lượng
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -62,7 +65,7 @@ $title = 'Danh sách đặt tour';
                                 Thanh toán
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Ngày tạo
+                                Ngày đặt
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Thao tác
@@ -70,46 +73,74 @@ $title = 'Danh sách đặt tour';
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                098
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">tên tour</div>
-                                <div class="text-sm text-gray-500"></div>
-                            </td>
+                        <?php if ($bookings) {
+                            foreach ($bookings as $booking) { ?>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <?= $booking['id'] ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900"><?= $booking['title'] ?></div>
+                                        <div class="text-sm text-gray-500"><?= $booking['duration'] ?></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900"><?= $booking['start_date'] ?> <br> <?= $booking['end_date'] ?></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900"> <?= $booking['adults'] ?> người lớn</div>
+                                        <div class="text-xs text-gray-500"><?= $booking['children'] ?> trẻ em</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <?= number_format($booking['total_price'], 0, ',', '.') . ' đ' ?>
+                                        </div>
+                                    </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900"> người lớn</div>
-                                <div class="text-xs text-gray-500"> trẻ em</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    0000đ
-                                </div>
-                            </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <?php
+                                        $statusClass = [
+                                            'paid' => 'bg-green-100 text-green-800',
+                                            'failed' => 'bg-red-100 text-red-800',
+                                            'pending' => 'bg-gray-100 text-gray-800'
+                                        ][$booking['payment_status']] ?? 'bg-gray-100 text-gray-800';
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                đã thanh toán
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                00/00/00
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex space-x-2">
-                                    <a href="">
-                                        <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </a>
-                                    <a href="">
-                                        <button class="text-red-600 hover:text-red-900" title="Xóa">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                                        $statusLabel = [
+                                            'paid' => 'Đã thanh toán',
+                                            'failed' => 'Thanh toán thất bại',
+                                            'pending' => 'Chưa thanh toán'
+                                        ][$booking['payment_status']] ?? $booking['payment_status'];
+                                        ?>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                                            <?= $statusLabel ?>
+                                        </span>
+
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <?= $booking['created_at'] ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex space-x-2">
+                                            <a href="">
+                                                <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </a>
+                                            <a href="">
+                                                <button class="text-red-600 hover:text-red-900" title="Xóa">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php }
+                        } else { ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-l font-medium text-gray-700 mb-2">
+                                    Bạn chưa đặt tour nào
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>

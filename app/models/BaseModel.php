@@ -48,7 +48,19 @@ abstract class BaseModel
             $whereClauses = [];
 
             foreach ($conditions as $key => $value) {
-                $whereClauses[] = "$key = :$key";
+                $paramName = str_replace('.', '_', $key);
+
+                // Kiểm tra xem giá trị có phải là chuỗi và bắt đầu bằng toán tử so sánh không
+                if (is_string($value) && preg_match('/^\s*([<>=!]+)\s*(.+)$/', $value, $matches)) {
+                    $operator = $matches[1]; // Lấy toán tử (>, <, =, !=, >=, <=)
+                    $actualValue = $matches[2]; // Lấy giá trị thực
+                    $whereClauses[] = "$key $operator :$paramName";
+                    $value = $actualValue; // Cập nhật giá trị để bind
+                } else {
+                    $whereClauses[] = "$key = :$paramName";
+                }
+
+                $conditions[$key] = $value; // Cập nhật giá trị trong mảng conditions
             }
 
             $sql .= implode(' AND ', $whereClauses);
@@ -74,7 +86,8 @@ abstract class BaseModel
 
         if (!empty($conditions)) {
             foreach ($conditions as $key => $value) {
-                $stmt->bindValue(":$key", $value);
+                $paramName = str_replace('.', '_', $key);
+                $stmt->bindValue(":$paramName", $value);
             }
         }
 

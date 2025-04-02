@@ -114,22 +114,22 @@ if (!empty($tourDetails['included'])) {
 
                         <div class="mt-4 flex items-center justify-between">
                             <div>
-                                <?php if ($hasDiscount): ?>
-                                    <span
-                                        class="text-gray-500 text-sm line-through"><?= number_format($tourDetails['price'], 0, ',', '.') ?>
-                                        đ</span>
-                                <?php endif; ?>
+                                <span
+                                    class="text-gray-500 text-sm line-through"><?= $tourDetails['sale_price'] ? number_format($tourDetails['price'], 0, ',', '.') : 0 ?>
+                                    đ </span>
                                 <div class="text-2xl font-bold text-teal-600">
                                     <?= number_format($displayPrice, 0, ',', '.') ?> đ
                                 </div>
                                 <span class="text-gray-500 text-xs">/ người</span>
                             </div>
 
-                            <?php if ($hasDiscount): ?>
-                                <div class="bg-teal-100 text-teal-800 text-sm font-semibold px-3 py-1 rounded-full">
-                                    Tiết kiệm <?= number_format($tourDetails['price'] - $tourDetails['sale_price'], 0, ',', '.') ?> đ
-                                </div>
-                            <?php endif; ?>
+                            <?= $tourDetails['sale_price'] ?
+                                '<div class="bg-teal-100 text-teal-800 text-sm font-semibold px-3 py-1 rounded-full">' .
+                                'Tiết kiệm ' . number_format($tourDetails['price'] - $tourDetails['sale_price'], 0, ',', '.') . 'đ'
+                                . '</div>'
+                                : ''
+                            ?>
+
                         </div>
                     </div>
                 </div>
@@ -199,6 +199,7 @@ if (!empty($tourDetails['included'])) {
                                 }
                                 ?>
                             </select>
+
                         </div>
 
                         <!-- Number of People -->
