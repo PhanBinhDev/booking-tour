@@ -123,8 +123,35 @@ class HomeController extends BaseController
   function tourDetail($id)
   {
     $tourDetails = $this->tourModel->getTourDetails($id);
-    $itinerary = json_decode($tourDetails['itinerary'], true);
-    $this->view('home/tour-details', ['tourDetails' => $tourDetails, 'itinerary' => $itinerary]);
+    $itinerary = json_decode($tourDetails['itinerary'], true) ?? [];
+
+    // Get tour reviews
+    $reviews = $this->tourModel->getTourReviews($id);
+
+    // Get average rating
+    $avgRating = 0;
+    if (!empty($reviews)) {
+      $totalRating = array_sum(array_column($reviews, 'rating'));
+      $avgRating = number_format($totalRating / count($reviews), 1);
+    }
+
+    // Get available tour dates
+    $tourDates = $this->tourModel->getAvailableTourDates($id);
+
+    // Check if user can review
+    $canReview = false;
+    if (isset($_SESSION['user_id'])) {
+      $canReview = $this->tourModel->canUserReviewTour($_SESSION['user_id'], $id);
+    }
+
+    $this->view('home/tour-details', [
+      'tourDetails' => $tourDetails,
+      'itinerary' => $itinerary,
+      'reviews' => $reviews,
+      'avgRating' => $avgRating,
+      'canReview' => $canReview,
+      'tourDates' => $tourDates
+    ]);
   }
 
   function bookings($id)

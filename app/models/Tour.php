@@ -200,6 +200,85 @@ class Tour extends BaseModel
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getAvailableTourDates($tourId)
+    {
+        // Get current date
+        $today = date('Y-m-d');
+
+        // Update past dates automatically
+        $this->updateTourDateStatuses();
+
+        // Get available tour dates that haven't passed yet
+        $sql = "SELECT * FROM tour_dates 
+            WHERE tour_id = ? 
+            AND start_date >= ? 
+            AND status = 'available' 
+            AND available_seats > 0
+            ORDER BY start_date ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$tourId, $today]);
+        return $stmt->fetchAll();
+    }
+
+    public function updateTourDateStatuses()
+    {
+        // Get current date
+        $today = date('Y-m-d');
+
+        // Update status for dates that have passed
+        $sql = "UPDATE tour_dates 
+            SET status = 'cancelled' 
+            WHERE start_date < ? 
+            AND status = 'available'";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$today]);
+        return $stmt->rowCount();
+    }
+
+    public function getTourReviews($tourId)
+    {
+        $sql = "SELECT r.*, u.full_name, u.avatar
+            FROM tour_reviews r
+            JOIN users u ON r.user_id = u.id
+            WHERE r.tour_id = ? AND r.status = 'approved'
+            ORDER BY r.created_at DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$tourId]);
+        return $stmt->fetchAll();
+    }
+
+    public function canUserReviewTour($userId, $tourId)
+    {
+        // Check if user has booked and completed this tour
+        $sql = "SELECT COUNT(*) FROM bookings 
+            WHERE user_id = ? AND tour_id = ? AND status = 'completed' 
+            AND id NOT IN (SELECT booking_id FROM tour_reviews WHERE user_id = ? AND tour_id = ?)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $tourId, $userId, $tourId]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function saveReview($data)
+    {
+        $sql = "INSERT INTO tour_reviews 
+            (tour_id, user_id, booking_id, rating, title, review) 
+            VALUES (?, ?, ?, ?, ?, ?)";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            $data['tour_id'],
+            $data['user_id'],
+            $data['booking_id'],
+            $data['rating'],
+            $data['title'],
+            $data['review']
+        ]);
+    }
+
 
     public function insertTour($data)
     {

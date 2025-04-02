@@ -27,6 +27,9 @@ use App\Helpers\UrlHelper;
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
   <link rel="stylesheet" href="<?= UrlHelper::css('mapbox.css') ?>">
   <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="<?= UrlHelper::css('swiper.css') ?>">
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans flex flex-col">
@@ -207,7 +210,8 @@ use App\Helpers\UrlHelper;
     <!-- Flash messages -->
     <?php if (isset($_SESSION['flash_message'])): ?>
       <?php if (!empty($_SESSION['flash']) && isset($_SESSION['flash']['message'])): ?>
-        <div class="mb-6 p-4 rounded-md <?= ($_SESSION['flash']['type'] ?? '') === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
+        <div
+          class="mb-6 p-4 rounded-md <?= ($_SESSION['flash']['type'] ?? '') === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
           <?= $_SESSION['flash']['message'] ?>
         </div>
       <?php endif; ?>

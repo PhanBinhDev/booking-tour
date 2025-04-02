@@ -9,13 +9,15 @@ use App\Helpers\UrlHelper;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $title ?? 'PHP MVC Project' ?></title>
+  <title><?= $title ?? 'Di Travel' ?></title>
   <link href="<?= UrlHelper::css('style.css') ?>" rel="stylesheet">
   <link rel="icon" type="image/png" href="<?= UrlHelper::image('favicon/favicon-96x96.png') ?>" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg') ?>" />
   <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico') ?>" />
   <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png') ?>" />
-  <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
+  <link rel="icon" type="image/svg+xml" href="<?= UrlHelper::image('favicon/favicon.svg') ?>" />
+  <link rel="shortcut icon" href="<?= UrlHelper::image('favicon/favicon.ico') ?>" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= UrlHelper::image('favicon/apple-touch-icon.png') ?>" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
@@ -24,6 +26,10 @@ use App\Helpers\UrlHelper;
   <link rel="stylesheet"
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
   <link rel="stylesheet" href="<?= UrlHelper::css('mapbox.css') ?>">
+  <link rel="manifest" href="<?= UrlHelper::image('favicon/site.webmanifest') ?>" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="<?= UrlHelper::css('swiper.css') ?>">
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans flex flex-col">
