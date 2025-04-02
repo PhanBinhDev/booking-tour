@@ -246,6 +246,7 @@ class HomeController extends BaseController
   function tourDetail($id)
   {
     $tourDetails = $this->tourModel->getTourDetails($id);
+<<<<<<< HEAD
     $itinerary = json_decode($tourDetails['itinerary'], true) ?? [];
 
     // Get tour reviews
@@ -275,6 +276,10 @@ class HomeController extends BaseController
       'canReview' => $canReview,
       'tourDates' => $tourDates
     ]);
+=======
+    $itinerary = json_decode($tourDetails['itinerary'], true);
+    $this->view('home/tour-details', ['tourDetails' => $tourDetails, 'itinerary' => $itinerary]);
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
   }
 
   function bookings($id)

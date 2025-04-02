@@ -166,6 +166,7 @@
                 <div class="bg-white rounded-xl shadow-md p-6 mb-8">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Lịch trình chi tiết</h2>
 
+<<<<<<< HEAD
                     <?php
 
                     use App\Helpers\UrlHelper;
@@ -187,6 +188,25 @@
                                 <p class="text-gray-700 font-semibold mt-2"> Bữa ăn: <?= implode(", ", array_map('htmlspecialchars', $details["meals"])) ?></p>
                             <?php endif; ?>
 
+=======
+                    <?php foreach ($itinerary as $details): ?>
+                        <div class="mb-6 border-l-4 border-teal-500 pl-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                                <?= $details["day"] ?>: <?= htmlspecialchars($details["title"] ?? "Chưa có tiêu đề") ?>
+                            </h3>
+
+                            <?php if (!empty($details["description"])): ?>
+                                <p class="text-gray-600"><?= htmlspecialchars($details["description"]) ?></p>
+                            <?php else: ?>
+                                <p class="text-gray-500 italic">Chưa có thông tin chi tiết cho ngày này.</p>
+                            <?php endif; ?>
+
+                            <!-- Hiển thị bữa ăn -->
+                            <?php if (!empty($details["meals"]) && is_array($details["meals"])): ?>
+                                <p class="text-gray-700 font-semibold mt-2"> Bữa ăn: <?= implode(", ", array_map('htmlspecialchars', $details["meals"])) ?></p>
+                            <?php endif; ?>
+
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
                             <!-- Hiển thị nơi ở -->
                             <?php if (!empty($details["accommodation"])): ?>
                                 <p class="text-gray-700 font-semibold mt-2"> Nơi ở: <?= htmlspecialchars($details["accommodation"]) ?></p>
@@ -458,6 +478,7 @@
                                 <?= number_format($tourDetails['sale_price'] ?? $tourDetails['price'], 0, ',', '.') ?> VND
                             </span>
                             <span class="text-gray-500 ml-2">/ người</span>
+<<<<<<< HEAD
                         </div>
                     </div>
 
@@ -551,6 +572,43 @@
                             <span>
                                 <?= number_format($tourDetails['taxes'] ?? 300000, 0, ',', '.') ?> VND
                             </span>
+=======
+                        </div>
+                    </div>
+
+                    <?php if (!empty($tourDetails['sale_price'])): ?>
+                        <div class="text-gray-500 line-through mb-4">
+                            <?= number_format($tourDetails['price'], 0, ',', '.') ?> VND (Giá gốc)
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Chọn ngày</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="date" class="w-full border rounded-lg py-2 px-3">
+                            <input type="date" class="w-full border rounded-lg py-2 px-3">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Số lượng khách</label>
+                        <select class="w-full border rounded-lg py-2 px-3">
+                            <option>1 Người lớn</option>
+                            <option>2 Người lớn</option>
+                            <option>2 Người lớn, 1 Trẻ em</option>
+                            <option>2 Người lớn, 2 Trẻ em</option>
+                        </select>
+                    </div>
+
+                    <div class="border-t border-b border-gray-200 py-4 mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Giá cơ bản</span>
+                            <span><?= number_format($tourDetails['sale_price'] ?? $tourDetails['price'], 0, ',', '.') ?> VND</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Thuế & phí</span>
+                            <span><?= number_format($tourDetails['taxes'] ?? 300000, 0, ',', '.') ?> VND</span>
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
                         </div>
                         <?php
                         $price = $tourDetails['price'] ?? 0;
@@ -560,6 +618,7 @@
                         ?>
                         <div class="flex justify-between font-bold mt-3 pt-3 border-t border-gray-200">
                             <span>Tổng cộng</span>
+<<<<<<< HEAD
                             <span>
                                 <?= number_format($total, 0, ',', '.') ?> VND
                             </span>
@@ -567,6 +626,12 @@
                     </div>
 
 
+=======
+                            <span><?= number_format(($tourDetails['sale_price'] ?? $tourDetails['price']) - 500000 + 300000, 0, ',', '.') . ' VND' ?></span>
+                        </div>
+                    </div>
+
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
                     <div class="space-y-3">
                         <a href="<?= UrlHelper::route('home/bookings/' . $tourDetails['id']) ?>"> <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center">
                                 Đặt ngay
