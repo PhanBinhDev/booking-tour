@@ -48,11 +48,14 @@ abstract class BaseModel
             $whereClauses = [];
 
             foreach ($conditions as $key => $value) {
-                $whereClauses[] = "$key = :$key";
+                $paramName = str_replace('.', '_', $key);
+                $whereClauses[] = "$key = :$paramName";
             }
 
             $sql .= implode(' AND ', $whereClauses);
         }
+
+
 
         if (!empty($groupBy)) {
             $sql .= " " . $groupBy;
@@ -73,8 +76,10 @@ abstract class BaseModel
         $stmt = $this->db->prepare($sql);
 
         if (!empty($conditions)) {
+            // và ở phần bind
             foreach ($conditions as $key => $value) {
-                $stmt->bindValue(":$key", $value);
+                $paramName = str_replace('.', '_', $key);
+                $stmt->bindValue(":$paramName", $value);
             }
         }
 

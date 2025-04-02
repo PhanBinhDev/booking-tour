@@ -85,7 +85,11 @@
 
                         <div class="mt-4 flex items-center justify-between">
                             <div>
-                                <span class="text-gray-500 text-sm line-through"><?= $tourDetails['sale_price'] ? number_format($tourDetails['price'], 0, ',', '.') : 0 ?> đ </span>
+                                <?= $tourDetails['sale_price'] ?
+                                    '<span class="text-gray-500 text-sm line-through">' .
+                                    number_format($tourDetails['price'], 0, ',', '.') . 'đ' . '</span>'
+                                    : ''
+                                ?>
                                 <div class="text-2xl font-bold text-teal-600">
                                     <?= $tourDetails['sale_price'] ? number_format($tourDetails['sale_price'], 0, ',', '.') : number_format($tourDetails['price'], 0, ',', '.')  ?> đ
                                 </div>
@@ -94,7 +98,7 @@
 
                             <?= $tourDetails['sale_price'] ?
                                 '<div class="bg-teal-100 text-teal-800 text-sm font-semibold px-3 py-1 rounded-full">' .
-                                'Tiết kiệm ' . number_format($tourDetails['price'] - $tourDetails['sale_price'], 0, ',', '.') . 'đ'
+                                'Giảm ' . number_format($tourDetails['price'] - $tourDetails['sale_price'], 0, ',', '.') . 'đ'
                                 . '</div>'
                                 : ''
                             ?>
@@ -164,6 +168,7 @@
                                 <option value="104">06/07/2025 - 09/07/2025 (12 chỗ trống)</option>
                                 <option value="105">13/07/2025 - 16/07/2025 (18 chỗ trống)</option>
                             </select>
+
                         </div>
 
                         <!-- Number of People -->

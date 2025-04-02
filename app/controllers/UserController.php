@@ -5,15 +5,19 @@ namespace App\Controllers;
 use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
 use App\Models\User;
+use App\Models\Booking;
 use Exception;
 
 
 class UserController extends BaseController
 {
     private $userModel;
+    private $bookingModel;
+
     public function __construct()
     {
         $this->userModel = new User();
+        $this->bookingModel = new Booking();
     }
 
     public function dashboard()
@@ -152,7 +156,10 @@ class UserController extends BaseController
 
     public function userBookings()
     {
-        $this->view('user/user-bookings');
+        $bookings = $this->bookingModel->getAll();
+        // var_dump(($bookings));
+        // die;
+        $this->view('user/user-bookings', ['bookings' => $bookings]);
     }
 
     public function wishlist()
