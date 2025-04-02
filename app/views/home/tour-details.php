@@ -166,7 +166,11 @@
                 <div class="bg-white rounded-xl shadow-md p-6 mb-8">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Lịch trình chi tiết</h2>
 
-                    <?php foreach ($itinerary as $details): ?>
+                    <?php
+
+                    use App\Helpers\UrlHelper;
+
+                    foreach ($itinerary as $details): ?>
                         <div class="mb-6 border-l-4 border-teal-500 pl-4">
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">
                                 <?= $details["day"] ?>: <?= htmlspecialchars($details["title"] ?? "Chưa có tiêu đề") ?>
@@ -497,9 +501,11 @@
                     </div>
 
                     <div class="space-y-3">
-                        <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center">
-                            Book Now
-                        </button>
+                        <a href="<?= UrlHelper::route('home/bookings/' . $tourDetails['id']) ?>">
+                            <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center">
+                                Book Now
+                            </button>
+                        </a>
                         <div class="flex gap-2">
                             <button class="flex-1 border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-3 px-4 rounded-lg transition duration-300">
                                 Reserve

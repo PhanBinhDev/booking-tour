@@ -52,7 +52,7 @@ class UserController extends BaseController
 
         $currentUser = $this->getCurrentUser();
         $userProfile = $this->userModel->getUserProfile($currentUser['id']);
-
+        var_dump($currentUser);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $address = $_POST['address'] ?? '';
@@ -156,9 +156,16 @@ class UserController extends BaseController
 
     public function userBookings()
     {
-        $bookings = $this->bookingModel->getAll();
-        // var_dump(($bookings));
-        // die;
+        $currentUser = $this->getCurrentUser();
+        $user_id = $currentUser['id'];
+        $collums = 'bookings.*, tours.title, tours.duration, tour_dates.start_date, tour_dates.end_date ';
+        $condition = ['user_id' => $user_id];
+        $join = [
+            "LEFT JOIN tour_dates ON tour_dates.id = bookings.tour_date_id",
+            "JOIN tours ON tours.id = bookings.tour_id"
+        ];
+        $bookings = $this->bookingModel->getAll($collums, $condition, null, null, null, $join);
+        // var_dump($bookings);
         $this->view('user/user-bookings', ['bookings' => $bookings]);
     }
 

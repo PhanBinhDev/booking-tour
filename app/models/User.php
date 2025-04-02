@@ -384,7 +384,7 @@ class User extends BaseModel
                             avatar = :avatar,
                             updated_at = NOW()
                         WHERE id = :user_id";
-            
+
             $userStmt = $this->db->prepare($userSql);
             $userStmt->bindValue(':full_name', $data['full_name']);
             $userStmt->bindValue(':phone', $data['phone']);
@@ -392,18 +392,18 @@ class User extends BaseModel
             $userStmt->bindValue(':avatar', $data['avatar'] ?? null);
             $userStmt->bindValue(':user_id', $data['user_id']);
             $userResult = $userStmt->execute();
-            
+
             if (!$userResult) {
                 error_log("Failed to update user: " . print_r($userStmt->errorInfo(), true));
                 return false;
             }
-            
+
             // Check if user profile exists
             $checkSql = "SELECT * FROM user_profiles WHERE user_id = :user_id";
             $checkStmt = $this->db->prepare($checkSql);
             $checkStmt->bindValue(':user_id', $data['user_id']);
             $checkStmt->execute();
-            
+
             if ($checkStmt->rowCount() > 0) {
                 // Update existing profile
                 $profileSql = "UPDATE user_profiles 
@@ -423,7 +423,7 @@ class User extends BaseModel
                             VALUES 
                             (:user_id, :date_of_birth, :gender, :bio, :website, :facebook, :twitter, :instagram, NOW(), NOW())";
             }
-            
+
             $profileStmt = $this->db->prepare($profileSql);
             $profileStmt->bindValue(':user_id', $data['user_id']);
             $profileStmt->bindValue(':date_of_birth', $data['date_of_birth'] ?? null);
@@ -433,34 +433,34 @@ class User extends BaseModel
             $profileStmt->bindValue(':facebook', $data['facebook'] ?? null);
             $profileStmt->bindValue(':twitter', $data['twitter'] ?? null);
             $profileStmt->bindValue(':instagram', $data['instagram'] ?? null);
-            
+
             $profileResult = $profileStmt->execute();
-            
+
             if (!$profileResult) {
                 error_log("Failed to update profile: " . print_r($profileStmt->errorInfo(), true));
                 return false;
             }
-            
+
             return true;
         } catch (\Exception $e) {
             error_log("Error updating user profile: " . $e->getMessage());
             return false;
         }
     }
-    
-   public function getUserProfile($userId) 
+
+    public function getUserProfile($userId)
     {
         try {
             $sql = "SELECT * FROM user_profiles WHERE user_id = :user_id";
-                    
+
             $stmt = $this->db->prepare($sql);
             $stmt->bindValue(':user_id', $userId);
             $stmt->execute();
-            
+
             if ($stmt->rowCount() === 0) {
                 return null; // Profile not found
             }
-            
+
             // Return user profile data
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
@@ -477,7 +477,5 @@ class User extends BaseModel
         $stmt->bindParam(':id', $id);
 
         return $stmt->execute();
-
     }
-
 }
