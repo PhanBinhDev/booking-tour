@@ -1,1308 +1,856 @@
-<?php
-
-use App\Helpers\UrlHelper;
-
-// Parse itinerary data from JSON string if needed
-$itinerary = json_decode($tourDetails['itinerary'], true) ?? [];
-
-// Calculate price display
-$hasDiscount = !empty($tourDetails['sale_price']);
-$displayPrice = $hasDiscount ? $tourDetails['sale_price'] : $tourDetails['price'];
-$childPrice = $displayPrice * 0.7;
-?>
-
-
-<div class="bg-gray-50 py-12">
-  <div class="container mx-auto px-4">
-    <!-- Breadcrumbs -->
-    <div class="mb-8 text-sm text-gray-500 flex items-center">
-      <a href="<?= UrlHelper::route('') ?>" class="hover:text-teal-500 transition-colors">Trang chủ</a>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mx-2" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-      <a href="<?= UrlHelper::route('tours') ?>" class="hover:text-teal-500 transition-colors">Tours</a>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mx-2" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-      <span class="text-gray-700 font-medium"><?= htmlspecialchars($tourDetails['title']) ?></span>
-    </div>
-
-    <!-- Tour Title Section -->
-    <div class="mb-10">
-      <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-        <?= htmlspecialchars($tourDetails['title']) ?>
-      </h1>
-      <div class="flex flex-wrap items-center gap-6">
-        <div class="flex items-center">
-          <div class="bg-teal-100 p-2 rounded-full mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </div>
-          <span class="font-medium"><?= htmlspecialchars($tourDetails["location_name"]) ?></span>
-        </div>
-        <div class="flex items-center">
-          <div class="bg-yellow-100 p-2 rounded-full mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600" viewBox="0 0 20 20"
-              fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          </div>
-          <span class="font-medium">4.8</span>
-          <span class="text-gray-500 ml-1">(<?= intval($tourDetails['views']) ?> đánh giá)</span>
-        </div>
-        <div class="flex items-center">
-          <div class="bg-teal-100 p-2 rounded-full mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <span class="font-medium"><?= htmlspecialchars($tourDetails["duration"]) ?></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Swiper.js Image Gallery with Side Thumbnails -->
-    <div class="mb-12 flex flex-col md:flex-row gap-4">
-      <!-- Main Gallery -->
-      <div class="md:w-5/6 relative">
-        <div class="swiper galleryMain rounded-2xl overflow-hidden shadow-lg">
-          <div class="swiper-wrapper">
-            <!-- Slides từ các ảnh thực tế từ tour -->
-            <div class="swiper-slide">
-              <img
-                src="<?= $tourDetails['featured_image'] ?? 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e' ?>"
-                alt="<?= htmlspecialchars($tourDetails['title']) ?>" class="w-full h-[500px] object-cover">
-            </div>
-            <div class="swiper-slide">
-              <img src="https://dynamic-media.tacdn.com/media/photo-o/2e/f5/9c/57/caption.jpg"
-                alt="<?= htmlspecialchars($tourDetails['title']) ?>" class="w-full h-[500px] object-cover">
-            </div>
-            <div class="swiper-slide">
-              <img src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f992"
-                alt="<?= htmlspecialchars($tourDetails['title']) ?>" class="w-full h-[500px] object-cover">
-            </div>
-            <div class="swiper-slide">
-              <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6"
-                alt="<?= htmlspecialchars($tourDetails['title']) ?>" class="w-full h-[500px] object-cover">
-            </div>
-            <div class="swiper-slide">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-                alt="<?= htmlspecialchars($tourDetails['title']) ?>" class="w-full h-[500px] object-cover">
-            </div>
-          </div>
-          <!-- Add Pagination -->
-          <div class="swiper-pagination"></div>
-          <!-- Add Navigation -->
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </div>
-      </div>
-
-      <!-- Thumbnail Swiper - Vertical on right side -->
-      <div class="md:w-1/6">
-        <div class="swiper galleryThumbs h-[500px] rounded-xl overflow-hidden">
-          <div class="swiper-wrapper">
-            <div
-              class="swiper-slide cursor-pointer border-2 border-transparent hover:border-teal-500 transition-all rounded-lg overflow-hidden">
-              <img
-                src="<?= $tourDetails['featured_image'] ?? 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e' ?>"
-                alt="Thumbnail 1" class="w-full h-full object-cover">
-            </div>
-            <div
-              class="swiper-slide cursor-pointer border-2 border-transparent hover:border-teal-500 transition-all rounded-lg overflow-hidden">
-              <img src="https://dynamic-media.tacdn.com/media/photo-o/2e/f5/9c/57/caption.jpg" alt="Thumbnail 2"
-                class="w-full h-full object-cover">
-            </div>
-            <div
-              class="swiper-slide cursor-pointer border-2 border-transparent hover:border-teal-500 transition-all rounded-lg overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f992" alt="Thumbnail 3"
-                class="w-full h-full object-cover">
-            </div>
-            <div
-              class="swiper-slide cursor-pointer border-2 border-transparent hover:border-teal-500 transition-all rounded-lg overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6" alt="Thumbnail 4"
-                class="w-full h-full object-cover">
-            </div>
-            <div
-              class="swiper-slide cursor-pointer border-2 border-transparent hover:border-teal-500 transition-all rounded-lg overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Thumbnail 5"
-                class="w-full h-full object-cover">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Left Column - Tour Details -->
-      <div class="lg:col-span-2">
-        <!-- Overview Section -->
-        <div class="bg-white rounded-2xl shadow-md p-8 mb-8 transition-all hover:shadow-lg border border-gray-100">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            <div class="bg-teal-100 p-2 rounded-full mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            Tổng quan Tour
-          </h2>
-
-          <p class="text-gray-600 mb-6 leading-relaxed text-lg">
-            <?= htmlspecialchars($tourDetails["description"]) ?>
-          </p>
-
-          <p class="text-gray-600 mb-6 leading-relaxed">
-            <?= nl2br(htmlspecialchars($tourDetails["content"])) ?>
-          </p>
-
-          <!-- Dịch vụ bao gồm / không bao gồm -->
-          <h3 class="text-xl font-semibold text-gray-800 mt-10 mb-6 flex items-center">
-            <div class="bg-teal-100 p-1.5 rounded-full mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-            Dịch vụ
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Dịch vụ bao gồm -->
-            <div
-              class="flex items-start space-x-4 p-6 bg-green-50 rounded-xl border border-green-100 hover:shadow-md transition-all">
-              <div class="bg-green-100 p-2 rounded-full flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" viewBox="0 0 20 20"
-                  fill="currentColor">
-                  <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-800 mb-3 text-lg">Dịch vụ Bao Gồm</h4>
-                <p class="text-gray-600"><?= nl2br(htmlspecialchars($tourDetails["included"])) ?>
-                </p>
-              </div>
-            </div>
-
-            <!-- Dịch vụ không bao gồm -->
-            <div
-              class="flex items-start space-x-4 p-6 bg-red-50 rounded-xl border border-red-100 hover:shadow-md transition-all">
-              <div class="bg-red-100 p-2 rounded-full flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 20 20"
-                  fill="currentColor">
-                  <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-800 mb-3 text-lg">Không Bao Gồm</h4>
-                <p class="text-gray-600"><?= nl2br(htmlspecialchars($tourDetails["excluded"])) ?>
-                </p>
-              </div>
-            </div>
-          </div>
+<div class="bg-gray-50 py-10">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <!-- Breadcrumbs -->
+        <div class="mb-6 text-sm text-gray-500">
+            <a href="#" class="hover:text-teal-500">Home</a> &gt;
+            <a href="#" class="hover:text-teal-500">Tours</a> &gt;
+            <span class="text-gray-700"><?= $tourDetails['title'] ?></span>
         </div>
 
-        <!-- Lịch trình Tour - Compact & Responsive -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 border border-gray-100">
-          <!-- Header - More Compact -->
-          <div class="bg-teal-500 p-4">
-            <h2 class="text-xl font-bold text-white flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Lịch trình chi tiết
-            </h2>
-          </div>
+        <!-- Tour Title Section -->
+        <div class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2"><?= $tourDetails['title'] ?></h1>
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span><?= $tourDetails["location_name"] ?></span>
+                </div>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span class="font-medium">4.8</span>
+                    <span class="text-gray-500 ml-1">(124 reviews)</span>
+                </div>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span><?= $tourDetails["duration"] ?></span>
+                </div>
+            </div>
+        </div>
 
-          <div class="p-4">
-            <!-- Itinerary Timeline - More Compact -->
-            <div class="space-y-4">
-              <?php foreach ($itinerary as $index => $details): ?>
-                <div class="relative <?= $index >= 3 ? 'itinerary-day hidden' : '' ?>">
-                  <!-- Timeline connector - Simplified -->
-                  <?php if ($index < count($itinerary) - 1): ?>
-                    <div class="absolute top-10 bottom-0 left-4 w-0.5 bg-teal-200"></div>
-                  <?php endif; ?>
 
-                  <div class="relative flex items-start">
-                    <!-- Day number - Smaller, No Animation -->
-                    <div
-                      class="flex-shrink-0 w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm">
-                      <?= $details["day"] ?>
-                    </div>
 
-                    <!-- Day content - More Compact, No Hover Effects -->
-                    <div class="ml-4 bg-white p-3 rounded-lg border border-gray-100 flex-grow">
-                      <h3 class="text-base font-semibold text-gray-800 mb-2">
-                        <?= htmlspecialchars($details["title"] ?? "Ngày {$details["day"]}") ?>
-                      </h3>
+        <!--slideshows ảnh-->
+        <div class="flex space-x-4 items-center">
+            <!-- Danh sách ảnh nhỏ (BÊN TRÁI) -->
+            <div class="flex flex-col space-y-2">
+                <img onclick="changeImage(0)" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&h=100&fit=crop"
+                    class="w-32 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500">
+                <img onclick="changeImage(1)" src="https://dynamic-media.tacdn.com/media/photo-o/2e/f5/9c/57/caption.jpg?w=150&h=100&s=1"
+                    class="w-32 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500">
+                <img onclick="changeImage(2)" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&h=100&fit=crop"
 
-                      <?php if (!empty($details["description"])): ?>
-                        <p class="text-gray-600 text-sm mb-3"><?= htmlspecialchars($details["description"]) ?></p>
-                      <?php else: ?>
-                        <p class="text-gray-500 italic text-sm mb-3">Chưa có thông tin chi tiết cho ngày này.</p>
-                      <?php endif; ?>
+                    class="w-32 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500">
+                <!-- Ảnh ẩn -->
+                <div id="hidden-images" class="hidden flex flex-col space-y-2">
+                    <img onclick="changeImage(3)" src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=150&h=100&fit=crop&fit=crop"
+                        class="w-32 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500">
+                    <img onclick="changeImage(4)" src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=150&h=100&fit=crop&fit=crop"
+                        class="w-32 h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500">
+                </div>
 
-                      <!-- Activity Details - More Compact -->
-                      <div class="flex flex-wrap gap-2 mt-2">
-                        <!-- Meals info - Smaller -->
-                        <?php if (!empty($details["meals"]) && is_array($details["meals"])): ?>
-                          <div class="inline-flex items-center bg-orange-50 px-2 py-1 rounded text-xs">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-orange-500 mr-1" viewBox="0 0 20 20"
-                              fill="currentColor">
-                              <path
-                                d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" />
+                <!-- Nút "Xem thêm" -->
+                <button id="showMoreBtn" onclick="showMoreImages()"
+                    class="w-32 h-20 flex items-center justify-center bg-gray-300 rounded-lg cursor-pointer text-sm text-center font-bold hover:bg-gray-400">
+                    Xem thêm
+                </button>
+            </div>
+            <!-- Ảnh chính + Nút Chuyển -->
+            <div class="flex items-center space-x-4">
+                <!-- Nút Prev -->
+                <button onclick="prevImage()" class="text-3xl bg-white px-6 py-4 rounded-full shadow-lg 
+               hover:bg-gray-200 transition duration-300">
+                    ⬅
+                </button>
+
+                <!-- Ảnh chính -->
+                <div class="relative w-[800px] h-[600px]">
+                    <img id="mainImage" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop"
+                        class="w-full h-full object-cover rounded-lg shadow-md">
+                </div>
+
+                <!-- Nút Next -->
+                <button onclick="nextImage()" class="text-3xl bg-white px-6 py-4 rounded-full shadow-lg 
+               hover:bg-gray-200 transition duration-300">
+                    ➡
+                </button>
+            </div>
+        </div>
+
+        <script>
+            let images = [
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop",
+                "https://dynamic-media.tacdn.com/media/photo-o/2e/f5/9c/57/caption.jpg?w=800&h=600&s=1",
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&h=600&fit=crop"
+            ];
+            let currentIndex = 0;
+
+            function changeImage(index) {
+                currentIndex = index;
+                document.getElementById("mainImage").src = images[currentIndex];
+            }
+
+            function prevImage() {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                document.getElementById("mainImage").src = images[currentIndex];
+            }
+
+            function nextImage() {
+                currentIndex = (currentIndex + 1) % images.length;
+                document.getElementById("mainImage").src = images[currentIndex];
+            }
+
+            function showMoreImages() {
+                document.getElementById("hidden-images").classList.remove("hidden");
+                document.getElementById("showMoreBtn").classList.add("hidden");
+
+                // Cập nhật danh sách ảnh để có thể next/prev qua ảnh ẩn
+                images.push(
+                    "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?w=800&h=600&fit=crop",
+                    "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&h=600&fit=crop"
+                );
+            }
+        </script>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Tour Details -->
+            <div class="lg:col-span-2">
+                <!-- Overview Section -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Tổng quan Tour</h2>
+
+                    <p class="text-gray-600 mb-4">
+                        <?= htmlspecialchars($tourDetails["description"]) ?>
+                    </p>
+
+                    <p class="text-gray-600 mb-4">
+                        <?= nl2br(htmlspecialchars($tourDetails["content"])) ?>
+                    </p>
+
+                    <!-- Dịch vụ bao gồm / không bao gồm -->
+                    <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Dịch vụ</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Dịch vụ bao gồm -->
+                        <div class="flex items-start space-x-3 p-4 bg-white rounded-lg shadow">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-500 mt-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
-                            <span class="font-medium">Bữa ăn:</span>
-                            <span class="ml-1"><?= implode(", ", array_map('htmlspecialchars', $details["meals"])) ?></span>
-                          </div>
-                        <?php endif; ?>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Bao Gồm</h4>
+                                <p class="text-gray-600"><?= nl2br(htmlspecialchars($tourDetails["included"])) ?></p>
+                            </div>
+                        </div>
 
-                        <!-- Accommodation info - Smaller -->
-                        <?php if (!empty($details["accommodation"])): ?>
-                          <div class="inline-flex items-center bg-blue-50 px-2 py-1 rounded text-xs">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-blue-500 mr-1" viewBox="0 0 20 20"
-                              fill="currentColor">
-                              <path
-                                d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                        <!-- Dịch vụ không bao gồm -->
+                        <div class="flex items-start space-x-3 p-4 bg-white rounded-lg shadow">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 mt-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM12.707 7.293a1 1 0 00-1.414 0L10 8.586 8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 000-1.414z" clip-rule="evenodd" />
                             </svg>
-                            <span class="font-medium">Nơi ở:</span>
-                            <span class="ml-1"><?= htmlspecialchars($details["accommodation"]) ?></span>
-                          </div>
-                        <?php endif; ?>
-                      </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Không Bao Gồm</h4>
+                                <p class="text-gray-600"><?= nl2br(htmlspecialchars($tourDetails["excluded"])) ?></p>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              <?php endforeach; ?>
-            </div>
 
-            <!-- "Show more" button - Simplified -->
-            <?php if (count($itinerary) > 3): ?>
-              <div class="mt-4 text-center">
-                <button id="showAllItinerary"
-                  class="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium inline-flex items-center">
-                  <span>Xem toàn bộ lịch trình</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            <?php endif; ?>
-          </div>
-        </div>
+                <!-- Lịch trình Tour -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Lịch trình chi tiết</h2>
 
-        <!-- Phần Chỗ Ở -->
-        <div class="bg-white rounded-2xl shadow-md p-8 mb-8 transition-all hover:shadow-lg border border-gray-100">
-          <h2 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
-            <div class="bg-teal-100 p-2 rounded-full mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </div>
-            Chỗ Ở
-          </h2>
+<<<<<<< HEAD
+                    <?php
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Loại Phòng 1 -->
-            <div
-              class="border border-gray-200 rounded-xl overflow-hidden transition-all hover:-translate-y-2 hover:shadow-lg duration-300">
-              <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=500&h=300&fit=crop"
-                alt="Phòng Deluxe View Biển" class="w-full h-56 object-cover" />
-              <div class="p-6">
-                <h3 class="font-semibold text-gray-800 mb-3 text-lg">Phòng Deluxe View Biển</h3>
-                <ul class="text-sm text-gray-600 space-y-2 mb-4">
-                  <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 flex-shrink-0" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Giường King-size
-                  </li>
-                  <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 flex-shrink-0" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Ban công riêng
-                  </li>
-                  <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 flex-shrink-0" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    View biển
-                  </li>
-                </ul>
-                <div class="text-right">
-                  <span class="bg-teal-100 text-teal-600 px-4 py-1.5 rounded-full font-medium">Bao gồm trong gói</span>
-                </div>
-              </div>
-            </div>
+                    use App\Helpers\UrlHelper;
 
-            <!-- Loại Phòng 2 -->
-            <div
-              class="border border-gray-200 rounded-xl overflow-hidden transition-all hover:-translate-y-2 hover:shadow-lg duration-300">
-              <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&h=300&fit=crop"
-                alt="Biệt Thự Bãi Biển" class="w-full h-56 object-cover" />
-              <div class="p-6">
-                <h3 class="font-semibold text-gray-800 mb-3 text-lg">Biệt Thự Bãi Biển</h3>
-                <ul class="text-sm text-gray-600 space-y-2 mb-4">
-                  <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 flex-shrink-0" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Khu vực sinh hoạt riêng
-                  </li>
-                  <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 flex-shrink-0" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Hồ bơi riêng
-                  </li>
-                  <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 flex-shrink-0" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Truy cập trực tiếp ra biển
-                  </li>
-                </ul>
-                <div class="text-right">
-                  <span class="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-full font-medium">+ 899.000đ nâng
-                    cấp</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                    foreach ($itinerary as $details): ?>
+                        <div class="mb-6 border-l-4 border-teal-500 pl-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                                <?= $details["day"] ?>: <?= htmlspecialchars($details["title"] ?? "Chưa có tiêu đề") ?>
+                            </h3>
 
-        <!-- Reviews Section -->
-        <!-- Reviews Section -->
-        <div class="bg-white rounded-2xl shadow-md p-8 mb-8 transition-all hover:shadow-lg border border-gray-100">
-          <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-              <div class="bg-teal-100 p-2 rounded-full mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                </svg>
-              </div>
-              Đánh giá (<?= count($reviews) ?>)
-            </h2>
-            <div class="flex items-center">
-              <div class="flex">
-                <?php
-                $fullStars = floor($avgRating);
-                $hasHalfStar = $avgRating - $fullStars >= 0.5;
+                            <?php if (!empty($details["description"])): ?>
+                                <p class="text-gray-600"><?= htmlspecialchars($details["description"]) ?></p>
+                            <?php else: ?>
+                                <p class="text-gray-500 italic">Chưa có thông tin chi tiết cho ngày này.</p>
+                            <?php endif; ?>
 
-                for ($i = 1; $i <= 5; $i++):
-                  if ($i <= $fullStars): ?>
-                    <!-- Full star -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  <?php elseif ($i == $fullStars + 1 && $hasHalfStar): ?>
-                    <!-- Half star -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <defs>
-                        <linearGradient id="halfStarGradient">
-                          <stop offset="50%" stop-color="#FBBF24" />
-                          <stop offset="50%" stop-color="#D1D5DB" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#halfStarGradient)"
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  <?php else: ?>
-                    <!-- Empty star -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  <?php endif; ?>
-                <?php endfor; ?>
-              </div>
-              <span class="ml-2 font-semibold"><?= $avgRating ?>/5</span>
-            </div>
-          </div>
+                            <!-- Hiển thị bữa ăn -->
+                            <?php if (!empty($details["meals"]) && is_array($details["meals"])): ?>
+                                <p class="text-gray-700 font-semibold mt-2"> Bữa ăn: <?= implode(", ", array_map('htmlspecialchars', $details["meals"])) ?></p>
+                            <?php endif; ?>
 
-          <?php if ($canReview): ?>
-            <!-- Review Form for eligible users -->
-            <form id="reviewForm" action="<?= UrlHelper::route('tours/review') ?>" method="post"
-              class="bg-teal-50 p-6 rounded-xl mb-8 border border-teal-100">
-              <h3 class="text-lg font-semibold mb-4">Viết đánh giá của bạn</h3>
-              <input type="hidden" name="tour_id" value="<?= $tourDetails['id'] ?>">
+=======
+                    <?php foreach ($itinerary as $details): ?>
+                        <div class="mb-6 border-l-4 border-teal-500 pl-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                                <?= $details["day"] ?>: <?= htmlspecialchars($details["title"] ?? "Chưa có tiêu đề") ?>
+                            </h3>
 
-              <!-- Star Rating -->
-              <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Đánh giá của bạn</label>
-                <div class="flex star-rating">
-                  <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                      class="star h-8 w-8 text-gray-300 cursor-pointer hover:text-yellow-400" data-rating="<?= $i ?>"
-                      viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  <?php endfor; ?>
-                  <input type="hidden" name="rating" id="ratingInput" value="0" required>
-                </div>
-              </div>
+                            <?php if (!empty($details["description"])): ?>
+                                <p class="text-gray-600"><?= htmlspecialchars($details["description"]) ?></p>
+                            <?php else: ?>
+                                <p class="text-gray-500 italic">Chưa có thông tin chi tiết cho ngày này.</p>
+                            <?php endif; ?>
 
-              <!-- Review Title -->
-              <div class="mb-4">
-                <label for="reviewTitle" class="block text-sm font-medium text-gray-700 mb-2">Tiêu đề</label>
-                <input type="text" id="reviewTitle" name="title"
-                  class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="Tóm tắt trải nghiệm của bạn" required>
-              </div>
+                            <!-- Hiển thị bữa ăn -->
+                            <?php if (!empty($details["meals"]) && is_array($details["meals"])): ?>
+                                <p class="text-gray-700 font-semibold mt-2"> Bữa ăn: <?= implode(", ", array_map('htmlspecialchars', $details["meals"])) ?></p>
+                            <?php endif; ?>
 
-              <!-- Review Content -->
-              <div class="mb-4">
-                <label for="reviewContent" class="block text-sm font-medium text-gray-700 mb-2">Nội dung đánh giá</label>
-                <textarea id="reviewContent" name="review" rows="4"
-                  class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="Chia sẻ chi tiết trải nghiệm tour của bạn" required></textarea>
-              </div>
-
-              <!-- Submit Button -->
-              <div class="text-right">
-                <button type="submit"
-                  class="bg-teal-500 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-teal-600 transition-colors">
-                  Gửi đánh giá
-                </button>
-              </div>
-            </form>
-          <?php endif; ?>
-
-          <!-- Review Filters -->
-          <div class="flex flex-wrap gap-3 mb-8">
-            <button data-filter="all"
-              class="filter-btn bg-teal-500 text-white px-5 py-2.5 rounded-full text-sm font-medium shadow-sm">
-              Tất cả đánh giá
-            </button>
-            <?php for ($i = 5; $i >= 1; $i--): ?>
-              <?php
-              $count = count(array_filter($reviews, function ($review) use ($i) {
-                return $review['rating'] == $i;
-              }));
-              if ($count > 0):
-              ?>
-                <button data-filter="<?= $i ?>"
-                  class="filter-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-full text-sm font-medium transition-colors">
-                  <?= $i ?> Sao (<?= $count ?>)
-                </button>
-              <?php endif; ?>
-            <?php endfor; ?>
-          </div>
-
-          <!-- Individual Reviews -->
-          <div class="space-y-8" id="reviewsList">
-            <?php if (empty($reviews)): ?>
-              <div class="text-center py-8 text-gray-500">
-                Chưa có đánh giá nào cho tour này.
-              </div>
-            <?php else: ?>
-              <?php foreach ($reviews as $review): ?>
-                <div class="border-b border-gray-200 pb-8 review-item" data-rating="<?= $review['rating'] ?>">
-                  <div class="flex justify-between mb-4">
-                    <div class="flex items-start">
-                      <div
-                        class="w-14 h-14 rounded-full bg-gray-200 overflow-hidden mr-4 border-2 border-teal-100 flex-shrink-0">
-                        <?php if (!empty($review['avatar'])): ?>
-                          <!-- User has uploaded an avatar -->
-                          <img src="<?= $review['avatar'] ?>" alt="<?= htmlspecialchars($review['full_name']) ?>"
-                            class="w-full h-full object-cover"
-                            onerror="this.onerror=null;this.src='https://avatar.iran.liara.run/public';" />
-                          />
-                        <?php else: ?>
-                          <!-- Generate avatar from external service using user's name -->
-                          <?php
-                          $userName = htmlspecialchars($review['full_name']);
-                          ?>
-                          <img src="https://avatar.iran.liara.run/public" alt="<?= $userName ?>"
-                            class="w-full h-full object-cover" />
-                        <?php endif; ?>
-                      </div>
-                      <div>
-                        <h4 class="font-semibold text-gray-800 text-lg"><?= htmlspecialchars($review['full_name']) ?></h4>
-                        <p class="text-sm text-gray-500">
-                          <?= date('d/m/Y', strtotime($review['created_at'])) ?>
-                        </p>
-                        <?php if (!empty($review['title'])): ?>
-                          <p class="font-medium text-gray-700 mt-2"><?= htmlspecialchars($review['title']) ?></p>
-                        <?php endif; ?>
-                      </div>
-                    </div>
-                    <div class="flex">
-                      <?php for ($i = 0; $i < 5; $i++): ?>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 <?= ($i < $review['rating']) ? 'text-yellow-400' : 'text-gray-300' ?>"
-                          viewBox="0 0 20 20" fill="currentColor">
-                          <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      <?php endfor; ?>
-                    </div>
-                  </div>
-                  <p class="text-gray-600 mb-4 leading-relaxed">
-                    <?= nl2br(htmlspecialchars($review['review'])) ?>
-                  </p>
-                </div>
-              <?php endforeach; ?>
-
-              <?php if (count($reviews) > 0): ?>
-                <div class="text-center">
-                  <button id="loadMoreReviews"
-                    class="px-8 py-3 bg-teal-50 text-teal-600 rounded-full font-medium border border-teal-200 hover:bg-teal-100 transition-colors">
-                    Xem thêm đánh giá
-                  </button>
-                </div>
-              <?php endif; ?>
-            <?php endif; ?>
-          </div>
-        </div>
-
-        <!-- Phần Bản Đồ & Vị Trí -->
-        <div class="bg-white rounded-2xl shadow-md p-8 mb-8 transition-all hover:shadow-lg border border-gray-100">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            <div class="bg-teal-100 p-2 rounded-full mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            Vị Trí
-          </h2>
-          <!-- Replace Static Map with Interactive Mapbox Map -->
-          <div class="aspect-video bg-gray-200 rounded-xl mb-6 overflow-hidden shadow-md">
-            <!-- Mapbox container with specific ID -->
-            <div id="tourLocationMap" class="w-full h-full"></div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 class="font-semibold text-gray-800 mb-3 text-lg">Địa Chỉ</h3>
-              <p class="text-gray-600 mb-6">
-                <?= htmlspecialchars($tourDetails["location_name"]) ?><br />
-                <?= htmlspecialchars($tourDetails["location_des"]) ?>
-              </p>
-              <h3 class="font-semibold text-gray-800 mb-3 text-lg">Các Điểm Tham Quan Gần Kề</h3>
-              <ul class="text-gray-600 space-y-3">
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 mt-0.5 flex-shrink-0"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Bãi biển địa phương (0.5 km)</span>
-                </li>
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 mt-0.5 flex-shrink-0"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Trung tâm mua sắm (1.5 km)</span>
-                </li>
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 mt-0.5 flex-shrink-0"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Thắng cảnh địa phương (2.3 km)</span>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="font-semibold text-gray-800 mb-3 text-lg">Cách Di Chuyển Đến</h3>
-              <ul class="text-gray-600 space-y-3 mb-6">
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 mt-0.5 flex-shrink-0"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Sân bay gần nhất (13 km)</span>
-                </li>
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 mt-0.5 flex-shrink-0"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Đưa đón sân bay (đã bao gồm)</span>
-                </li>
-                <li class="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-3 mt-0.5 flex-shrink-0"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Dịch vụ taxi 24/7</span>
-                </li>
-              </ul>
-              <button id="getRouteBtn"
-                class="text-teal-500 font-medium hover:text-teal-600 transition-colors flex items-center bg-teal-50 px-5 py-2.5 rounded-lg">
-                <span>Nhận Lộ Trình</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column - Booking & Info: Compact Redesign -->
-      <div class="lg:col-span-1">
-        <div
-          class="bg-white rounded-xl shadow overflow-hidden sticky top-24 border border-gray-100 hover:border-teal-100 transition-all">
-          <!-- Card Header with Gradient - Smaller -->
-          <div class="bg-gradient-to-r from-teal-500 to-teal-600 p-4 relative">
-            <?php if (!empty($tourDetails['sale_price'])): ?>
-              <div
-                class="absolute top-0 right-0 bg-white text-red-600 px-3 py-0.5 rounded-bl-lg font-semibold shadow-sm transform translate-y-0 -skew-y-3 text-sm">
-                <?= round((1 - $tourDetails['sale_price'] / $tourDetails['price']) * 100) ?>% GIẢM
-              </div>
-            <?php endif; ?>
-            <h3 class="text-white text-lg font-bold mb-1">Đặt tour</h3>
-            <p class="text-teal-100 text-xs">Đảm bảo chỗ của bạn ngay hôm nay</p>
-          </div>
-
-          <!-- Card Body - More Compact -->
-          <div class="p-4">
-            <!-- Date Selection Section -->
-            <div class="mb-4">
-              <label class="text-gray-700 text-sm font-medium mb-2 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-teal-500" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Chọn ngày
-              </label>
-              <div class="relative">
-                <?php if (empty($tourDates)): ?>
-                  <div class="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm bg-gray-100 text-gray-500">
-                    Không có lịch trình nào sắp tới
-                  </div>
-                <?php else: ?>
-                  <select id="tourDate"
-                    class="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white shadow-sm">
-                    <?php foreach ($tourDates as $date):
-                      $startDate = date('d/m/Y', strtotime($date['start_date']));
-                      $endDate = date('d/m/Y', strtotime($date['end_date']));
-                      $datePrice = !empty($date['sale_price']) ? $date['sale_price'] : $date['price'];
-                      $defaultPrice = !empty($tourDetails['sale_price']) ? $tourDetails['sale_price'] : $tourDetails['price'];
-                      $displayPrice = !empty($datePrice) ? $datePrice : $defaultPrice;
-                    ?>
-                      <option value="<?= $date['id'] ?>" data-price="<?= $displayPrice ?>"
-                        data-seats="<?= $date['available_seats'] ?>">
-                        <?= $startDate ?> - <?= $endDate ?> (<?= $date['available_seats'] ?> chỗ)
-                      </option>
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
+                            <!-- Hiển thị nơi ở -->
+                            <?php if (!empty($details["accommodation"])): ?>
+                                <p class="text-gray-700 font-semibold mt-2"> Nơi ở: <?= htmlspecialchars($details["accommodation"]) ?></p>
+                            <?php endif; ?>
+                        </div>
                     <?php endforeach; ?>
-                  </select>
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-gray-400 absolute right-3 top-3 pointer-events-none" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                <?php endif; ?>
-              </div>
+
+                    <!-- Nút xem thêm -->
+                    <button class="flex items-center text-teal-500 font-medium hover:text-teal-600 transition-colors">
+                        <span>Xem toàn bộ lịch trình</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+
+
+
+                <!-- Phần Chỗ Ở -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Chỗ Ở</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Loại Phòng 1 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=500&h=300&fit=crop" alt="Phòng Deluxe View Biển" class="w-full h-48 object-cover" />
+                            <div class="p-4">
+                                <h3 class="font-semibold text-gray-800 mb-2">Phòng Deluxe View Biển</h3>
+                                <ul class="text-sm text-gray-600 space-y-1 mb-3">
+                                    <li class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Giường King-size
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="http://www.w3.org/2000/svg" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Ban công riêng
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="http://www.w3.org/2000/svg" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        View biển
+                                    </li>
+                                </ul>
+                                <div class="text-right">
+                                    <span class="text-teal-500 font-semibold">Bao gồm trong gói</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Loại Phòng 2 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&h=300&fit=crop" alt="Biệt Thự Bãi Biển" class="w-full h-48 object-cover" />
+                            <div class="p-4">
+                                <h3 class="font-semibold text-gray-800 mb-2">Biệt Thự Bãi Biển</h3>
+                                <ul class="text-sm text-gray-600 space-y-1 mb-3">
+                                    <li class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="http://www.w3.org/2000/svg" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Khu vực sinh hoạt riêng
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="http://www.w3.org/2000/svg" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Hồ bơi riêng
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-2" fill="none" viewBox="http://www.w3.org/2000/svg" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Truy cập trực tiếp ra biển
+                                    </li>
+                                </ul>
+                                <div class="text-right">
+                                    <span class="text-gray-600 font-semibold">+ $899 nâng cấp</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Reviews Section -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Đánh giá </h2>
+                        <div class="flex items-center">
+                            <div class="flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            </div>
+                            <span class="ml-2 font-semibold">4.8 out of 5</span>
+                        </div>
+                    </div>
+
+                    <!-- Review Filters -->
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <button class="bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-medium">Tất cả đánh giá </button>
+                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium transition-colors">5 Star</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium transition-colors">4 Star</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium transition-colors">3 Star</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium transition-colors">2 Star</button>
+                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-medium transition-colors">1 Star</button>
+                    </div>
+
+                    <!-- Individual Reviews -->
+                    <div class="space-y-6">
+                        <!-- Review 1 -->
+                        <div class="border-b border-gray-200 pb-6">
+                            <div class="flex justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
+                                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Sarah J." class="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Sarah J.</h4>
+                                        <p class="text-sm text-gray-500">Visited April 2023</p>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-3">
+                                Absolutely amazing experience! The resort exceeded all our expectations. The staff was incredibly attentive, the beach was pristine, and the food was outstanding. We particularly enjoyed the cultural excursions which gave us a deeper appreciation of Balinese culture.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Great Service</span>
+                                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Beautiful Location</span>
+                                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Excellent Food</span>
+                            </div>
+                        </div>
+
+                        <!-- Review 2 -->
+                        <div class="border-b border-gray-200 pb-6">
+                            <div class="flex justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael T." class="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Michael T.</h4>
+                                        <p class="text-sm text-gray-500">Visited March 2023</p>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-3">
+                                My wife and I had a wonderful time at the resort. The beach villa upgrade was definitely worth it! The private pool and direct beach access made our honeymoon truly special. The only minor issue was occasional slow service at the main restaurant during peak hours.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Romantic</span>
+                                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Luxury</span>
+                                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Great Views</span>
+                            </div>
+                        </div>
+
+                        <!-- Show More Reviews Button -->
+                        <a href=""><button class="w-full py-2 border border-teal-500 text-teal-500 rounded-lg font-medium hover:bg-teal-50 transition-colors">
+                                Xem thêm
+                            </button></a>
+                    </div>
+                </div>
+
+                <!-- Phần Bản Đồ & Vị Trí -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Vị Trí</h2>
+                    <div class="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                        <!-- Placeholder bản đồ - trong thực tế, đây sẽ là một bản đồ thực tế -->
+                        <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center=Nusa+Dua,Bali,Indonesia&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7CNusa+Dua,Bali,Indonesia&key=YOUR_API_KEY" alt="Bản đồ vị trí khu nghỉ dưỡng" class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Địa Chỉ</h3>
+                            <p class="text-gray-600 mb-4">
+                                Jl. Pantai Mengiat, Nusa Dua<br />
+                                Bali 80363, Indonesia
+                            </p>
+                            <h3 class="font-semibold text-gray-800 mb-2">Các Điểm Tham Quan Gần Kề</h3>
+                            <ul class="text-gray-600 space-y-1">
+                                <li>• Bãi Biển Nusa Dua (0.1 km)</li>
+                                <li>• Trung Tâm Mua Sắm Bali Collection (1.5 km)</li>
+                                <li>• Water Blow (2.3 km)</li>
+                                <li>• Puja Mandala (3.1 km)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Cách Di Chuyển Đến</h3>
+                            <ul class="text-gray-600 space-y-1 mb-4">
+                                <li>• Sân Bay Quốc Tế Ngurah Rai (13 km)</li>
+                                <li>• Dịch vụ đưa đón sân bay bao gồm trong gói</li>
+                                <li>• Dịch vụ taxi có sẵn 24/7</li>
+                            </ul>
+                            <button class="text-teal-500 font-medium hover:text-teal-600 transition-colors flex items-center">
+                                <span>Nhận Lộ Trình</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Add hidden input for selected date ID -->
-            <input type="hidden" name="tour_date_id" id="selectedTourDateId"
-              value="<?= !empty($tourDates) ? $tourDates[0]['id'] : '' ?>">
+            <!-- Right Column - Booking & Info -->
+            <div class="lg:w-[350px] w-full">
+                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                    <?php if (!empty($tourDetails['sale_price'])): ?>
+                        <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold w-20">
+                            <?= round((1 - $tourDetails['sale_price'] / $tourDetails['price']) * 100) ?>% GIẢM
+                        </div>
+                    <?php endif; ?>
 
-            <!-- Guests Selection Section - More Compact -->
-            <div class="mb-4">
-              <label class="text-gray-700 text-sm font-medium mb-2 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-teal-500" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Số lượng khách
-              </label>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-baseline">
+                            <span class="text-xl font-bold text-red-500">
+                                <?= number_format($tourDetails['sale_price'] ?? $tourDetails['price'], 0, ',', '.') ?> VND
+                            </span>
+                            <span class="text-gray-500 ml-2">/ người</span>
+<<<<<<< HEAD
+                        </div>
+                    </div>
 
-              <!-- Adults Counter - More Compact -->
-              <div
-                class="flex items-center justify-between p-2.5 border border-gray-200 rounded-lg mb-2 bg-white shadow-sm">
-                <div>
-                  <p class="font-medium text-sm text-gray-700">Người lớn</p>
-                  <p class="text-xs text-gray-500">Trên 12 tuổi</p>
+                    <?php if (!empty($tourDetails['sale_price'])): ?>
+                        <div class="text-gray-500 line-through mb-4">
+                            <?= number_format($tourDetails['price'], 0, ',', '.') ?> VND (Giá gốc)
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mb-6">
+                        <label for="tour_date_id" class="block text-gray-700 font-medium mb-2">Chọn ngày khởi hành</label>
+                        <select id="tour_date_id" name="tour_date_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <option value="">-- Chọn ngày --</option>
+                        </select>
+                    </div>
+
+                    <script>
+                        async function fetchTourDates(tourId) {
+                            try {
+                                const response = await fetch(`/api/getTourDates?tourId=${tourId}`);
+                                const dates = await response.json();
+                                console.log('Dữ liệu nhận được:', dates); // Kiểm tra dữ liệu trong console
+
+                                if (!Array.isArray(dates) || dates.length === 0) {
+                                    console.warn('Không có ngày tour nào khả dụng');
+                                    return;
+                                }
+
+                                const dateSelect = document.getElementById('tour_date_id');
+                                dateSelect.innerHTML = '<option value="">-- Chọn ngày --</option>';
+                                dates.forEach(date => {
+                                    if (date.start_date && date.end_date && date.id && date.available_seats !== undefined) {
+                                        const option = document.createElement('option');
+                                        option.value = date.id;
+                                        option.textContent = `${date.start_date} - ${date.end_date} (${date.available_seats} chỗ trống)`;
+                                        dateSelect.appendChild(option);
+                                    } else {
+                                        console.warn('Dữ liệu ngày không hợp lệ:', date);
+                                    }
+                                });
+                            } catch (error) {
+                                console.error('Lỗi lấy dữ liệu ngày tour:', error);
+                            }
+                        }
+
+                        // Gọi API với ID tour cụ thể (thay đổi theo nhu cầu)
+                        fetchTourDates(1);
+                    </script>
+
+
+
+                    <div class="flex space-x-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Người lớn (>12 tuổi)</label>
+                            <div class="flex items-center border rounded-lg">
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('adult', -1)">-</button>
+                                <input id="adult" type="text" value="1" class="w-12 text-center border-none" readonly>
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('adult', 1)">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Trẻ em (5-12 tuổi)</label>
+                            <div class="flex items-center border rounded-lg">
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('child', -1)">-</button>
+                                <input id="child" type="text" value="0" class="w-12 text-center border-none" readonly>
+                                <button class="px-3 py-1 bg-gray-200" onclick="changeValue('child', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function changeValue(id, delta) {
+                            let input = document.getElementById(id);
+                            let value = parseInt(input.value) + delta;
+                            if (value >= 0) {
+                                input.value = value;
+                            }
+                        }
+                    </script>
+
+
+                    <div class="border-t border-b border-gray-200 py-4 mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Giá cơ bản</span>
+                            <span>
+                                <?= number_format($tourDetails['price'] ?? 0, 0, ',', '.') ?> VND
+                            </span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Thuế & phí</span>
+                            <span>
+                                <?= number_format($tourDetails['taxes'] ?? 300000, 0, ',', '.') ?> VND
+                            </span>
+=======
+                        </div>
+                    </div>
+
+                    <?php if (!empty($tourDetails['sale_price'])): ?>
+                        <div class="text-gray-500 line-through mb-4">
+                            <?= number_format($tourDetails['price'], 0, ',', '.') ?> VND (Giá gốc)
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Chọn ngày</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="date" class="w-full border rounded-lg py-2 px-3">
+                            <input type="date" class="w-full border rounded-lg py-2 px-3">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Số lượng khách</label>
+                        <select class="w-full border rounded-lg py-2 px-3">
+                            <option>1 Người lớn</option>
+                            <option>2 Người lớn</option>
+                            <option>2 Người lớn, 1 Trẻ em</option>
+                            <option>2 Người lớn, 2 Trẻ em</option>
+                        </select>
+                    </div>
+
+                    <div class="border-t border-b border-gray-200 py-4 mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Giá cơ bản</span>
+                            <span><?= number_format($tourDetails['sale_price'] ?? $tourDetails['price'], 0, ',', '.') ?> VND</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Thuế & phí</span>
+                            <span><?= number_format($tourDetails['taxes'] ?? 300000, 0, ',', '.') ?> VND</span>
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
+                        </div>
+                        <?php
+                        $price = $tourDetails['price'] ?? 0;
+                        $sale_price = $tourDetails['sale_price'] ?? $price;
+                        $taxes = $tourDetails['taxes'] ?? 300000;
+                        $total = $sale_price + $taxes;
+                        ?>
+                        <div class="flex justify-between font-bold mt-3 pt-3 border-t border-gray-200">
+                            <span>Tổng cộng</span>
+<<<<<<< HEAD
+                            <span>
+                                <?= number_format($total, 0, ',', '.') ?> VND
+                            </span>
+                        </div>
+                    </div>
+
+
+=======
+                            <span><?= number_format(($tourDetails['sale_price'] ?? $tourDetails['price']) - 500000 + 300000, 0, ',', '.') . ' VND' ?></span>
+                        </div>
+                    </div>
+
+>>>>>>> 63931b189355e56e13f4eeafecf750432d9a9903
+                    <div class="space-y-3">
+                        <a href="<?= UrlHelper::route('home/bookings/' . $tourDetails['id']) ?>"> <button class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center">
+                                Đặt ngay
+                            </button></a>
+                        <div class="flex gap-2">
+                            <button class="flex-1 border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-3 px-4 rounded-lg transition duration-300">
+                                Reserve
+                            </button>
+                            <button class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-semibold py-3 px-3 rounded-lg transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                  <button type="button"
-                    class="w-7 h-7 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
-                    onclick="decrementGuests('adults')">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-600" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                  <span class="w-8 text-center font-medium text-gray-700 text-sm" id="adults-count">2</span>
-                  <button type="button"
-                    class="w-7 h-7 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
-                    onclick="incrementGuests('adults')">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-600" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path fill-rule="evenodd"
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
+
+                <!-- Thẻ Bao Gồm Những Gì -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Những gì bao gồm</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-600">7 ngày, 6 đêm lưu trú</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-600">Đưa đón sân bay</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-600">Bữa sáng và bữa tối hàng ngày</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-600">3 chuyến tham quan có hướng dẫn viên</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-600">1 liệu pháp spa mỗi người</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-600">Truy cập tất cả các tiện ích của khu nghỉ dưỡng</span>
+                        </li>
+                    </ul>
                 </div>
-              </div>
-
-              <!-- Children Counter - More Compact -->
-              <div class="flex items-center justify-between p-2.5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                <div>
-                  <p class="font-medium text-sm text-gray-700">Trẻ em</p>
-                  <p class="text-xs text-gray-500">5-12 tuổi (Giảm 30%)</p>
-                </div>
-                <div class="flex items-center">
-                  <button type="button"
-                    class="w-7 h-7 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
-                    onclick="decrementGuests('children')">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-600" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                  <span class="w-8 text-center font-medium text-gray-700 text-sm" id="children-count">0</span>
-                  <button type="button"
-                    class="w-7 h-7 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
-                    onclick="incrementGuests('children')">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-600" viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path fill-rule="evenodd"
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Price Calculation Summary - More Compact -->
-            <div class="bg-gray-50 p-3 rounded-lg mb-4 border border-gray-100 text-sm">
-              <h4 class="font-semibold text-gray-700 border-b border-gray-200 pb-1.5 mb-2">Chi tiết thanh toán</h4>
-              <?php
-              // Calculate initial values for display
-              $initialAdultTotal = $displayPrice * 2; // 2 is the default number of adults
-              $initialChildTotal = $childPrice * 0;   // 0 is the default number of children
-              $initialSubtotal = $initialAdultTotal + $initialChildTotal;
-              $initialTax = $initialSubtotal * 0.1;   // 10% tax
-              ?>
-              <div class="flex justify-between mb-1.5">
-                <span class="text-gray-600">Người lớn (2 × <span
-                    class="adults-price"><?= number_format($displayPrice, 0, ',', '.') ?></span>)</span>
-                <span class="font-medium adults-total"><?= number_format($displayPrice * 2, 0, ',', '.') ?> VND</span>
-              </div>
-              <div class="flex justify-between mb-1.5">
-                <span class="text-gray-600">Trẻ em (0 × <span
-                    class="children-price"><?= number_format($childPrice, 0, ',', '.') ?></span>)</span>
-                <span class="font-medium children-total">0 VND</span>
-              </div>
-              <div class="flex justify-between mb-1.5">
-                <span class="text-gray-600">Thuế & phí (10%)</span>
-                <span class="font-medium tax-amount"><?= number_format($initialTax, 0, ',', '.') ?> VND</span>
-              </div>
-              <div class="flex justify-between font-bold mt-2 pt-2 border-t border-gray-200">
-                <span>Tổng cộng</span>
-                <span class="text-teal-600 total-price"><?= number_format(($displayPrice * 2) + 300000, 0, ',', '.') ?>
-                  VND</span>
-              </div>
-            </div>
-
-            <!-- Action Buttons - More Compact -->
-            <div class="space-y-3">
-              <button id="bookTourButton"
-                class="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold py-2 px-3 rounded-lg transition duration-300 flex justify-center items-center shadow-sm hover:shadow">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Đặt Tour Ngay
-              </button>
-              <div class="flex gap-2">
-                <a href="<? UrlHelper::route('home/contact') ?>" class="flex-1">
-                  <button
-                    class="w-full border border-teal-500 text-teal-500 hover:bg-teal-50 font-medium py-2 px-3 rounded-lg transition duration-300 flex items-center justify-center text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Đặt tư vấn
-                  </button>
-                </a>
-                <button id="wishlistButton"
-                  class="border border-teal-500 text-teal-500 hover:bg-teal-50 font-medium py-2 px-2.5 rounded-lg transition duration-300 relative overflow-hidden">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                  <span
-                    class="absolute inset-0 rounded-lg flex items-center justify-center bg-teal-500 text-white text-xs transform -translate-y-full wishlist-tooltip">Đã
-                    thêm!</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Security badges - More Compact -->
-            <div class="mt-3 pt-3 border-t border-gray-200">
-              <div class="flex items-center justify-center space-x-3">
-                <div class="flex items-center text-xs text-gray-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-500 mr-1" viewBox="0 0 20 20"
-                    fill="currentColor">
-                    <path fill-rule="evenodd"
-                      d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clip-rule="evenodd" />
-                  </svg>
-                  Thanh toán an toàn
-                </div>
-                <div class="flex items-center text-xs text-gray-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-500 mr-1" viewBox="0 0 20 20"
-                    fill="currentColor">
-                    <path fill-rule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                      clip-rule="evenodd" />
-                  </svg>
-                  Hỗ trợ 24/7
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Login Required Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 transform transition-all">
-        <!-- Close button -->
-        <div class="flex justify-end">
-          <button id="closeLoginModal" class="text-gray-500 hover:text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Modal content -->
-        <div class="text-center mb-6">
-          <div class="bg-teal-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-600" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-2">Đăng nhập để tiếp tục</h3>
-          <p class="text-gray-600 mb-6">Bạn cần đăng nhập để đặt tour này. Đăng nhập ngay để tiếp tục đặt tour!</p>
-
-          <div class="flex flex-col sm:flex-row gap-3">
-            <a href="<?= UrlHelper::route('auth/login') ?>"
-              class="flex-1 bg-teal-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-teal-600 transition-colors shadow-sm flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
-                  clip-rule="evenodd" />
-              </svg>
-              Đăng nhập
-            </a>
-            <a href="<?= UrlHelper::route('auth/register') ?>"
-              class="flex-1 border border-teal-500 text-teal-500 py-2.5 px-4 rounded-lg font-medium hover:bg-teal-50 transition-colors flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-              </svg>
-              Đăng ký
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Thêm script của Swiper -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Khởi tạo Swiper thumbnail
-        // Khởi tạo Swiper thumbnail vertical
-        const galleryThumbs = new Swiper('.galleryThumbs', {
-          direction: 'vertical',
-          spaceBetween: 10,
-          slidesPerView: 4,
-          watchSlidesProgress: true,
-          freeMode: true,
-          grabCursor: true,
-          breakpoints: {
-            // when window width is >= 320px
-            320: {
-              direction: 'horizontal',
-              slidesPerView: 3,
-            },
-            // when window width is >= 768px
-            768: {
-              direction: 'vertical',
-              slidesPerView: 4,
-            }
-          }
-        });
-
-        // Khởi tạo Swiper chính
-        const galleryMain = new Swiper('.galleryMain', {
-          spaceBetween: 10,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-          },
-          thumbs: {
-            swiper: galleryThumbs
-          }
-        });
-
-        // Xử lý các FAQ toggle
-        const faqToggles = document.querySelectorAll('.faq-toggle');
-        faqToggles.forEach(toggle => {
-          toggle.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const content = document.getElementById(targetId);
-            const icon = this.querySelector('.faq-icon');
-
-            // Toggle hiển thị nội dung
-            content.classList.toggle('hidden');
-
-            // Xoay icon khi mở/đóng
-            if (!content.classList.contains('hidden')) {
-              icon.classList.add('rotate-180');
-            } else {
-              icon.classList.remove('rotate-180');
-            }
-          });
-        });
-
-        // Hiển thị thêm nội dung lịch trình khi click vào button
-        const showAllItineraryBtn = document.getElementById('showAllItinerary');
-        if (showAllItineraryBtn) {
-          showAllItineraryBtn.addEventListener('click', function() {
-            const btnText = this.querySelector('span');
-            const btnIcon = this.querySelector('svg');
-            const hiddenDays = document.querySelectorAll('.itinerary-day');
-
-            hiddenDays.forEach(day => {
-              day.classList.toggle('hidden');
-            });
-
-            if (btnText.textContent === 'Xem toàn bộ lịch trình') {
-              btnText.textContent = 'Thu gọn lịch trình';
-              btnIcon.classList.add('rotate-180');
-            } else {
-              btnText.textContent = 'Xem toàn bộ lịch trình';
-              btnIcon.classList.remove('rotate-180');
-            }
-          });
-        }
-      });
-
-      function incrementGuests(type) {
-        const countElement = document.getElementById(type + '-count');
-        let count = parseInt(countElement.textContent);
-
-        if (type === 'adults' && count < 10) {
-          count++;
-        } else if (type === 'children' && count < 5) {
-          count++;
-        }
-
-        countElement.textContent = count;
-        updatePriceSummary();
-      }
-
-      function decrementGuests(type) {
-        const countElement = document.getElementById(type + '-count');
-        let count = parseInt(countElement.textContent);
-
-        if (type === 'adults' && count > 1) {
-          count--;
-        } else if (type === 'children' && count > 0) {
-          count--;
-        }
-
-        countElement.textContent = count;
-        updatePriceSummary();
-      }
-
-      const tourDateSelect = document.getElementById('tourDate');
-      if (tourDateSelect) {
-        tourDateSelect.addEventListener('change', function() {
-          const selectedOption = this.options[this.selectedIndex];
-          const datePrice = parseFloat(selectedOption.dataset.price);
-          const childPrice = datePrice * 0.7;
-          const selectedDateId = this.value;
-
-          // Update hidden input with selected date ID
-          document.getElementById('selectedTourDateId').value = selectedDateId;
-
-          // Update price display
-          updatePricesForDate(datePrice, childPrice);
-        });
-      }
-
-      // New function to update price display when date changes
-      function updatePricesForDate(adultPrice, childPrice) {
-        document.querySelector('.adults-price').textContent = formatCurrency(adultPrice);
-        document.querySelector('.children-price').textContent = formatCurrency(childPrice);
-        updatePriceSummary();
-      }
-
-      function updatePriceSummary() {
-        const adultCount = parseInt(document.getElementById('adults-count').textContent);
-        const childrenCount = parseInt(document.getElementById('children-count').textContent);
-
-        let adultPrice = <?= $displayPrice ?>;
-
-        // Check if a date is selected and use its price
-        if (tourDateSelect) {
-          const selectedOption = tourDateSelect.options[tourDateSelect.selectedIndex];
-          if (selectedOption && selectedOption.dataset.price) {
-            adultPrice = parseFloat(selectedOption.dataset.price);
-          }
-        }
-
-        const childPrice = adultPrice * 0.7;
-
-        const adultTotal = adultCount * adultPrice;
-        const childrenTotal = childrenCount * childPrice;
-        const subtotal = adultTotal + childrenTotal;
-        const taxFee = subtotal * 0.1; // 10% tax
-        const total = subtotal + taxFee;
-
-        document.querySelector('.adults-total').textContent = formatCurrency(adultTotal) + ' VND';
-        document.querySelector('.children-total').textContent = formatCurrency(childrenTotal) + ' VND';
-        document.querySelector('.tax-amount').textContent = formatCurrency(taxFee) + ' VND';
-        document.querySelector('.total-price').textContent = formatCurrency(total) + ' VND';
-      }
-
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount);
-      }
-
-      // Add wishlist button animation
-      document.getElementById('wishlistButton').addEventListener('click', function() {
-        const tooltip = this.querySelector('.wishlist-tooltip');
-        tooltip.classList.remove('-translate-y-full');
-        tooltip.classList.add('translate-y-0');
-
-        setTimeout(() => {
-          tooltip.classList.remove('translate-y-0');
-          tooltip.classList.add('-translate-y-full');
-        }, 1500);
-      });
 
 
-      const bookTourButton = document.getElementById('bookTourButton');
-      const loginModal = document.getElementById('loginModal');
-      const closeLoginModal = document.getElementById('closeLoginModal');
-
-      if (bookTourButton) {
-        bookTourButton.addEventListener('click', function(e) {
-          e.preventDefault();
-
-          // Check if user is logged in
-          const isLoggedIn = <?= isset($_SESSION['user_id']) ? 'true' : 'false' ?>;
-
-          if (isLoggedIn) {
-            // User is logged in, proceed to summary page
-            const tourId = <?= $tourDetails['id'] ?>;
-            const tourDateId = document.getElementById('selectedTourDateId').value;
-            const adultCount = parseInt(document.getElementById('adults-count').textContent);
-            const childrenCount = parseInt(document.getElementById('children-count').textContent);
-
-            // Create form and submit it
-            const form = document.createElement('form');
-            form.method = 'post';
-            form.action = '<?= UrlHelper::route('home/booking/') ?>' + tourId;
-
-            // Add form fields
-            const fields = {
-              'tour_date_id': tourDateId,
-              'adults': adultCount,
-              'children': childrenCount
-            };
-
-            for (const key in fields) {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = fields[key];
-              form.appendChild(input);
-            }
-
-            document.body.appendChild(form);
-            form.submit();
-          } else {
-            // User is not logged in, show the modal
-            loginModal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-          }
-        });
-      }
-
-      // Close modal when clicking the close button
-      if (closeLoginModal) {
-        closeLoginModal.addEventListener('click', function() {
-          loginModal.classList.add('hidden');
-          document.body.classList.remove('overflow-hidden');
-        });
-      }
-
-      // Close modal when clicking outside the modal content
-      if (loginModal) {
-        loginModal.addEventListener('click', function(e) {
-          if (e.target === loginModal) {
-            loginModal.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-          }
-        });
-      }
-
-      // MAPBOX
-
-      mapboxgl.accessToken =
-        'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
-      // Get location coordinates from tour details
-      const lat = <?= !empty($tourDetails['location_la']) ? $tourDetails['location_la'] : 21.0285 ?>;
-      const lng = <?= !empty($tourDetails['location_long']) ? $tourDetails['location_long'] : 105.8542 ?>;
-      const locationName = "<?= htmlspecialchars($tourDetails['location_name']) ?>";
-
-      // Initialize the map
-      const map = new mapboxgl.Map({
-        container: 'tourLocationMap',
-        style: 'mapbox://styles/mapbox/streets-v11', // Default style
-        center: [lng, lat], // [longitude, latitude]
-        zoom: 12,
-        interactive: true
-      });
-
-      // Add navigation controls
-      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-      // Create a custom marker element
-      const markerElement = document.createElement('div');
-      markerElement.className = 'custom-marker';
-      markerElement.innerHTML = `
-            <div class="relative">
-                <div class="w-5 h-5 bg-teal-500 rounded-full border-2 border-white shadow-md"></div>
-                <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 translate-y-full">
-                    <div class="bg-white px-2 py-1 rounded text-xs font-medium shadow-sm whitespace-nowrap">
-                        ${locationName}
+                <!-- Need Help Card -->
+                <div class="bg-teal-50 rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Cần Hỗ Trợ?</h3>
+                    <p class="text-gray-600 mb-4">
+                        Các chuyên gia du lịch của chúng tôi sẵn sàng hỗ trợ bạn với bất kỳ câu hỏi nào về gói tour này. </p>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Gọi cho chúng tôi</p>
+                            <p class="font-medium text-gray-800">+1 (800) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5   stroke-linejoin=" round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Gửi email cho chúng tôi</p>
+                            <p class="font-medium text-gray-800">support@travelagency.com</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        `;
+        </div>
 
-      // Add marker to the map
-      new mapboxgl.Marker(markerElement)
-        .setLngLat([lng, lat])
-        .addTo(map);
+        <!-- Similar Tours Section -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Có thể bạn quan tâm</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Similar Tour 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop" alt="Luxury Retreat" class="w-full h-full object-cover" />
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-2 py-1 rounded-lg text-teal-500 font-semibold text-sm">
+                            $2,999
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-xs text-gray-500">Maldives</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Maldives Overwater Villa</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span class="text-sm font-medium ml-1">4.9</span>
+                                <span class="text-xs text-gray-500 ml-1">(86)</span>
+                            </div>
+                            <button class="text-sm font-medium text-teal-500 hover:text-teal-600">View</button>
+                        </div>
+                    </div>
+                </div>
 
-      // Add a popup with location info
-      new mapboxgl.Popup({
-          closeButton: false,
-          closeOnClick: false,
-          offset: 25,
-          className: 'custom-popup'
-        })
-        .setLngLat([lng, lat])
-        .setHTML(`
-            <div>
-                <h3 class="text-sm font-bold">${locationName}</h3>
-                <p class="text-xs text-gray-600"><?= htmlspecialchars($tourDetails['location_des']) ?></p>
+                <!-- Similar Tour 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=500&h=300&fit=crop" alt="Cultural Tour" class="w-full h-full object-cover" />
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-2 py-1 rounded-lg text-teal-500 font-semibold text-sm">
+                            $1,799
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-xs text-gray-500">Japan</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Japan Cultural Experience</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span class="text-sm font-medium ml-1">4.8</span>
+                                <span class="text-xs text-gray-500 ml-1">(112)</span>
+                            </div>
+                            <button class="text-sm font-medium text-teal-500 hover:text-teal-600">View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Similar Tour 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=300&fit=crop" alt="Mountain Tour" class="w-full h-full object-cover" />
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-2 py-1 rounded-lg text-teal-500 font-semibold text-sm">
+                            $1,599
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-xs text-gray-500">Switzerland</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Swiss Alps Adventure</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span class="text-sm font-medium ml-1">4.7</span>
+                                <span class="text-xs text-gray-500 ml-1">(94)</span>
+                            </div>
+                            <button class="text-sm font-medium text-teal-500 hover:text-teal-600">View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Similar Tour 4 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="relative h-48">
+                        <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=500&h=300&fit=crop" alt="Rome Tour" class="w-full h-full object-cover" />
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-2 py-1 rounded-lg text-teal-500 font-semibold text-sm">
+                            $1,299
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-xs text-gray-500">Italy</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Italian Heritage Tour</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span class="text-sm font-medium ml-1">4.6</span>
+                                <span class="text-xs text-gray-500 ml-1">(78)</span>
+                            </div>
+                            <button class="text-sm font-medium text-teal-500 hover:text-teal-600">View</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        `)
-        .addTo(map);
+        </div>
 
-      // Add event to "Nhận Lộ Trình" button to open directions
-      document.querySelector('#getRouteBtn').addEventListener('click', function() {
-        window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
-      });
-    </script>
 
-    <style>
-      .custom-marker {
-        cursor: pointer;
-        z-index: 1;
-      }
+    </div>
 
-      .custom-popup .mapboxgl-popup-content {
-        padding: 12px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        max-width: 250px;
-      }
-
-      .mapboxgl-popup-close-button {
-        font-size: 16px;
-        color: #666;
-      }
-
-      /* Animation for marker bounce */
-      @keyframes markerBounce {
-
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-
-      .custom-marker:hover>div {
-        animation: markerBounce 0.6s ease infinite;
-      }
-    </style>
+</div>
