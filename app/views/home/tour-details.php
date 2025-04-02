@@ -581,7 +581,7 @@ $childPrice = $displayPrice * 0.7;
                                 </div>
                             <?php endforeach; ?>
 
-                            <?php if (count($reviews) > 5): ?>
+                            <?php if (count($reviews) > 0): ?>
                                 <div class="text-center">
                                     <button id="loadMoreReviews"
                                         class="px-8 py-3 bg-teal-50 text-teal-600 rounded-full font-medium border border-teal-200 hover:bg-teal-100 transition-colors">
@@ -607,13 +607,10 @@ $childPrice = $displayPrice * 0.7;
                         </div>
                         Vị Trí
                     </h2>
+                    <!-- Replace Static Map with Interactive Mapbox Map -->
                     <div class="aspect-video bg-gray-200 rounded-xl mb-6 overflow-hidden shadow-md">
-                        <!-- Placeholder bản đồ - trong thực tế, đây sẽ là một bản đồ thực tế -->
-                        <div class="w-full h-full bg-gray-200">
-                            <img
-                                src="https://maps.googleapis.com/maps/api/staticmap?center=<?= urlencode($tourDetails['location_name']) ?>&zoom=13&size=800x400&maptype=roadmap&markers=color:red%7C<?= urlencode($tourDetails['location_name']) ?>&key=YOUR_API_KEY"
-                                alt="Bản đồ vị trí khu nghỉ dưỡng" class="w-full h-full object-cover" />
-                        </div>
+                        <!-- Mapbox container with specific ID -->
+                        <div id="tourLocationMap" class="w-full h-full"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
@@ -672,7 +669,7 @@ $childPrice = $displayPrice * 0.7;
                                     <span>Dịch vụ taxi 24/7</span>
                                 </li>
                             </ul>
-                            <button
+                            <button id="getRouteBtn"
                                 class="text-teal-500 font-medium hover:text-teal-600 transition-colors flex items-center bg-teal-50 px-5 py-2.5 rounded-lg">
                                 <span>Nhận Lộ Trình</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24"
@@ -705,9 +702,8 @@ $childPrice = $displayPrice * 0.7;
                     <!-- Card Body - More Compact -->
                     <div class="p-4">
                         <!-- Date Selection Section -->
-                        <!-- Date Selection Section -->
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2 flex items-center">
+                            <label class="text-gray-700 text-sm font-medium mb-2 flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-teal-500" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -751,7 +747,7 @@ $childPrice = $displayPrice * 0.7;
 
                         <!-- Guests Selection Section - More Compact -->
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2 flex items-center">
+                            <label class="text-gray-700 text-sm font-medium mb-2 flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-teal-500" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1212,4 +1208,101 @@ $childPrice = $displayPrice * 0.7;
                     }
                 });
             }
+
+            // MAPBOX
+
+            mapboxgl.accessToken =
+                'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
+            // Get location coordinates from tour details
+            const lat = <?= !empty($tourDetails['location_la']) ? $tourDetails['location_la'] : 21.0285 ?>;
+            const lng = <?= !empty($tourDetails['location_long']) ? $tourDetails['location_long'] : 105.8542 ?>;
+            const locationName = "<?= htmlspecialchars($tourDetails['location_name']) ?>";
+
+            // Initialize the map
+            const map = new mapboxgl.Map({
+                container: 'tourLocationMap',
+                style: 'mapbox://styles/mapbox/streets-v11', // Default style
+                center: [lng, lat], // [longitude, latitude]
+                zoom: 12,
+                interactive: true
+            });
+
+            // Add navigation controls
+            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+            // Create a custom marker element
+            const markerElement = document.createElement('div');
+            markerElement.className = 'custom-marker';
+            markerElement.innerHTML = `
+            <div class="relative">
+                <div class="w-5 h-5 bg-teal-500 rounded-full border-2 border-white shadow-md"></div>
+                <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 translate-y-full">
+                    <div class="bg-white px-2 py-1 rounded text-xs font-medium shadow-sm whitespace-nowrap">
+                        ${locationName}
+                    </div>
+                </div>
+            </div>
+        `;
+
+            // Add marker to the map
+            new mapboxgl.Marker(markerElement)
+                .setLngLat([lng, lat])
+                .addTo(map);
+
+            // Add a popup with location info
+            new mapboxgl.Popup({
+                    closeButton: false,
+                    closeOnClick: false,
+                    offset: 25,
+                    className: 'custom-popup'
+                })
+                .setLngLat([lng, lat])
+                .setHTML(`
+            <div>
+                <h3 class="text-sm font-bold">${locationName}</h3>
+                <p class="text-xs text-gray-600"><?= htmlspecialchars($tourDetails['location_des']) ?></p>
+            </div>
+        `)
+                .addTo(map);
+
+            // Add event to "Nhận Lộ Trình" button to open directions
+            document.querySelector('#getRouteBtn').addEventListener('click', function() {
+                window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`, '_blank');
+            });
         </script>
+
+        <style>
+            .custom-marker {
+                cursor: pointer;
+                z-index: 1;
+            }
+
+            .custom-popup .mapboxgl-popup-content {
+                padding: 12px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                max-width: 250px;
+            }
+
+            .mapboxgl-popup-close-button {
+                font-size: 16px;
+                color: #666;
+            }
+
+            /* Animation for marker bounce */
+            @keyframes markerBounce {
+
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .custom-marker:hover>div {
+                animation: markerBounce 0.6s ease infinite;
+            }
+        </style>
