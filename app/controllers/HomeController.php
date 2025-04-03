@@ -6,7 +6,10 @@ use App\Models\Tour;
 use App\Models\Contact;
 use App\Models\BaseModel;
 use App\Models\Categories;
+<<<<<<< Updated upstream
 use App\Models\Location;
+=======
+>>>>>>> Stashed changes
 use App\Models\NewsModel;
 
 class HomeController extends BaseController
@@ -16,6 +19,7 @@ class HomeController extends BaseController
   private $newsModel;
   private $contactModel;
   private $categoriesModel;
+  private $newsModel;
 
   function __construct()
   {
@@ -31,6 +35,7 @@ class HomeController extends BaseController
     $this->newsModel = new NewsModel();
     $this->contactModel = new Contact();
     $this->categoriesModel = new Categories();
+    $this->newsModel = new NewsModel();
   }
   function index()
   {
@@ -129,9 +134,28 @@ class HomeController extends BaseController
     $this->view('home/contact');
   }
 
-  function news()
+  public function news()
   {
-    $this->view('home/news');
+    $newsList = $this->newsModel->getAllNews();
+
+    // echo "<pre>";
+    // print_r($newsList);
+    // echo "</pre>";
+    // die();
+    $getActiveCategories =$this->newsModel->getActiveCategories();
+
+    // Lấy 3 bài viết có lượt xem cao nhất
+    $topViewedNews = $this->newsModel->getTopViewedNews(3);
+
+    // Lấy 1 bài viết nổi bật (featured = 1) được tạo sớm nhất
+    $featuredNews = $this->newsModel->getOldestFeaturedNews();
+
+    $this->view('home/news', [
+      'newsList' => $newsList, 
+      'getActiveCategories' => $getActiveCategories,
+      'topViewedNews' => $topViewedNews,
+      'featuredNews' => $featuredNews
+    ]);
   }
 
   function newsDetail($id)
