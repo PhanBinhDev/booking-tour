@@ -56,12 +56,16 @@ class HomeController extends BaseController
       FROM tour_reviews 
       GROUP BY tour_id
       ) as tr ON tr.tour_id = tours.id",
-      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id"
+      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
+      "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
+      "LEFT JOIN images ON tour_images.image_id = images.id"
     ];
 
     $conditions = ["tours.status" => "active", "tours.sale_price" => "> 0"];
 
-    $columns = "tours.id, tours.description,
+    $columns = "tours.id, tours.description, 
+              tour_images.tour_id, tour_images.image_id,
+              images.cloudinary_url,
               tr.avg_rating, 
               tr.review_count,
               tours.title, tours.price, tours.duration, tours.sale_price,
@@ -73,6 +77,8 @@ class HomeController extends BaseController
               locations.name AS location_name";
 
     $orderBy = 'tours.id DESC';
+    $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
+
 
     $allTours = $this->tourModel->getAll(
       $columns,
@@ -81,7 +87,7 @@ class HomeController extends BaseController
       8,
       null,
       $join,
-      "GROUP BY tours.id, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name"
+      $groupBy
     );
 
     $condition = ["tours.status" => "active", "tours.featured" => "1"];
@@ -93,7 +99,7 @@ class HomeController extends BaseController
       3,
       null,
       $join,
-      "GROUP BY tours.id, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name"
+      $groupBy
     );
 
     $newsColumns = 'id, title, summary, featured_image, created_at';
@@ -211,7 +217,9 @@ class HomeController extends BaseController
       FROM tour_reviews 
       GROUP BY tour_id
       ) as tr ON tr.tour_id = tours.id",
-      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id"
+      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
+      "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
+      "LEFT JOIN images ON tour_images.image_id = images.id"
     ];
 
     $conditions = ["tours.status" => "active"];
@@ -221,7 +229,8 @@ class HomeController extends BaseController
       $conditions["tours.category_id"] = $category_id;
     }
 
-    $columns = "tours.id, 
+    $columns = "tours.id, tour_images.tour_id, tour_images.image_id,
+              images.cloudinary_url,
               tr.avg_rating, 
               tr.review_count,
               tours.title, tours.price, tours.duration, tours.sale_price,
@@ -248,6 +257,8 @@ class HomeController extends BaseController
         $orderBy = 'tr.avg_rating DESC, tr.review_count DESC';
         break;
     }
+    $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id,images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
+
 
     $allTours = $this->tourModel->getAll(
       $columns,
@@ -256,7 +267,7 @@ class HomeController extends BaseController
       null,
       null,
       $join,
-      "GROUP BY tours.id, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name"
+      $groupBy
     );
 
     // Truyền dữ liệu thêm để hiển thị trạng thái bộ lọc

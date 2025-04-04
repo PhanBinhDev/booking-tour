@@ -84,7 +84,7 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : null;
                             <div class="relative">
                                 <!-- Tour Image -->
                                 <div class="h-56 overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1540329957110-b87cd2e1c6d7?w=800&auto=format&fit=crop" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
 
                                 <!-- Discount Badge -->
