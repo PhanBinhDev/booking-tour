@@ -21,9 +21,9 @@ $title = 'Quản lý đặt tours';
             return $value !== '';
           })); ?>
           <?php if ($filterCount > 0): ?>
-          <span class="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-teal-100 text-teal-800">
-            <?= $filterCount ?> bộ lọc
-          </span>
+            <span class="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-teal-100 text-teal-800">
+              <?= $filterCount ?> bộ lọc
+            </span>
           <?php endif; ?>
         </h3>
         <button type="button" id="toggle-filter"
@@ -57,9 +57,9 @@ $title = 'Quản lý đặt tours';
               <!-- Selected badge -->
               <input type="hidden" name="tour_category" :value="selected">
               <?php if (!empty($filters['tour_category'])): ?>
-              <div class="absolute inset-y-0 right-0 pr-8 flex items-center">
-                <span class="text-xs font-medium px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-800">Đã chọn</span>
-              </div>
+                <div class="absolute inset-y-0 right-0 pr-8 flex items-center">
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-800">Đã chọn</span>
+                </div>
               <?php endif; ?>
 
               <!-- Dropdown options -->
@@ -79,30 +79,30 @@ $title = 'Quản lý đặt tours';
 
                 <!-- Category options -->
                 <?php foreach ($parentCategories as $parent): ?>
-                <div @click="selected = '<?= $parent['id'] ?>'; open = false"
-                  class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer font-medium text-gray-800 border-t border-gray-100"
-                  data-value="<?= $parent['id'] ?>">
-                  <?= htmlspecialchars($parent['name']) ?>
-                </div>
+                  <div @click="selected = '<?= $parent['id'] ?>'; open = false"
+                    class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer font-medium text-gray-800 border-t border-gray-100"
+                    data-value="<?= $parent['id'] ?>">
+                    <?= htmlspecialchars($parent['name']) ?>
+                  </div>
 
-                <?php if (isset($childCategories[$parent['id']])): ?>
-                <?php foreach ($childCategories[$parent['id']] as $child): ?>
-                <div @click="selected = '<?= $child['id'] ?>'; open = false"
-                  class="px-4 py-2 pl-8 text-sm hover:bg-gray-100 cursor-pointer" data-value="<?= $child['id'] ?>">
-                  <i class="fas fa-long-arrow-alt-right mr-2 text-gray-400"></i><?= htmlspecialchars($child['name']) ?>
-                </div>
+                  <?php if (isset($childCategories[$parent['id']])): ?>
+                    <?php foreach ($childCategories[$parent['id']] as $child): ?>
+                      <div @click="selected = '<?= $child['id'] ?>'; open = false"
+                        class="px-4 py-2 pl-8 text-sm hover:bg-gray-100 cursor-pointer" data-value="<?= $child['id'] ?>">
+                        <i class="fas fa-long-arrow-alt-right mr-2 text-gray-400"></i><?= htmlspecialchars($child['name']) ?>
+                      </div>
 
-                <?php if (isset($childCategories[$child['id']])): ?>
-                <?php foreach ($childCategories[$child['id']] as $grandchild): ?>
-                <div @click="selected = '<?= $grandchild['id'] ?>'; open = false"
-                  class="px-4 py-2 pl-12 text-sm hover:bg-gray-100 cursor-pointer"
-                  data-value="<?= $grandchild['id'] ?>">
-                  <i class="fas fa-angle-right mr-2 text-gray-400"></i><?= htmlspecialchars($grandchild['name']) ?>
-                </div>
-                <?php endforeach; ?>
-                <?php endif; ?>
-                <?php endforeach; ?>
-                <?php endif; ?>
+                      <?php if (isset($childCategories[$child['id']])): ?>
+                        <?php foreach ($childCategories[$child['id']] as $grandchild): ?>
+                          <div @click="selected = '<?= $grandchild['id'] ?>'; open = false"
+                            class="px-4 py-2 pl-12 text-sm hover:bg-gray-100 cursor-pointer"
+                            data-value="<?= $grandchild['id'] ?>">
+                            <i class="fas fa-angle-right mr-2 text-gray-400"></i><?= htmlspecialchars($grandchild['name']) ?>
+                          </div>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
                 <?php endforeach; ?>
               </div>
             </div>
@@ -132,9 +132,9 @@ $title = 'Quản lý đặt tours';
                 <i class="fas fa-check-circle text-gray-400"></i>
               </div>
               <?php if (!empty($filters['status'])): ?>
-              <div class="absolute inset-y-0 right-0 pr-8 flex items-center">
-                <span class="text-xs font-medium px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">Đã chọn</span>
-              </div>
+                <div class="absolute inset-y-0 right-0 pr-8 flex items-center">
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">Đã chọn</span>
+                </div>
               <?php endif; ?>
             </div>
           </div>
@@ -163,9 +163,9 @@ $title = 'Quản lý đặt tours';
                 <i class="fas fa-check-circle text-gray-400"></i>
               </div>
               <?php if (!empty($filters['payment_status'])): ?>
-              <div class="absolute inset-y-0 right-0 pr-8 flex items-center">
-                <span class="text-xs font-medium px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">Đã chọn</span>
-              </div>
+                <div class="absolute inset-y-0 right-0 pr-8 flex items-center">
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">Đã chọn</span>
+                </div>
               <?php endif; ?>
             </div>
           </div>
@@ -183,12 +183,12 @@ $title = 'Quản lý đặt tours';
                 <i class="fas fa-search text-gray-400"></i>
               </div>
               <?php if (!empty($filters['search'])): ?>
-              <div class="absolute inset-y-0 right-2 flex items-center">
-                <button type="button" onclick="document.getElementById('search').value='';this.form.submit();"
-                  class="text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Clear search">
-                  <i class="fas fa-times-circle"></i>
-                </button>
-              </div>
+                <div class="absolute inset-y-0 right-2 flex items-center">
+                  <button type="button" onclick="document.getElementById('search').value='';this.form.submit();"
+                    class="text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Clear search">
+                    <i class="fas fa-times-circle"></i>
+                  </button>
+                </div>
               <?php endif; ?>
             </div>
           </div>
@@ -196,10 +196,10 @@ $title = 'Quản lý đặt tours';
           <!-- BUTTONS -->
           <div class="col-span-4 flex justify-end space-x-2 mt-2">
             <?php if ($filterCount > 0): ?>
-            <a href="<?= UrlHelper::route('admin/bookings') ?>"
-              class="bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium py-2 px-4 rounded transition-colors duration-150 flex items-center">
-              <i class="fas fa-times-circle mr-2"></i> Xóa bộ lọc
-            </a>
+              <a href="<?= UrlHelper::route('admin/bookings') ?>"
+                class="bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium py-2 px-4 rounded transition-colors duration-150 flex items-center">
+                <i class="fas fa-times-circle mr-2"></i> Xóa bộ lọc
+              </a>
             <?php endif; ?>
             <button type="submit"
               class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded transition-colors duration-150 flex items-center">
@@ -247,109 +247,109 @@ $title = 'Quản lý đặt tours';
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <?php foreach ($bookings['items'] as $item): ?>
-            <tr>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= $item["booking_number"] ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["tour_title"] ?></div>
-                <div class="text-sm text-gray-500"><?= $item["duration"] ?></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><?= $item["customer_name"] ?></div>
-                <div class="text-xs text-gray-500">ID: <?= $item["customer_id"] ?></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= $item["adults"] ?> người lớn</div>
-                <div class="text-xs text-gray-500"><?= $item["children"] ?> trẻ em</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><?= FormatHelper::formatCurrency($item["tour_price"]) ?>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <?= renderBookingStatus($item["booking_status"]) ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <?= renderPaymentStatus($item["payment_status"]) ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <?= FormatHelper::formatDate($item["booking_date"]) ?>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="relative" x-data="{ open: false }">
-                  <button @click="open = !open" class="text-teal-600 hover:text-teal-900 font-medium flex items-center">
-                    <i class="fas fa-ellipsis-v mr-1"></i>
-                  </button>
-
-                  <!-- Dropdown menu -->
-                  <div x-show="open" @click.outside="open = false"
-                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                    <!-- View details -->
-                    <a href="<?= UrlHelper::route('admin/bookings/' . $item['id']) ?>"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <i class="fas fa-eye mr-2"></i> Xem chi tiết
-                    </a>
-
-                    <!-- Status change options - Only show if not cancelled -->
-                    <?php if ($item["booking_status"] !== 'cancelled'): ?>
-                    <!-- Divider -->
-                    <div class="border-t border-gray-100"></div>
-                    <div class="px-4 py-2 text-xs font-medium text-gray-500">Đổi trạng thái:</div>
-
-                    <!-- Form for each status option -->
-                    <form action="<?= UrlHelper::route('admin/bookings/updateStatus') ?>" method="POST" class="block">
-                      <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                      <input type="hidden" name="status" value="pending">
-                      <button type="submit"
-                        class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 <?= $item['booking_status'] == 'pending' ? 'bg-gray-100 font-medium' : '' ?>">
-                        <span class="flex items-center">
-                          <span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span>
-                          Chờ xử lý
-                        </span>
-                      </button>
-                    </form>
-
-                    <form action="<?= UrlHelper::route('admin/bookings/updateStatus') ?>" method="POST" class="block">
-                      <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                      <input type="hidden" name="status" value="confirmed">
-                      <button type="submit"
-                        class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 <?= $item['booking_status'] == 'confirmed' ? 'bg-gray-100 font-medium' : '' ?>">
-                        <span class="flex items-center">
-                          <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
-                          Đã xác nhận
-                        </span>
-                      </button>
-                    </form>
-
-                    <form action="<?= UrlHelper::route('admin/bookings/updateStatus') ?>" method="POST" class="block">
-                      <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                      <input type="hidden" name="status" value="completed">
-                      <button type="submit"
-                        class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 <?= $item['booking_status'] == 'completed' ? 'bg-gray-100 font-medium' : '' ?>">
-                        <span class="flex items-center">
-                          <span class="w-2 h-2 rounded-full bg-green-600 mr-2"></span>
-                          Hoàn thành
-                        </span>
-                      </button>
-                    </form>
-
-                    <form action="<?= UrlHelper::route('admin/bookings/updateStatus') ?>" method="POST" class="block">
-                      <input type="hidden" name="id" value="<?= $item['id'] ?>">
-                      <input type="hidden" name="status" value="cancelled">
-                      <button type="submit"
-                        class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600 hover:text-red-800">
-                        <span class="flex items-center">
-                          <span class="w-2 h-2 rounded-full bg-red-400 mr-2"></span>
-                          Hủy đặt tour
-                        </span>
-                      </button>
-                    </form>
-                    <?php endif; ?>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= $item["booking_number"] ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["tour_title"] ?></div>
+                  <div class="text-sm text-gray-500"><?= $item["duration"] ?></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><?= $item["customer_name"] ?></div>
+                  <div class="text-xs text-gray-500">ID: <?= $item["customer_id"] ?></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= $item["adults"] ?> người lớn</div>
+                  <div class="text-xs text-gray-500"><?= $item["children"] ?> trẻ em</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><?= FormatHelper::formatCurrency($item["tour_price"]) ?>
                   </div>
-                </div>
-              </td>
-            </tr>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <?= renderBookingStatus($item["booking_status"]) ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <?= renderPaymentStatus($item["payment_status"]) ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= FormatHelper::formatDate($item["booking_date"]) ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="text-teal-600 hover:text-teal-900 font-medium flex items-center">
+                      <i class="fas fa-ellipsis-v mr-1"></i>
+                    </button>
+
+                    <!-- Dropdown menu -->
+                    <div x-show="open" @click.outside="open = false"
+                      class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                      <!-- View details -->
+                      <a href="<?= UrlHelper::route('admin/bookings/' . $item['id']) ?>"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-eye mr-2"></i> Xem chi tiết
+                      </a>
+
+                      <!-- Status change options - Only show if not cancelled -->
+                      <?php if ($item["booking_status"] !== 'cancelled'): ?>
+                        <!-- Divider -->
+                        <div class="border-t border-gray-100"></div>
+                        <div class="px-4 py-2 text-xs font-medium text-gray-500">Đổi trạng thái:</div>
+
+                        <!-- Form for each status option -->
+                        <form action="<?= UrlHelper::route('admin/bookings/updateStatus/' . $item['id']) ?>" method="POST" class="block">
+                          <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                          <input type="hidden" name="status" value="pending">
+                          <button type="submit"
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 <?= $item['booking_status'] == 'pending' ? 'bg-gray-100 font-medium' : '' ?>">
+                            <span class="flex items-center">
+                              <span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span>
+                              Chờ xử lý
+                            </span>
+                          </button>
+                        </form>
+
+                        <form action="<?= UrlHelper::route('admin/bookings/updateStatus/' . $item['id']) ?>" method="POST" class="block">
+                          <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                          <input type="hidden" name="status" value="confirmed">
+                          <button type="submit"
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 <?= $item['booking_status'] == 'confirmed' ? 'bg-gray-100 font-medium' : '' ?>">
+                            <span class="flex items-center">
+                              <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
+                              Đã xác nhận
+                            </span>
+                          </button>
+                        </form>
+
+                        <form action="<?= UrlHelper::route('admin/bookings/updateStatus/' . $item['id']) ?>" method="POST" class="block">
+                          <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                          <input type="hidden" name="status" value="completed">
+                          <button type="submit"
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 <?= $item['booking_status'] == 'completed' ? 'bg-gray-100 font-medium' : '' ?>">
+                            <span class="flex items-center">
+                              <span class="w-2 h-2 rounded-full bg-green-600 mr-2"></span>
+                              Hoàn thành
+                            </span>
+                          </button>
+                        </form>
+
+                        <form action="<?= UrlHelper::route('admin/bookings/updateStatus/' . $item['id']) ?>" method="POST" class="block">
+                          <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                          <input type="hidden" name="status" value="cancelled">
+                          <button type="submit"
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600 hover:text-red-800">
+                            <span class="flex items-center">
+                              <span class="w-2 h-2 rounded-full bg-red-400 mr-2"></span>
+                              Hủy đặt tour
+                            </span>
+                          </button>
+                        </form>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </td>
+              </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
@@ -360,16 +360,16 @@ $title = 'Quản lý đặt tours';
     <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
       <div class="flex-1 flex justify-between sm:hidden">
         <?php if ($bookings['pagination']['current_page'] > 1): ?>
-        <a href="?page=<?= $bookings['pagination']['current_page'] - 1 ?>"
-          class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-          Trước
-        </a>
+          <a href="?page=<?= $bookings['pagination']['current_page'] - 1 ?>"
+            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            Trước
+          </a>
         <?php endif; ?>
         <?php if ($bookings['pagination']['current_page'] < $bookings['pagination']['total_pages']): ?>
-        <a href="?page=<?= $bookings['pagination']['current_page'] + 1 ?>"
-          class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-          Sau
-        </a>
+          <a href="?page=<?= $bookings['pagination']['current_page'] + 1 ?>"
+            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            Sau
+          </a>
         <?php endif; ?>
       </div>
       <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
@@ -387,12 +387,12 @@ $title = 'Quản lý đặt tours';
         <div>
           <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             <?php for ($i = 1; $i <= $bookings['pagination']['total_pages']; $i++): ?>
-            <a href="<?= UrlHelper::route('admin/bookings?page=' . $i) ?>" class="relative inline-flex items-center px-4 py-2 border text-sm font-medium 
+              <a href="<?= UrlHelper::route('admin/bookings?page=' . $i) ?>" class="relative inline-flex items-center px-4 py-2 border text-sm font-medium 
               <?= (int)$i === (int)$bookings['pagination']['current_page']
                 ? 'z-10 bg-teal-50 border-teal-500 text-teal-600 font-bold'
                 : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50' ?>">
-              <?= $i ?>
-            </a>
+                <?= $i ?>
+              </a>
             <?php endfor; ?>
           </nav>
         </div>
@@ -512,37 +512,37 @@ $title = 'Quản lý đặt tours';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const changeStatusBtns = document.querySelectorAll('.change-status-btn');
-  const modal = document.getElementById('change-status-modal');
-  const cancelBtn = document.getElementById('cancel-status-change');
+  document.addEventListener('DOMContentLoaded', function() {
+    const changeStatusBtns = document.querySelectorAll('.change-status-btn');
+    const modal = document.getElementById('change-status-modal');
+    const cancelBtn = document.getElementById('cancel-status-change');
 
-  // Debug - Kiểm tra các phần tử
-  console.log("Modal:", modal);
-  console.log("Change status buttons:", changeStatusBtns.length);
-  console.log("Cancel button:", cancelBtn);
+    // Debug - Kiểm tra các phần tử
+    console.log("Modal:", modal);
+    console.log("Change status buttons:", changeStatusBtns.length);
+    console.log("Cancel button:", cancelBtn);
 
-  changeStatusBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const bookingId = this.dataset.id;
-      const currentStatus = this.dataset.currentStatus;
-      console.log("Button clicked, status:", currentStatus, "ID:", bookingId);
+    changeStatusBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const bookingId = this.dataset.id;
+        const currentStatus = this.dataset.currentStatus;
+        console.log("Button clicked, status:", currentStatus, "ID:", bookingId);
 
-      // Thiết lập giá trị cho các input ẩn
-      document.getElementById('hidden-status').value = currentStatus;
-      document.getElementById('booking-id-input').value = bookingId;
+        // Thiết lập giá trị cho các input ẩn
+        document.getElementById('hidden-status').value = currentStatus;
+        document.getElementById('booking-id-input').value = bookingId;
 
-      // Mở modal
-      modal.style.display = 'block';
-      modal.classList.remove('hidden');
+        // Mở modal
+        modal.style.display = 'block';
+        modal.classList.remove('hidden');
+      });
+    });
+
+    cancelBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+      modal.classList.add('hidden');
     });
   });
-
-  cancelBtn.addEventListener('click', function() {
-    modal.style.display = 'none';
-    modal.classList.add('hidden');
-  });
-});
 </script>
 
 <?php
@@ -593,11 +593,11 @@ function renderPaymentStatus($status)
 
 
 <style>
-#change-status-modal {
-  display: flex;
-}
+  #change-status-modal {
+    display: flex;
+  }
 
-#change-status-modal.hidden {
-  display: none !important;
-}
+  #change-status-modal.hidden {
+    display: none !important;
+  }
 </style>

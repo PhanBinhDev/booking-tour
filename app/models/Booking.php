@@ -291,6 +291,11 @@ class Booking extends BaseModel
      */
     public function updateStatus($id, $status)
     {
+        $allowedStatuses = ['pending', 'confirmed', 'paid', 'cancelled', 'completed'];
+
+        if (!in_array($status, $allowedStatuses)) {
+            throw new \InvalidArgumentException("Trạng thái không hợp lệ.");
+        }
         return $this->update($id, [
             'status' => $status,
             'updated_at' => date('Y-m-d H:i:s')

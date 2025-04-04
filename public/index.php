@@ -65,6 +65,7 @@ $router->get('/home/news', 'HomeController@news');
 $router->get('/home/news-detail/{id}', 'HomeController@newsDetail');
 $router->get('/home/tours', 'HomeController@tours');
 $router->get('/home/home', 'HomeController@home');
+$router->get('/home/search', 'HomeController@search');
 $router->get('/home/tour-details/{id}', 'HomeController@tourDetail');
 $router->get('/home/bookings/{id}', 'HomeController@bookings');
 
@@ -90,6 +91,9 @@ $router->post('/user/bookings/cancel/{bookingId}', 'HomeController@cancelBooking
 $router->get('/user/reviews', 'UserController@reviews');
 $router->get('/user/change-password', 'UserController@changePassword');
 $router->post('/user/change-password', 'UserController@changePassword');
+$router->get('/user/deleteReview/{id}', 'UserController@deleteReview');
+
+
 
 
 // AUTH
