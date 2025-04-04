@@ -7,7 +7,7 @@
         </div>
 
         <!-- Filters and Sorting -->
-        <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-2">
                 <span class="text-gray-700 font-medium">Lọc theo:</span>
                 <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -30,7 +30,7 @@
                     <option>Đánh giá cao nhất</option>
                 </select>
             </div>
-        </div>
+        </div> -->
 
         <!-- Tour List -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -781,6 +781,23 @@ class ToursController extends BaseController
 
     public function updateStatus($id)
     {
-        $this->view('admin/booking/index');
+        $status = $_POST['status'] ?? null;
+
+        $allowed = ['pending', 'confirmed', 'completed', 'cancelled'];
+
+        if (!in_array($status, $allowed)) {
+            die("Trạng thái không hợp lệ.");
+        }
+
+        $success = $this->bookingModel->updateStatus($id, $status);
+
+        if ($success) {
+            $this->setFlashMessage('success', 'Sửa trạng thái thành công');
+            header("Location: " . UrlHelper::route('admin/bookings'));
+            exit;
+        } else {
+            $this->setFlashMessage('error', 'Sửa trạng thái thất bại');
+            exit;
+        }
     }
 }

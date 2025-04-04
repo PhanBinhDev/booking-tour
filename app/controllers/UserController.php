@@ -6,18 +6,21 @@ use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
 use App\Models\User;
 use App\Models\Booking;
+use App\Models\Reviews;
 use Exception;
-
+use Stripe\Review;
 
 class UserController extends BaseController
 {
     private $userModel;
     private $bookingModel;
+    private $reviewsModel;
 
     public function __construct()
     {
         $this->userModel = new User();
         $this->bookingModel = new Booking();
+        $this->reviewsModel = new Reviews();
     }
 
     public function dashboard()
@@ -168,6 +171,7 @@ class UserController extends BaseController
         $this->view('user/user-bookings', ['bookings' => $bookings]);
     }
 
+
     public function wishlist()
     {
         $this->view('user/wishlist');
@@ -175,6 +179,23 @@ class UserController extends BaseController
 
     public function reviews()
     {
-        $this->view('user/reviews');
+        $currentUser = $this->getCurrentUser();
+        $user_id = $currentUser['id'];
+        $collums = 'tour_reviews.*, tours.title';
+        $condition = ['user_id' => $user_id];
+        $join = [
+            // "LEFT JOIN bookings ON tour_reviews.bookings_id = bookings.id",
+            "JOIN tours ON tours.id = tour_reviews.tour_id"
+        ];
+        $reviews = $this->reviewsModel->getAll($collums, $condition, null, null, null, $join);
+        // var_dump($reviews);
+        $this->view('user/reviews', ['reviews' => $reviews]);
+    }
+    public function deleteReview($id)
+    {
+        $this->reviewsModel->delete($id);
+        header('location:' . UrlHelper::route('user/reviews'));
+        $this->setFlashMessage('success', 'Xóa bình luận thành công');
+        exit;
     }
 }

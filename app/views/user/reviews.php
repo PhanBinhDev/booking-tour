@@ -14,7 +14,7 @@ $title = 'Danh sách đặt tour';
         </div>
 
         <!-- Filters and Sorting -->
-        <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-2">
                 <span class="text-gray-700 font-medium">Lọc theo:</span>
                 <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -37,7 +37,7 @@ $title = 'Danh sách đặt tour';
                     <option>Đánh giá cao nhất</option>
                 </select>
             </div>
-        </div>
+        </div> -->
 
         <!-- Bảng danh sách đặt tour du lịch với scroll horizontal -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden w-full">
@@ -65,40 +65,63 @@ $title = 'Danh sách đặt tour';
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                098
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">tên tour</div>
-                                <div class="text-sm text-gray-500"></div>
-                            </td>
+                        <?php $i = 1;
+                        foreach ($reviews as $review) { ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <?= $i++ ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="<?= UrlHelper::route('home/tour-details/' . $review["tour_id"]) ?>">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <?= $review['title'] ?>
+                                        </div>
+                                    </a>
+                                    <div class="text-sm text-gray-500"></div>
+                                </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    <div class="flex text-yellow-400">
-                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        <div class="flex text-yellow-400">
+                                            <?php
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                if ($review['rating'] >= $i) {
+                                                    echo '<span class="text-yellow-400">★</span>';
+                                                } elseif ($review['rating'] >= $i - 0.5) {
+                                                    echo '<span class="text-yellow-400">⯨</span>';
+                                                } else {
+                                                    echo '<span class="text-gray-300">☆</span>';
+                                                }
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-xs text-gray-500"> nội dung</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    0000đ
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex space-x-2">
-                                    <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
+                                    <div class="text-sm font-regular text-gray-600" style="white-space: pre-line;">
+                                        <?= $review['review'] ?>
+                                    </div>
 
-                                    <button class="text-red-600 hover:text-red-900" title="Xóa">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        <?= $review['created_at'] ?>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <!-- <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button> -->
+
+                                        <a href="<?= UrlHelper::route('user/deleteReview/' . $review['id']) ?>"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này?');">
+                                            <button class="text-red-600 hover:text-red-900" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>

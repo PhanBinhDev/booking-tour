@@ -59,10 +59,16 @@ class HomeController extends BaseController
       "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
       "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
       "LEFT JOIN images ON tour_images.image_id = images.id"
+      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
+      "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
+      "LEFT JOIN images ON tour_images.image_id = images.id"
     ];
 
     $conditions = ["tours.status" => "active", "tours.sale_price" => "> 0"];
 
+    $columns = "tours.id, tours.description, 
+              tour_images.tour_id, tour_images.image_id,
+              images.cloudinary_url,
     $columns = "tours.id, tours.description, 
               tour_images.tour_id, tour_images.image_id,
               images.cloudinary_url,
@@ -79,6 +85,8 @@ class HomeController extends BaseController
     $orderBy = 'tours.id DESC';
     $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
 
+    $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
+
 
     $allTours = $this->tourModel->getAll(
       $columns,
@@ -87,6 +95,7 @@ class HomeController extends BaseController
       8,
       null,
       $join,
+      $groupBy
       $groupBy
     );
 
@@ -99,6 +108,7 @@ class HomeController extends BaseController
       3,
       null,
       $join,
+      $groupBy
       $groupBy
     );
 
@@ -116,9 +126,9 @@ class HomeController extends BaseController
     ]);
   }
 
+
   function about()
   {
-
     $this->view('home/about');
   }
 
@@ -201,14 +211,15 @@ class HomeController extends BaseController
     $categories = $this->categoriesModel->getAll();
     $currentDate = date('Y-m-d');
 
-    // Lấy các tham số lọc từ URL
-    $category_id = isset($_GET['category']) ? (int)$_GET['category'] : null;
+    $category_id = isset($_GET['category']) && $_GET['category'] !== 'Tất cả danh mục' ?
+      filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT) : null;
+    $location_id = isset($_GET['location']) && $_GET['location'] !== 'Tất cả địa điểm' ?
+      filter_input(INPUT_GET, 'location', FILTER_VALIDATE_INT) : null;
     $sort_option = isset($_GET['sort']) ? $_GET['sort'] : 'popular';
     $price_ranges = isset($_GET['price_range']) ? $_GET['price_range'] : [];
     $durations = isset($_GET['duration']) ? $_GET['duration'] : [];
     $ratings = isset($_GET['rating']) ? $_GET['rating'] : [];
 
-    // Xây dựng bộ lọc
     $join = [
       "JOIN tour_categories ON tour_categories.id = tours.category_id",
       "JOIN locations ON locations.id = tours.location_id",
@@ -224,25 +235,28 @@ class HomeController extends BaseController
 
     $conditions = ["tours.status" => "active"];
 
-    // Lọc theo danh mục
     if ($category_id) {
       $conditions["tours.category_id"] = $category_id;
     }
 
-    $columns = "tours.id, tour_images.tour_id, tour_images.image_id,
-              images.cloudinary_url,
-              tr.avg_rating, 
-              tr.review_count,
-              tours.title, tours.price, tours.duration, tours.sale_price,
-              MIN(CASE WHEN tour_dates.start_date >= '$currentDate' THEN tour_dates.start_date ELSE NULL END) as next_start_date,
-              MIN(CASE WHEN tour_dates.end_date >= '$currentDate' THEN tour_dates.end_date ELSE NULL END) as next_end_date,
-              COUNT(DISTINCT tour_dates.id) as date_count,
-              GROUP_CONCAT(DISTINCT CONCAT(tour_dates.start_date, '|', tour_dates.end_date) ORDER BY tour_dates.start_date) as all_dates,
-              tour_categories.name AS category_name, 
-              locations.name AS location_name";
+    if ($location_id) {
+      $conditions["tours.location_id"] = $location_id;
+    }
 
-    // Xác định thứ tự sắp xếp dựa trên tùy chọn
-    $orderBy = 'tours.id DESC'; // Mặc định
+
+    $columns = "tours.id, tour_images.tour_id, tour_images.image_id,
+            images.cloudinary_url,
+            tr.avg_rating, 
+            tr.review_count,
+            tours.title, tours.price, tours.duration, tours.sale_price,
+            MIN(CASE WHEN tour_dates.start_date >= '$currentDate' THEN tour_dates.start_date ELSE NULL END) as next_start_date,
+            MIN(CASE WHEN tour_dates.end_date >= '$currentDate' THEN tour_dates.end_date ELSE NULL END) as next_end_date,
+            COUNT(DISTINCT tour_dates.id) as date_count,
+            GROUP_CONCAT(DISTINCT CONCAT(tour_dates.start_date, '|', tour_dates.end_date) ORDER BY tour_dates.start_date) as all_dates,
+            tour_categories.name AS category_name, 
+            locations.name AS location_name";
+
+    $orderBy = 'tours.id DESC';
     switch ($sort_option) {
       case 'popular':
         $orderBy = 'tr.review_count DESC, tr.avg_rating DESC';
@@ -270,7 +284,6 @@ class HomeController extends BaseController
       $groupBy
     );
 
-    // Truyền dữ liệu thêm để hiển thị trạng thái bộ lọc
     $this->view('home/tours', [
       'allTours' => $allTours,
       'categories' => $categories,

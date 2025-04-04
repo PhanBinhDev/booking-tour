@@ -14,7 +14,7 @@ $title = 'Danh sách đặt tour';
         </div>
 
         <!-- Filters and Sorting -->
-        <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-2">
                 <span class="text-gray-700 font-medium">Lọc theo:</span>
                 <select class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -37,7 +37,7 @@ $title = 'Danh sách đặt tour';
                     <option>Đánh giá cao nhất</option>
                 </select>
             </div>
-        </div>
+        </div> -->
 
         <!-- Bảng danh sách đặt tour du lịch với scroll horizontal -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden w-full">
@@ -65,6 +65,9 @@ $title = 'Danh sách đặt tour';
                                 Thanh toán
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Trạng thái
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Ngày đặt
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -80,7 +83,9 @@ $title = 'Danh sách đặt tour';
                                         <?= $booking['id'] ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900"><?= $booking['title'] ?></div>
+                                        <a href="<?= UrlHelper::route('home/tour-details/' . $booking["tour_id"]) ?>">
+                                            <div class="text-sm font-medium text-gray-900"><?= $booking['title'] ?></div>
+                                        </a>
                                         <div class="text-sm text-gray-500"><?= $booking['duration'] ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -117,6 +122,26 @@ $title = 'Danh sách đặt tour';
 
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <?php
+                                        $status = [
+                                            'completed' => 'bg-green-100 text-green-800',
+                                            'confirmed' => 'bg-green-100 text-blue-800',
+                                            'cancelled' => 'bg-red-100 text-red-800',
+                                            'pending' => 'bg-gray-100 text-gray-800'
+                                        ][$booking['status']] ?? 'bg-gray-100 text-gray-800';
+
+                                        $label = [
+                                            'completed' => 'Hoàn thành',
+                                            'confirmed' => 'Đã xác nhận',
+                                            'cancelled' => 'Đã huỷ',
+                                            'pending' => 'Chờ xử lý'
+                                        ][$booking['status']] ?? $booking['status'];
+                                        ?>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $status ?>">
+                                            <?= $label ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <?= $booking['created_at'] ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -126,7 +151,7 @@ $title = 'Danh sách đặt tour';
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                             </a>
-                                            <a href="">
+                                            <a href="<?= UrlHelper::route('user/bookings/cancel/' . $booking["id"]) ?>">
                                                 <button class="text-red-600 hover:text-red-900" title="Xóa">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
