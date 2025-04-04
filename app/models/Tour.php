@@ -29,22 +29,22 @@ class Tour extends BaseModel
 
         // Build the base query
         $sql = "SELECT t.id, t.title, t.slug, t.description, t.duration, t.group_size, 
-                       t.price, t.sale_price, t.status, t.featured, t.views, 
-                       t.created_at, t.updated_at, 
-                       tc.name as category_name, l.name as location_name, 
-                       dl.name as departure_location_name
-                FROM {$this->table} t
-                LEFT JOIN tour_categories tc ON t.category_id = tc.id
-                LEFT JOIN locations l ON t.location_id = l.id
-                LEFT JOIN locations dl ON t.departure_location_id = dl.id
-                WHERE 1=1";
+                   t.price, t.sale_price, t.status, t.featured, t.views, 
+                   t.created_at, t.updated_at, 
+                   tc.name as category_name, l.name as location_name, 
+                   dl.name as departure_location_name
+            FROM {$this->table} t
+            LEFT JOIN tour_categories tc ON t.category_id = tc.id
+            LEFT JOIN locations l ON t.location_id = l.id
+            LEFT JOIN locations dl ON t.departure_location_id = dl.id
+            WHERE 1=1";
 
         $countSql = "SELECT COUNT(*) as total
-                     FROM {$this->table} t
-                     LEFT JOIN tour_categories tc ON t.category_id = tc.id
-                     LEFT JOIN locations l ON t.location_id = l.id
-                     LEFT JOIN locations dl ON t.departure_location_id = dl.id
-                     WHERE 1=1";
+                 FROM {$this->table} t
+                 LEFT JOIN tour_categories tc ON t.category_id = tc.id
+                 LEFT JOIN locations l ON t.location_id = l.id
+                 LEFT JOIN locations dl ON t.departure_location_id = dl.id
+                 WHERE 1=1";
 
         $params = [];
         $countParams = [];
@@ -73,11 +73,11 @@ class Tour extends BaseModel
 
         // Add sorting and pagination
         $sql .= " GROUP BY t.id, t.title, t.slug, t.description, t.duration, t.group_size, 
-                         t.price, t.sale_price, t.status, t.featured, t.views, 
-                         t.created_at, t.updated_at, 
-                         tc.name, l.name, dl.name
-                  ORDER BY t.{$sortBy} {$sortOrder}
-                  LIMIT :limit OFFSET :offset";
+                     t.price, t.sale_price, t.status, t.featured, t.views, 
+                     t.created_at, t.updated_at, 
+                     tc.name, l.name, dl.name
+              ORDER BY t.{$sortBy} {$sortOrder}
+              LIMIT :limit OFFSET :offset";
         $params[':limit'] = $limit;
         $params[':offset'] = $offset;
 
@@ -97,6 +97,24 @@ class Tour extends BaseModel
         }
         $stmt->execute();
         $items = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Get only image paths for each tour
+        foreach ($items as &$item) {
+            $imagesSql = "SELECT 
+                        CASE 
+                            WHEN i.cloudinary_url IS NOT NULL AND i.cloudinary_url != '' 
+                            THEN i.cloudinary_url 
+                            ELSE i.file_path 
+                        END as image_path
+                    FROM tour_images ti
+                    JOIN images i ON ti.image_id = i.id
+                    WHERE ti.tour_id = :tour_id
+                    ORDER BY ti.is_featured DESC, ti.sort_order ASC";
+            $imagesStmt = $this->db->prepare($imagesSql);
+            $imagesStmt->bindValue(':tour_id', $item['id'], \PDO::PARAM_INT);
+            $imagesStmt->execute();
+            $item['tour_images'] = $imagesStmt->fetchAll(\PDO::FETCH_COLUMN);
+        }
 
         // Calculate pagination metadata
         $totalPages = ceil($total / $limit);
@@ -131,17 +149,35 @@ class Tour extends BaseModel
                 locations.latitude AS location_la,
                 tour_categories.name AS category_name, 
                 tour_dates.start_date, 
-                tour_dates.end_date 
+                tour_dates.end_date,
+                GROUP_CONCAT(images.cloudinary_url) AS images
             FROM tours
             LEFT JOIN tour_categories ON tours.category_id = tour_categories.id 
             LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id 
             LEFT JOIN locations ON locations.id = tours.location_id 
-            WHERE tours.id = :id";
+            LEFT JOIN tour_images ON tour_images.tour_id = tours.id
+            LEFT JOIN images ON images.id = tour_images.image_id
+            WHERE tours.id = :id
+            GROUP BY tours.id, locations.name, locations.description, locations.latitude, 
+                     tour_categories.name, tour_dates.start_date, tour_dates.end_date";
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $tourId, \PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Chuyển danh sách URL từ chuỗi thành mảng
+        if ($result && !empty($result['images'])) {
+            $result['images'] = explode(',', $result['images']);
+        } else {
+            $result['images'] = [];
+        }
+
+        return $result;
     }
+
+
     /**
      * Retrieves the most popular tours based on bookings and ratings.
      *
@@ -294,7 +330,69 @@ class Tour extends BaseModel
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($data);
+        return $this->db->lastInsertId();
     }
+
+    public function attachImage($tourId, $imageId, $is_featured = null)
+    {
+        $sql = "INSERT INTO `tour_images` (`tour_id`, `image_id`, `is_featured` ) VALUES (:tour_id, :image_id, :is_featured)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'tour_id' => $tourId,
+            'image_id' => $imageId,
+            'is_featured' => $is_featured
+        ]);
+    }
+
+    public function updateImage($tourId, $imageId, $isFeatured = null)
+    {
+        $sql = "UPDATE `tour_images` SET ";
+
+        $params = ['tour_id' => $tourId, 'image_id' => $imageId];
+
+        if (!is_null($isFeatured)) {
+            $sql .= "`is_featured` = :is_featured, ";
+            $params['is_featured'] = $isFeatured;
+        }
+
+        $sql = rtrim($sql, ', ');
+
+        $sql .= " WHERE `tour_id` = :tour_id AND `image_id` = :image_id";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    public function getFeaturedImageByTourId($tourId)
+    {
+        $sql = "
+        SELECT i.file_path, i.file_name, i.file_type, i.cloudinary_url
+        FROM tour_images ti
+        INNER JOIN images i ON ti.image_id = i.id
+        WHERE ti.tour_id = :tour_id AND ti.is_featured = 1
+        LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['tour_id' => $tourId]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllImagesExcludingFeatured($tourId)
+    {
+        $sql = "
+        SELECT i.cloudinary_url
+        FROM tour_images ti
+        INNER JOIN images i ON ti.image_id = i.id
+        WHERE ti.tour_id = :tour_id AND ti.is_featured = 0
+        ORDER BY ti.sort_order ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['tour_id' => $tourId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function updateTour($data)
     {

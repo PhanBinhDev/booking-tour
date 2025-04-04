@@ -279,7 +279,9 @@ use App\Helpers\UrlHelper;
                   ID
                   <?php if ($sort == 'id'): ?>
                     <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                     <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
@@ -293,7 +295,9 @@ use App\Helpers\UrlHelper;
                   Tên tour
                   <?php if ($sort == 'title'): ?>
                     <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                     <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
@@ -307,7 +311,9 @@ use App\Helpers\UrlHelper;
                   Giá
                   <?php if ($sort == 'price'): ?>
                     <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                     <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
@@ -324,7 +330,9 @@ use App\Helpers\UrlHelper;
                   Ngày tạo
                   <?php if ($sort == 'created_at'): ?>
                     <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
+                    <i class="fas fa-sort-<?= ($direction == 'asc') ? 'up' : 'down' ?> ml-1"></i>
                   <?php else: ?>
+                    <i class="fas fa-sort ml-1 text-gray-300"></i>
                     <i class="fas fa-sort ml-1 text-gray-300"></i>
                   <?php endif; ?>
                 </a>
@@ -342,8 +350,8 @@ use App\Helpers\UrlHelper;
                     <?= $item["id"] ?>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <?php if (!empty($item['featured_image'])): ?>
-                      <img src="<?= $item['featured_image'] ?>" alt="<?= $item['title'] ?>"
+                    <?php if (!empty($item['tour_images'][0])): ?>
+                      <img src="<?= $item['tour_images'][0] ?>" alt="<?= $item['title'] ?>"
                         class="h-12 w-20 object-cover rounded">
                     <?php else: ?>
                       <img src="<?= UrlHelper::asset('images/no-image.jpg') ?>" alt="No Image"
@@ -407,7 +415,35 @@ use App\Helpers\UrlHelper;
                   </td>
                 </tr>
               <?php endforeach; ?>
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $statusClass ?>">
+                <?= $statusLabel ?>
+              </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <?= date('d/m/Y', strtotime($item["created_at"])) ?>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <a href="<?= UrlHelper::route('admin/tours/editTour/' . $item['id']) ?>">
+                    <button class="text-teal-600 hover:text-teal-900" title="Chỉnh sửa">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </a>
+                  <a href="<?= UrlHelper::route('admin/tours/deleteTour/' . $item['id']) ?>"
+                    onclick="return confirm('Bạn có chắc chắn muốn xóa tour này?');">
+                    <button class="text-red-600 hover:text-red-900" title="Xóa">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </a>
+                </div>
+              </td>
+              </tr>
             <?php else: ?>
+              <tr>
+                <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500">
+                  Không tìm thấy tour nào phù hợp với điều kiện tìm kiếm.
+                </td>
+              </tr>
               <tr>
                 <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500">
                   Không tìm thấy tour nào phù hợp với điều kiện tìm kiếm.
@@ -425,46 +461,68 @@ use App\Helpers\UrlHelper;
             <div class="text-sm text-gray-600 mb-4 sm:mb-0">
               Hiển thị <?= $pagination['from'] ?> đến <?= $pagination['to'] ?> trong số <?= $pagination['total'] ?> tour
             </div>
+            <div class="px-6 py-4 bg-white border-t border-gray-200">
+              <div class="flex flex-col sm:flex-row justify-between items-center">
+                <div class="text-sm text-gray-600 mb-4 sm:mb-0">
+                  Hiển thị <?= $pagination['from'] ?> đến <?= $pagination['to'] ?> trong số <?= $pagination['total'] ?> tour
+                </div>
 
-            <!-- Các nút phân trang -->
-            <div class="flex flex-wrap items-center space-x-1">
-              <?php if ($pagination['has_prev_page']): ?>
-                <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] - 1]) ?>"
-                  class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
-                  &laquo; Trước
-                </a>
-              <?php endif; ?>
+                <!-- Các nút phân trang -->
+                <div class="flex flex-wrap items-center space-x-1">
+                  <?php if ($pagination['has_prev_page']): ?>
+                    <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] - 1]) ?>"
+                      class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                      &laquo; Trước
+                    </a>
+                  <?php endif; ?>
+                  <!-- Các nút phân trang -->
+                  <div class="flex flex-wrap items-center space-x-1">
+                    <?php if ($pagination['has_prev_page']): ?>
+                      <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] - 1]) ?>"
+                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                        &laquo; Trước
+                      </a>
+                    <?php endif; ?>
 
-              <?php
-              // Hiển thị các số trang
-              $start = max(1, $pagination['current_page'] - 2);
-              $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                    <?php
+                    // Hiển thị các số trang
+                    $start = max(1, $pagination['current_page'] - 2);
+                    $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
 
-              if ($start > 1) {
-                echo '<a href="' . UrlHelper::buildQueryString(['page' => 1]) . '" 
+                    if ($start > 1) {
+                      echo '<a href="' . UrlHelper::buildQueryString(['page' => 1]) . '" 
                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">1</a>';
-                if ($start > 2) {
-                  echo '<span class="px-2 text-gray-500">...</span>';
-                }
-              }
+                      if ($start > 2) {
+                        echo '<span class="px-2 text-gray-500">...</span>';
+                      }
+                    }
 
-              for ($i = $start; $i <= $end; $i++) {
-                $isActive = $i === $pagination['current_page'];
-                echo '<a href="' . UrlHelper::buildQueryString(['page' => $i]) . '" 
+                    for ($i = $start; $i <= $end; $i++) {
+                      $isActive = $i === $pagination['current_page'];
+                      echo '<a href="' . UrlHelper::buildQueryString(['page' => $i]) . '" 
                        class="px-3 py-1 border rounded-md text-sm ' .
-                  ($isActive ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') .
-                  '">' . $i . '</a>';
-              }
+                        ($isActive ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') .
+                        '">' . $i . '</a>';
+                    }
 
-              if ($end < $pagination['total_pages']) {
-                if ($end < $pagination['total_pages'] - 1) {
-                  echo '<span class="px-2 text-gray-500">...</span>';
-                }
-                echo '<a href="' . UrlHelper::buildQueryString(['page' => $pagination['total_pages']]) . '" 
+                    if ($end < $pagination['total_pages']) {
+                      if ($end < $pagination['total_pages'] - 1) {
+                        echo '<span class="px-2 text-gray-500">...</span>';
+                      }
+                      echo '<a href="' . UrlHelper::buildQueryString(['page' => $pagination['total_pages']]) . '" 
                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">' . $pagination['total_pages'] . '</a>';
-              }
-              ?>
+                    }
+                    ?>
 
+                    <?php if ($pagination['has_next_page']): ?>
+                      <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] + 1]) ?>"
+                        class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                        Sau &raquo;
+                      </a>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </div>
               <?php if ($pagination['has_next_page']): ?>
                 <a href="<?= UrlHelper::buildQueryString(['page' => $pagination['current_page'] + 1]) ?>"
                   class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">

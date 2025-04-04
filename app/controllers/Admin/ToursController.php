@@ -133,6 +133,7 @@ class ToursController extends BaseController
         $result = $this->tourModel->getPaginated($page, $limit, $filters, $sort, $direction);
 
         // Lấy danh sách danh mục cho bộ lọc
+
         $tourCategories = $this->categoriesModel->getAll();
         $locations = $this->categoriesModel->getTitle('id', 'name', 'locations');
 
@@ -196,24 +197,37 @@ class ToursController extends BaseController
             $meta_description = $_POST['meta_description'] ?? '';
             $status = $_POST['status'] ?? 'active';
             $featured = isset($_POST['featured']) ? 1 : 0;
+            $is_featured = 1;
 
-            // if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
-            //     try {
+            // Xử lý upload ảnh đại diện
+            $imageData = [
+                'title' => $title,
+                'description' => $description,
+                'alt_text' => $title,
+                'category' => 'tour',
+                'user_id' => $currentUserId
+            ];
 
-            //         // Upload ảnh và lưu thông tin
-            //         $uploadResult = CloudinaryHelper::upload($_FILES['featured_image']['tmp_name'], 'tour_image');
-
-            //         if (!isset($uploadResult['secure_url'])) {
-            //             throw new Exception('Lỗi khi upload ảnh');
-            //         }
-
-            //         $imageUrl = $uploadResult['secure_url'];
-            //         $formData['image'] = $imageUrl;
-            //     } catch (Exception $e) {
-            //         $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
-            //         return;
-            //     }
-            // }
+            try {
+                $imageId = CloudinaryHelper::uploadAndSave(
+                    $_FILES['featured_image']['tmp_name'],
+                    $imageData,
+                    'tour_image',
+                    $currentUserId
+                );
+                if (!$imageId) {
+                    throw new \Exception("Không thể upload và lưu hình ảnh");
+                }
+                $tourData['image_id'] = $imageId;
+            } catch (\Exception $e) {
+                $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
+                $this->view('admin/tours/createTour', [
+                    'categories' => $categories,
+                    'locations' => $locations,
+                    'formData' => $_POST
+                ]);
+                return;
+            }
 
             $tourData = [
                 'title' => $title,
@@ -239,10 +253,48 @@ class ToursController extends BaseController
                 'updated_by' => $currentUserId,
             ];
 
-            $this->tourModel->insertTour($tourData);
+            $tourId = $this->tourModel->insertTour($tourData);
+            $this->tourModel->attachImage($tourId, $imageId, $is_featured);
+
+            // Xử lý upload nhiều ảnh chi tiết
+            if (isset($_FILES['detail_image']) && !empty($_FILES['detail_image']['name'][0])) {
+                $detailImagesCount = count($_FILES['detail_image']['name']);
+                $detailImageIds = [];
+
+                for ($i = 0; $i < $detailImagesCount; $i++) {
+                    // Kiểm tra nếu file hợp lệ
+                    if ($_FILES['detail_image']['error'][$i] === UPLOAD_ERR_OK) {
+                        $tempFile = $_FILES['detail_image']['tmp_name'][$i];
+                        $detailImageData = [
+                            'title' => $title . ' - Chi tiết ' . ($i + 1),
+                            'description' => 'Hình ảnh chi tiết cho tour: ' . $title,
+                            'alt_text' => $title . ' chi tiết',
+                            'category' => 'tour_detail',
+                            'user_id' => $currentUserId
+                        ];
+
+                        try {
+                            $detailImageId = CloudinaryHelper::uploadAndSave(
+                                $tempFile,
+                                $detailImageData,
+                                'tour_detail_image',
+                                $currentUserId
+                            );
+
+                            if ($detailImageId) {
+                                $detailImageIds[] = $detailImageId;
+                                $this->tourModel->attachImage($tourId, $detailImageId, 0);
+                            }
+                        } catch (\Exception $e) {
+                            error_log('Lỗi khi upload ảnh chi tiết ' . ($i + 1) . ': ' . $e->getMessage());
+                            continue;
+                        }
+                    }
+                }
+            }
+
             $this->setFlashMessage('success', 'Thêm tour thành công');
             header('location:' . UrlHelper::route('admin/tours'));
-
             exit;
         }
 
@@ -301,6 +353,9 @@ class ToursController extends BaseController
         $currentTour = $this->tourModel->getTourDetails($id);
         $categories = $this->categoriesModel->getTitle('id', 'name', 'tour_categories');
         $locations = $this->categoriesModel->getTitle('id', 'name', 'locations');
+        $feature_img = $this->tourModel->getFeaturedImageByTourId($id);
+        $details_img = $this->tourModel->getAllImagesExcludingFeatured($id);
+        var_dump($details_img);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Thông tin cơ bản
@@ -369,6 +424,65 @@ class ToursController extends BaseController
                 'id' => $id,
             ];
 
+            if (isset($_FILES['featured_image']) &&  !empty($_FILES['featured_image']['tmp_name'])) {
+                $imageData = [
+                    'title' => $title,
+                    'description' => $description,
+                    'alt_text' => $title,
+                    'category' => 'tour',
+                    'user_id' => $currentUserId
+                ];
+
+                try {
+                    $imageId = CloudinaryHelper::uploadAndSave(
+                        $_FILES['featured_image']['tmp_name'],
+                        $imageData,
+                        'tour_image',
+                        $currentUserId
+                    );
+
+                    if ($imageId) {
+                        $this->tourModel->updateImage($currentTour['id'], $imageId, 1);
+                    }
+                } catch (\Exception $e) {
+                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh đại diện: ' . $e->getMessage());
+                }
+            }
+
+            // Xử lý upload nhiều ảnh chi tiết
+            if (isset($_FILES['detail_image']) && !empty($_FILES['detail_image']['name'][0])) {
+                $detailImagesCount = count($_FILES['detail_image']['name']);
+
+                for ($i = 0; $i < $detailImagesCount; $i++) {
+                    if ($_FILES['detail_image']['error'][$i] === UPLOAD_ERR_OK && !empty($_FILES['detail_image']['tmp_name'][$i])) {
+                        $tempFile = $_FILES['detail_image']['tmp_name'][$i];
+                        $detailImageData = [
+                            'title' => $title . ' - Chi tiết ' . ($i + 1),
+                            'description' => 'Hình ảnh chi tiết cho tour: ' . $title,
+                            'alt_text' => $title . ' chi tiết',
+                            'category' => 'tour_detail',
+                            'user_id' => $currentUserId
+                        ];
+
+                        try {
+                            $detailImageId = CloudinaryHelper::uploadAndSave(
+                                $tempFile,
+                                $detailImageData,
+                                'tour_detail_image',
+                                $currentUserId
+                            );
+
+                            if ($detailImageId) {
+                                $this->tourModel->updateImage($currentTour['id'], $detailImageId, 0);
+                            }
+                        } catch (\Exception $e) {
+                            error_log('Lỗi khi upload ảnh chi tiết ' . ($i + 1) . ': ' . $e->getMessage());
+                            continue;
+                        }
+                    }
+                }
+            }
+
             $result = $this->tourModel->updateTour($tourData);
             if ($result) {
                 $this->setFlashMessage('success', 'Sửa tour thành công');
@@ -381,7 +495,9 @@ class ToursController extends BaseController
             $this->view('admin/tours/editTour', [
                 'tour' => $currentTour,
                 'categories' => $categories,
-                'locations' => $locations
+                'locations' => $locations,
+                'feature_img' => $feature_img,
+                'details_img' => $details_img
             ]);
         }
     }

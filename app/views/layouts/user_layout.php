@@ -125,11 +125,7 @@ use App\Helpers\UrlHelper;
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Danh sách yêu thích</a>
               <a href="<?= UrlHelper::route('user/reviews') ?>"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Đánh giá của tôi</a>
-              <?php if (isset($_SESSION['role_id']) && $_SESSION['role_id'] <= 3): ?>
-                <div class="border-t border-gray-100 my-1"></div>
-                <a href="<?= UrlHelper::route('admin') ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem">Quản trị hệ thống</a>
-              <?php endif; ?>
+
               <div class="border-t border-gray-100 my-1"></div>
               <a href="<?= UrlHelper::route('auth/logout') ?>"
                 class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">Đăng xuất</a>

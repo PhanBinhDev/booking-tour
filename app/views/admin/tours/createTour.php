@@ -136,21 +136,44 @@ use App\Helpers\UrlHelper;
                             <p class="mt-1 text-xs text-gray-500">Liệt kê các dịch vụ không bao gồm trong tour</p>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh tour</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-150 border-dashed rounded-md">
-                                <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <div class="flex text-sm text-gray-600">
-                                        <label for="file-featured_image" class="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500">
-                                            <span>Tải lên hình ảnh</span>
-                                            <input type="file" id="featured_image" name="featured_image" multiple>
-                                        </label>
-
+                        <div class="flex flex-col md:flex-row md:space-x-4">
+                            <!-- Hình ảnh nổi bật (Featured Image) - Smaller and on the left -->
+                            <div class="w-full md:w-1/3 mb-4 md:mb-0">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hình ảnh nổi bật</label>
+                                <div class="mt-1 border-2 border-gray-200 border-dashed rounded-lg hover:bg-gray-50 transition-colors duration-150 h-full">
+                                    <div id="featured-image-preview" class="hidden p-2 flex flex-wrap gap-2"></div>
+                                    <div id="featured-image-upload" class="p-4 text-center">
+                                        <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600 justify-center mt-2">
+                                            <label for="featured_image" class="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-emerald-500 px-3 py-1.5">
+                                                <span>Tải lên hình ảnh</span>
+                                                <input type="file" id="featured_image" name="featured_image" accept="image/*" class="sr-only">
+                                            </label>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF tối đa 10MB</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">PNG, JPG, GIF tối đa 10MB</p>
+                                </div>
+                            </div>
+
+                            <!-- Hình ảnh chi tiết (Detail Images) - On the right -->
+                            <div class="w-full md:w-2/3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hình ảnh chi tiết</label>
+                                <div class="mt-1 border-2 border-gray-200 border-dashed rounded-lg hover:bg-gray-50 transition-colors duration-150 h-full">
+                                    <div id="detail-images-preview" class="hidden p-2 flex flex-wrap gap-2"></div>
+                                    <div id="detail-images-upload" class="p-4 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600 justify-center mt-2">
+                                            <label for="file-detail_image" class="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-emerald-500 px-3 py-1.5">
+                                                <span>Tải lên hình ảnh</span>
+                                                <input type="file" id="file-detail_image" name="detail_image[]" accept="image/*" multiple class="sr-only">
+                                            </label>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF tối đa 10MB</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -395,6 +418,137 @@ use App\Helpers\UrlHelper;
             });
 
             dayCount = days.length;
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup for featured image (single image)
+        setupImageUpload('featured_image', 'featured-image-preview', 'featured-image-upload', false);
+
+        // Setup for detail images (multiple images)
+        setupImageUpload('file-detail_image', 'detail-images-preview', 'detail-images-upload', true);
+
+        function setupImageUpload(inputId, previewId, uploadId, multiple) {
+            const input = document.getElementById(inputId);
+            const previewContainer = document.getElementById(previewId);
+            const uploadContainer = document.getElementById(uploadId);
+
+            // Store selected files for multiple uploads
+            let selectedFiles = [];
+
+            input.addEventListener('change', function() {
+                const files = this.files;
+
+                if (files.length === 0) return;
+
+                // Clear previous preview for single image
+                if (!multiple) {
+                    previewContainer.innerHTML = '';
+                    selectedFiles = [];
+                }
+
+                // Process each selected file
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+
+                    // Validate file is an image
+                    if (!file.type.startsWith('image/')) continue;
+
+                    // Add to selected files array
+                    selectedFiles.push(file);
+
+                    // Create preview element
+                    const previewWrapper = document.createElement('div');
+                    previewWrapper.className = 'relative group';
+
+                    const preview = document.createElement('div');
+                    preview.className = 'w-24 h-24 border rounded-md overflow-hidden bg-gray-100';
+
+                    const img = document.createElement('img');
+                    img.className = 'w-full h-full object-cover';
+                    img.alt = 'Preview';
+
+                    // Create remove button
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'absolute top-0 right-1 text-gray rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.type = 'button';
+
+                    // Read file and set image source
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Add event listener to remove button
+                    removeBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Remove from selected files
+                        const index = selectedFiles.indexOf(file);
+                        if (index > -1) {
+                            selectedFiles.splice(index, 1);
+                        }
+
+                        // Remove preview
+                        previewWrapper.remove();
+
+                        // Update input files
+                        updateInputFiles(input, selectedFiles, multiple);
+
+                        // Show/hide containers based on whether we have files
+                        toggleContainers();
+                    });
+
+                    // Assemble preview
+                    preview.appendChild(img);
+                    previewWrapper.appendChild(preview);
+                    previewWrapper.appendChild(removeBtn);
+                    previewContainer.appendChild(previewWrapper);
+
+                    // Show preview container, hide upload container if needed
+                    toggleContainers();
+                }
+
+            });
+
+            // Function to toggle visibility of containers
+            function toggleContainers() {
+                if (selectedFiles.length > 0) {
+                    previewContainer.classList.remove('hidden');
+                    previewContainer.classList.add('flex');
+
+                    // For single image, hide upload container
+                    if (!multiple) {
+                        uploadContainer.classList.add('hidden');
+                    }
+                } else {
+                    previewContainer.classList.add('hidden');
+                    previewContainer.classList.remove('flex');
+                    uploadContainer.classList.remove('hidden');
+                }
+            }
+
+            // Function to update the input files
+            function updateInputFiles(input, files, multiple) {
+                // Create a new DataTransfer object
+                const dataTransfer = new DataTransfer();
+
+                // Add files to DataTransfer
+                files.forEach(file => {
+                    dataTransfer.items.add(file);
+                });
+
+                // Set the input files to our updated list
+                input.files = dataTransfer.files;
+
+                // If no files and single image, show upload container
+                if (files.length === 0 && !multiple) {
+                    uploadContainer.classList.remove('hidden');
+                }
+            }
         }
     });
 </script>

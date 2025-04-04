@@ -184,7 +184,7 @@ $title = 'Trang chủ - Di Travel';
               <div class="relative">
                 <!-- Tour Image -->
                 <div class="h-56 overflow-hidden">
-                  <img src="" alt="<?= $tour['title'] ?>"
+                  <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
 
@@ -313,7 +313,7 @@ $title = 'Trang chủ - Di Travel';
               <div class="relative">
                 <!-- Tour Image -->
                 <div class="h-56 overflow-hidden">
-                  <img src="" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                  <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
 
                 <!-- Discount Badge -->
