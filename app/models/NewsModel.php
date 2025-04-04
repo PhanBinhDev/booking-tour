@@ -526,4 +526,5 @@ class NewsModel extends BaseModel
             return false;
         }
     }
+    
 }
