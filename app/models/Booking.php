@@ -3,6 +3,8 @@
 
 namespace App\Models;
 
+use PDO;
+
 class Booking extends BaseModel
 {
     protected $table = 'bookings';
@@ -757,5 +759,333 @@ class Booking extends BaseModel
             'booking_history' => $bookingHistory,
             'invoice' => $invoice
         ];
+    }
+
+    public function findBy($column, $value, $jsonSearch = false)
+    {
+        if ($jsonSearch) {
+            // Search within JSON columns
+            $sql = "SELECT * FROM {$this->table} WHERE JSON_CONTAINS(payment_details, :value) LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $jsonValue = json_encode(['payment_intent_id' => $value]);
+            $stmt->bindParam(':value', $jsonValue);
+        } else {
+            // Regular column search
+            $sql = "SELECT * FROM {$this->table} WHERE {$column} = :value LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':value', $value);
+        }
+
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create($data)
+    {
+        // Define valid columns that exist in the database
+        $validColumns = [
+            'booking_number',
+            'user_id',
+            'tour_id',
+            'tour_date_id',
+            'adults',
+            'children',
+            'total_price',
+            'status',
+            'payment_status',
+            'payment_method',
+            'transaction_id',
+            'special_requirements',
+            'created_at',
+            'updated_at'
+        ];
+
+        $columns = [];
+        $placeholders = [];
+        $values = [];
+
+        foreach ($data as $column => $value) {
+            // Only include columns that exist in the database
+            if (in_array($column, $validColumns)) {
+                $columns[] = $column;
+                $placeholders[] = ":$column";
+                $values[":$column"] = $value;
+            }
+        }
+
+        // Add created_at if not provided
+        if (!isset($data['created_at'])) {
+            $columns[] = 'created_at';
+            $placeholders[] = ':created_at';
+            $values[':created_at'] = date('Y-m-d H:i:s');
+        }
+
+        $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
+                VALUES (" . implode(', ', $placeholders) . ")";
+
+        $stmt = $this->db->prepare($sql);
+        foreach ($values as $placeholder => $value) {
+            $stmt->bindValue($placeholder, $value);
+        }
+
+        $stmt->execute();
+        return $this->db->lastInsertId();
+    }
+
+    public function addPassenger(array $data)
+    {
+        // First, determine which fields actually exist in the booking_customers table
+        // by checking which ones are provided in the data array
+        $columns = ['booking_id', 'full_name', 'type'];
+        $values = [':booking_id', ':full_name', ':type'];
+        $params = [
+            ':booking_id' => $data['booking_id'],
+            ':full_name' => $data['full_name'],
+            ':type' => $data['type'],
+        ];
+
+        // Conditionally add other fields only if they're provided and not null
+        $possibleFields = [
+            'email',
+            'phone',
+            'address',
+            'passport_number',
+            'date_of_birth'
+        ];
+
+        foreach ($possibleFields as $field) {
+            if (isset($data[$field]) && $data[$field] !== null) {
+                $columns[] = $field;
+                $values[] = ":$field";
+                $params[":$field"] = $data[$field];
+            }
+        }
+
+        // Always add created_at
+        $columns[] = 'created_at';
+        $values[] = ':created_at';
+        $params[':created_at'] = date('Y-m-d H:i:s');
+
+        $sql = "INSERT INTO booking_customers (" . implode(', ', $columns) . ") 
+            VALUES (" . implode(', ', $values) . ")";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute($params);
+        } catch (\PDOException $e) {
+            error_log("Error adding passenger: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Create a new payment record
+     * 
+     * @param array $data Payment data
+     * @return int|bool The ID of the new payment or false on failure
+     */
+    public function createPayment(array $data)
+    {
+        // Define valid columns for the payments table
+        $validColumns = [
+            'booking_id',
+            'payment_method_id',
+            'transaction_id',
+            'transaction_id_internal',
+            'refund_id',
+            'amount',
+            'currency',
+            'status',
+            'payment_data',
+            'notes',
+            'payer_name',
+            'payer_email',
+            'payer_phone',
+            'payment_date',
+            'created_at',
+            'updated_at'
+        ];
+
+        $columns = [];
+        $placeholders = [];
+        $values = [];
+
+        foreach ($data as $column => $value) {
+            // Only include columns that exist in the database
+            if (in_array($column, $validColumns)) {
+                $columns[] = $column;
+                $placeholders[] = ":$column";
+                $values[":$column"] = $value;
+            }
+        }
+
+        // Add created_at if not provided
+        if (!isset($data['created_at'])) {
+            $columns[] = 'created_at';
+            $placeholders[] = ':created_at';
+            $values[':created_at'] = date('Y-m-d H:i:s');
+        }
+
+        $sql = "INSERT INTO payments (" . implode(', ', $columns) . ") 
+            VALUES (" . implode(', ', $placeholders) . ")";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            foreach ($values as $placeholder => $value) {
+                $stmt->bindValue($placeholder, $value);
+            }
+
+            $stmt->execute();
+            $paymentId = $this->db->lastInsertId();
+
+            // Log the payment creation
+            $this->createPaymentLog([
+                'payment_id' => $paymentId,
+                'booking_id' => $data['booking_id'],
+                'event' => 'payment_created',
+                'status' => $data['status'],
+                'message' => 'Tạo thanh toán mới',
+                'data' => json_encode(['method' => $data['payment_method_id'], 'amount' => $data['amount']])
+            ]);
+
+            return $paymentId;
+        } catch (\PDOException $e) {
+            error_log("Error creating payment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Create a payment log entry
+     * 
+     * @param array $data Log data
+     * @return bool Success or failure
+     */
+    public function createPaymentLog(array $data)
+    {
+        $sql = "INSERT INTO payment_logs 
+            (payment_id, booking_id, event, status, message, data, ip_address, created_at) 
+            VALUES 
+            (:payment_id, :booking_id, :event, :status, :message, :data, :ip_address, :created_at)";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':payment_id', $data['payment_id'] ?? null);
+            $stmt->bindValue(':booking_id', $data['booking_id']);
+            $stmt->bindValue(':event', $data['event']);
+            $stmt->bindValue(':status', $data['status']);
+            $stmt->bindValue(':message', $data['message']);
+            $stmt->bindValue(':data', $data['data'] ?? null);
+            $stmt->bindValue(':ip_address', $_SERVER['REMOTE_ADDR'] ?? null);
+            $stmt->bindValue(':created_at', date('Y-m-d H:i:s'));
+
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            error_log("Error creating payment log: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update payment information
+     * 
+     * @param int $paymentId The ID of the payment
+     * @param array $data The data to update
+     * @return bool
+     */
+    public function updatePayment($paymentId, $data)
+    {
+        $validColumns = [
+            'transaction_id',
+            'transaction_id_internal',
+            'amount',
+            'currency',
+            'status',
+            'payment_data',
+            'notes',
+            'payment_date',
+            'updated_at'
+        ];
+
+        $updates = [];
+        $values = [];
+
+        foreach ($data as $column => $value) {
+            if (in_array($column, $validColumns)) {
+                $updates[] = "{$column} = :{$column}";
+                $values[":{$column}"] = $value;
+            }
+        }
+
+        if (empty($updates)) {
+            return false;
+        }
+
+        // Add updated_at if not provided
+        if (!isset($data['updated_at'])) {
+            $updates[] = "updated_at = :updated_at";
+            $values[':updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $sql = "UPDATE payments SET " . implode(', ', $updates) . " WHERE id = :id";
+        $values[':id'] = $paymentId;
+
+        $stmt = $this->db->prepare($sql);
+        foreach ($values as $key => &$value) {
+            $stmt->bindParam($key, $value);
+        }
+
+        return $stmt->execute();
+    }
+
+
+
+
+    /**
+     * Get payment information by booking ID
+     * 
+     * @param int $bookingId The booking ID
+     * @return array|false Payment information or false if not found
+     */
+    public function getPaymentByBookingId($bookingId)
+    {
+        $sql = "SELECT * FROM payments WHERE booking_id = :booking_id ORDER BY id DESC LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':booking_id', $bookingId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get all passengers for a booking
+     * 
+     * @param int $bookingId The booking ID
+     * @return array List of passengers
+     */
+    public function getBookingPassengers($bookingId)
+    {
+        $sql = "SELECT * FROM booking_customers WHERE booking_id = :booking_id ORDER BY type, id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':booking_id', $bookingId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get payment logs for a booking
+     * 
+     * @param int $bookingId The booking ID
+     * @return array List of payment logs
+     */
+    public function getPaymentLogs($bookingId)
+    {
+        $sql = "SELECT * FROM payment_logs WHERE booking_id = :booking_id ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':booking_id', $bookingId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

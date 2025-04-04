@@ -1,0 +1,46 @@
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - ./public:/var/www/public # Ensure this matches the Nginx root
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app-network
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: ./docker/php
+      # Add a fallback check for the build context
+      # Ensure the directory and Dockerfile exist
+    volumes:
+      - .:/var/www # Ensure this matches the application root
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    networks:
+      - app-network
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - PUBLISHABLE_KEY=${PUBLISHABLE_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+
+  # Cloudflare Tunnel
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token eyJhIjoiYWFhZTY4YzJlZDRiZGQ5NWJkMzg4YjI1ZTYwMTNmNTIiLCJ0IjoiMzFhYmJlYWQtODA1OS00Y2NiLWFiNzMtYzE1ZmEyOGNlMTYwIiwicyI6Ik56UXhaVE0wWmpFdE9UQXhaQzAwTTJGakxXRTJOVEl0TkdJeE9XRTNPRGRqTjJNeCJ9
+    restart: unless-stopped
+    networks:
+      - app-network
+    environment:
+      - TUNNEL_HOSTNAME=booking-php.binh-dev.io.vn
+
+networks:
+  app-network:
+    driver: bridge

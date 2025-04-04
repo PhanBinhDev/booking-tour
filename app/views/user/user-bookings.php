@@ -84,7 +84,8 @@ $title = 'Danh sách đặt tour';
                                         <div class="text-sm text-gray-500"><?= $booking['duration'] ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900"><?= $booking['start_date'] ?> <br> <?= $booking['end_date'] ?></div>
+                                        <div class="text-sm font-medium text-gray-900"><?= $booking['start_date'] ?> <br>
+                                            <?= $booking['end_date'] ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900"> <?= $booking['adults'] ?> người lớn</div>
@@ -149,13 +150,16 @@ $title = 'Danh sách đặt tour';
         <!-- Empty State (Hidden by default) -->
         <div class="hidden bg-white rounded-xl shadow-md p-8 text-center">
             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
             </div>
             <h3 class="text-xl font-bold text-gray-800 mb-2">Danh sách trống</h3>
             <p class="text-gray-600 mb-6">Bạn chưa đặt tour nào</p>
-            <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300 inline-block">
+            <a href="#"
+                class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300 inline-block">
                 Khám phá tour
             </a>
         </div>

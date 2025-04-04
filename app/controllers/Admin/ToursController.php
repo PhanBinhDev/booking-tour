@@ -249,6 +249,53 @@ class ToursController extends BaseController
         $this->view('admin/tours/createTour', ['categories' => $categories, 'locations' => $locations]);
     }
 
+    public function publishTour($id)
+    {
+        // Verify tour exists
+        $tour = $this->tourModel->getTourDetails($id);
+        if (!$tour) {
+            $this->setFlashMessage('error', 'Tour không tồn tại');
+            $this->redirect(UrlHelper::route('admin/tours'));
+            return;
+        }
+
+        // Check if method is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate CSRF token if your application uses it
+            if (isset($_POST['csrf_token']) && $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+                $this->setFlashMessage('error', 'Phiên làm việc hết hạn, vui lòng thử lại');
+                $this->redirect(UrlHelper::route('admin/tours'));
+                return;
+            }
+
+            // Get current user for tracking who published
+            $currentUser = $this->getCurrentUser();
+            $currentUserId = isset($currentUser['id']) ? $currentUser['id'] : null;
+
+            // Update tour status
+            $updateData = [
+                'id' => $id,
+                'status' => 'published',
+                'published_at' => date('Y-m-d H:i:s'),
+                'updated_by' => $currentUserId
+            ];
+
+            $result = $this->tourModel->updateTour($updateData);
+
+            if ($result) {
+                $this->setFlashMessage('success', 'Tour đã được xuất bản thành công');
+            } else {
+                $this->setFlashMessage('error', 'Không thể xuất bản tour. Vui lòng thử lại');
+            }
+
+            $this->redirect(UrlHelper::route('admin/tours'));
+            return;
+        }
+
+        // If not POST, redirect back (this endpoint should only be accessed via POST)
+        $this->redirect(UrlHelper::route('admin/tours'));
+    }
+
     public function editTour($id)
     {
         $currentTour = $this->tourModel->getTourDetails($id);

@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css --watch",
-    "build": "npx tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css --minify"
+    "build": "npx tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css --minify",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:restart": "docker-compose restart",
+    "docker:logs": "docker-compose logs -f"
   },
   "keywords": [
     "php",

@@ -73,16 +73,16 @@ use App\Helpers\UrlHelper;
     </div>
   </div>
 
-  <!-- Status bar -->
+  <!-- Status bar with proper form actions -->
   <div class="bg-white shadow rounded-md mb-6">
     <div class="px-4 py-4 sm:px-6 flex justify-between items-center">
       <div class="flex items-center">
         <span class="px-2.5 py-1 rounded-full text-xs font-medium 
-                    <?= $news['status'] === 'published'
-                      ? 'bg-green-100 text-green-800'
-                      : ($news['status'] === 'draft'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800') ?>">
+                <?= $news['status'] === 'published'
+                  ? 'bg-green-100 text-green-800'
+                  : ($news['status'] === 'draft'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-100 text-gray-800') ?>">
           <?= $news['status'] === 'published'
             ? 'Đã xuất bản'
             : ($news['status'] === 'draft'
@@ -95,24 +95,35 @@ use App\Helpers\UrlHelper;
       </div>
       <div class="flex space-x-3">
         <?php if ($news['status'] !== 'published'): ?>
-          <button type="button" id="publishBtn"
-            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+          <form action="<?= UrlHelper::route('admin/news/publish/' . $news['id']) ?>" method="POST" class="inline">
+            <!-- Add CSRF token if your application uses it -->
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?? '' ?>">
+            <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xuất bản bài viết này?');"
+              class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Xuất bản
+            </button>
+          </form>
+        <?php endif; ?>
+
+        <form action="<?= UrlHelper::route('admin/news/deleteNews/' . $news['id']) ?>" method="POST" class="inline">
+          <!-- Add CSRF token if your application uses it -->
+          <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?? '' ?>">
+          <!-- You could add a confirmation field if needed -->
+          <input type="hidden" name="confirm_delete" value="yes">
+          <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');"
+            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            Xuất bản
+            Xóa
           </button>
-        <?php endif; ?>
-        <button type="button" id="deleteBtn"
-          class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-          Xóa
-        </button>
+        </form>
       </div>
     </div>
   </div>

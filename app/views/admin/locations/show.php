@@ -58,7 +58,7 @@ $title = 'Chi tiết địa điểm';
                   <img
                     src="<?= CloudinaryHelper::getImageUrl('locations', $location['slug'], ['width' => 800, 'height' => 400, 'crop' => 'fill']) ?>"
                     alt="<?= htmlspecialchars($location['name']) ?>" class="w-full h-full object-cover"
-                    onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=No+Image';">
+                    onerror="this.onerror=null; this.src='https://placeholder.co/800x400?text=No+Image';">
                 </div>
               </div>
             <?php endif; ?>
@@ -133,7 +133,7 @@ $title = 'Chi tiết địa điểm';
                 <div class="w-full h-52 rounded-lg overflow-hidden bg-gray-100">
                   <img src="<?= htmlspecialchars($location['image']) ?>" alt="<?= htmlspecialchars($location['name']) ?>"
                     class="w-full h-full object-cover"
-                    onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400?text=No+Image';">
+                    onerror="this.onerror=null; this.src='https://placeholder.co/800x400?text=No+Image';">
                 </div>
               </div>
             <?php endif; ?>

@@ -218,6 +218,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `payment_method` VARCHAR(50),
   `transaction_id` VARCHAR(255),
   `special_requirements` TEXT,
+  `cancellation_data` JSON DEFAULT NULL
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,

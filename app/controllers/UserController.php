@@ -52,7 +52,6 @@ class UserController extends BaseController
 
         $currentUser = $this->getCurrentUser();
         $userProfile = $this->userModel->getUserProfile($currentUser['id']);
-        var_dump($currentUser);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $address = $_POST['address'] ?? '';

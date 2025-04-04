@@ -17,6 +17,8 @@ abstract class BaseModel
         $this->db = $database->getConnection();
     }
 
+
+
     public function deleteSoft($id)
     {
         $sql = "UPDATE {$this->table} SET isDeleted = '1' WHERE id = :id";

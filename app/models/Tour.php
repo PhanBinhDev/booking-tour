@@ -336,4 +336,22 @@ class Tour extends BaseModel
             return false;
         }
     }
+
+    public function getTourDateById($id)
+    {
+        $sql = "SELECT * FROM tour_dates WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateTourDate($tourDateId, $data)
+    {
+        $setClause = implode(', ', array_map(fn($key) => "`$key` = :$key", array_keys($data)));
+        $sql = "UPDATE `tour_dates` SET $setClause WHERE `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        $data['id'] = $tourDateId;
+        return $stmt->execute($data);
+    }
 }

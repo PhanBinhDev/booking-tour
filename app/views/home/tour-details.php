@@ -581,7 +581,7 @@ $childPrice = $displayPrice * 0.7;
                 </div>
               <?php endforeach; ?>
 
-              <?php if (count($reviews) > 0): ?>
+              <?php if (count($reviews) > 5): ?>
                 <div class="text-center">
                   <button id="loadMoreReviews"
                     class="px-8 py-3 bg-teal-50 text-teal-600 rounded-full font-medium border border-teal-200 hover:bg-teal-100 transition-colors">
@@ -823,10 +823,11 @@ $childPrice = $displayPrice * 0.7;
               <h4 class="font-semibold text-gray-700 border-b border-gray-200 pb-1.5 mb-2">Chi tiết thanh toán</h4>
               <?php
               // Calculate initial values for display
-              $initialAdultTotal = $displayPrice * 2; // 2 is the default number of adults
+              $initialAdultTotal = $displayPrice * 1; // 2 is the default number of adults
+              $childPrice = $displayPrice * 0.7;      // Child price is 70% of adult price
               $initialChildTotal = $childPrice * 0;   // 0 is the default number of children
               $initialSubtotal = $initialAdultTotal + $initialChildTotal;
-              $initialTax = $initialSubtotal * 0.1;   // 10% tax
+              $initialTax = $initialSubtotal * 0.1;    // 10% tax
               ?>
               <div class="flex justify-between mb-1.5">
                 <span class="text-gray-600">Người lớn (2 × <span
@@ -861,7 +862,7 @@ $childPrice = $displayPrice * 0.7;
                 Đặt Tour Ngay
               </button>
               <div class="flex gap-2">
-                <a href="<? UrlHelper::route('home/contact') ?>" class="flex-1">
+                <a href="<?= UrlHelper::route('home/contact') ?>" class="flex-1">
                   <button
                     class="w-full border border-teal-500 text-teal-500 hover:bg-teal-50 font-medium py-2 px-3 rounded-lg transition duration-300 flex items-center justify-center text-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
@@ -915,7 +916,7 @@ $childPrice = $displayPrice * 0.7;
     </div>
 
     <!-- Login Required Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
       <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 transform transition-all">
         <!-- Close button -->
         <div class="flex justify-end">
@@ -965,7 +966,6 @@ $childPrice = $displayPrice * 0.7;
     <!-- Thêm script của Swiper -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Khởi tạo Swiper thumbnail
         // Khởi tạo Swiper thumbnail vertical
         const galleryThumbs = new Swiper('.galleryThumbs', {
           direction: 'vertical',
@@ -1093,8 +1093,13 @@ $childPrice = $displayPrice * 0.7;
 
       // New function to update price display when date changes
       function updatePricesForDate(adultPrice, childPrice) {
-        document.querySelector('.adults-price').textContent = formatCurrency(adultPrice);
-        document.querySelector('.children-price').textContent = formatCurrency(childPrice);
+        // Update the displayed prices in the summary
+        document.querySelectorAll('.adults-price').forEach(el => {
+          el.textContent = formatCurrency(adultPrice);
+        });
+        document.querySelectorAll('.children-price').forEach(el => {
+          el.textContent = formatCurrency(childPrice);
+        });
         updatePriceSummary();
       }
 
@@ -1112,6 +1117,7 @@ $childPrice = $displayPrice * 0.7;
           }
         }
 
+        // Ensure child price is ALWAYS 70% of adult price
         const childPrice = adultPrice * 0.7;
 
         const adultTotal = adultCount * adultPrice;
@@ -1147,6 +1153,7 @@ $childPrice = $displayPrice * 0.7;
       const loginModal = document.getElementById('loginModal');
       const closeLoginModal = document.getElementById('closeLoginModal');
 
+      // Replace the existing bookTourButton click handler with this one
       if (bookTourButton) {
         bookTourButton.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1155,34 +1162,22 @@ $childPrice = $displayPrice * 0.7;
           const isLoggedIn = <?= isset($_SESSION['user_id']) ? 'true' : 'false' ?>;
 
           if (isLoggedIn) {
-            // User is logged in, proceed to summary page
+            // User is logged in, redirect to summary page
             const tourId = <?= $tourDetails['id'] ?>;
             const tourDateId = document.getElementById('selectedTourDateId').value;
             const adultCount = parseInt(document.getElementById('adults-count').textContent);
             const childrenCount = parseInt(document.getElementById('children-count').textContent);
 
-            // Create form and submit it
-            const form = document.createElement('form');
-            form.method = 'post';
-            form.action = '<?= UrlHelper::route('home/booking/') ?>' + tourId;
+            // Build the URL with query parameters
+            let summaryUrl = `<?= UrlHelper::route('home/bookings/summary/') ?>${tourId}?` +
+              `tour_date_id=${tourDateId}&` +
+              `adults=${adultCount}&` +
+              `children=${childrenCount}`;
 
-            // Add form fields
-            const fields = {
-              'tour_date_id': tourDateId,
-              'adults': adultCount,
-              'children': childrenCount
-            };
-
-            for (const key in fields) {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = fields[key];
-              form.appendChild(input);
-            }
-
-            document.body.appendChild(form);
-            form.submit();
+            console.log(summaryUrl)
+            // return;
+            // Redirect to the summary page
+            window.location.href = summaryUrl;
           } else {
             // User is not logged in, show the modal
             loginModal.classList.remove('hidden');

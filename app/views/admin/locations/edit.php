@@ -102,11 +102,11 @@ $title = 'Chỉnh sửa địa điểm';
             <label for="thumbnail" class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh đại diện</label>
             <div class="flex items-center space-x-4">
               <?php if (!empty($location['thumbnail'])): ?>
-              <div class="w-24 h-24 border rounded-md overflow-hidden bg-gray-100">
-                <img src="<?= CloudinaryHelper::getPlaceholder() ?>" alt="<?= htmlspecialchars($location['name']) ?>"
-                  class="w-full h-full object-cover"
-                  onerror="this.onerror=null; this.src='https://via.placeholder.com/200?text=No+Image';">
-              </div>
+                <div class="w-24 h-24 border rounded-md overflow-hidden bg-gray-100">
+                  <img src="<?= CloudinaryHelper::getPlaceholder() ?>" alt="<?= htmlspecialchars($location['name']) ?>"
+                    class="w-full h-full object-cover"
+                    onerror="this.onerror=null; this.src='https://placeholder.co/200?text=No+Image';">
+                </div>
               <?php endif; ?>
               <div class="flex-1">
                 <input type="file" name="thumbnail" id="thumbnail"
@@ -173,126 +173,126 @@ $title = 'Chỉnh sửa địa điểm';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Thiết lập token Mapbox
-  mapboxgl.accessToken =
-    'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thiết lập token Mapbox
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiYmluaGRldiIsImEiOiJjbHduODEzNXMweWxrMmltanU3M3Voc3IxIn0.oZ19gfygIANckV1rAPGXuw';
 
-  // Lấy tọa độ từ các trường input
-  const latInput = document.getElementById('latitude');
-  const lngInput = document.getElementById('longitude');
+    // Lấy tọa độ từ các trường input
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
 
-  // Sử dụng giá trị mặc định nếu không có tọa độ
-  const lat = parseFloat(latInput.value) || 21.0278; // Hà Nội mặc định
-  const lng = parseFloat(lngInput.value) || 105.8342;
+    // Sử dụng giá trị mặc định nếu không có tọa độ
+    const lat = parseFloat(latInput.value) || 21.0278; // Hà Nội mặc định
+    const lng = parseFloat(lngInput.value) || 105.8342;
 
-  // Khởi tạo map với cấu hình đơn giản
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [lng, lat], // Mapbox dùng [lng, lat] không phải [lat, lng]
-    zoom: 12
-  });
-  // Thêm control điều hướng
-  map.addControl(new mapboxgl.NavigationControl());
+    // Khởi tạo map với cấu hình đơn giản
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [lng, lat], // Mapbox dùng [lng, lat] không phải [lat, lng]
+      zoom: 12
+    });
+    // Thêm control điều hướng
+    map.addControl(new mapboxgl.NavigationControl());
 
-  map.on('style.load', () => {
-    map.setFog({}); // Set the default atmosphere style
-  });
+    map.on('style.load', () => {
+      map.setFog({}); // Set the default atmosphere style
+    });
 
-  // Tạo marker có thể kéo
-  const marker = new mapboxgl.Marker({
-      color: "#e53e3e",
-      draggable: true
-    })
-    .setLngLat([lng, lat])
-    .addTo(map);
+    // Tạo marker có thể kéo
+    const marker = new mapboxgl.Marker({
+        color: "#e53e3e",
+        draggable: true
+      })
+      .setLngLat([lng, lat])
+      .addTo(map);
 
-  // Cập nhật tọa độ khi kéo thả marker
-  marker.on('dragend', function() {
-    console.log(marker.getLngLat());
-    const lngLat = marker.getLngLat();
-    latInput.value = lngLat.lat.toFixed(6);
-    lngInput.value = lngLat.lng.toFixed(6);
-  });
+    // Cập nhật tọa độ khi kéo thả marker
+    marker.on('dragend', function() {
+      console.log(marker.getLngLat());
+      const lngLat = marker.getLngLat();
+      latInput.value = lngLat.lat.toFixed(6);
+      lngInput.value = lngLat.lng.toFixed(6);
+    });
 
-  // Cập nhật marker khi click vào map
-  map.on('click', function(e) {
-    marker.setLngLat(e.lngLat);
-    latInput.value = e.lngLat.lat.toFixed(6);
-    lngInput.value = e.lngLat.lng.toFixed(6);
-  });
+    // Cập nhật marker khi click vào map
+    map.on('click', function(e) {
+      marker.setLngLat(e.lngLat);
+      latInput.value = e.lngLat.lat.toFixed(6);
+      lngInput.value = e.lngLat.lng.toFixed(6);
+    });
 
-  // Cập nhật marker khi thay đổi các trường input
-  function updateMarker() {
-    const lat = parseFloat(latInput.value);
-    const lng = parseFloat(lngInput.value);
+    // Cập nhật marker khi thay đổi các trường input
+    function updateMarker() {
+      const lat = parseFloat(latInput.value);
+      const lng = parseFloat(lngInput.value);
 
-    if (!isNaN(lat) && !isNaN(lng)) {
-      marker.setLngLat([lng, lat]);
-      map.flyTo({
-        center: [lng, lat],
-        zoom: 12,
-        essential: true // Đảm bảo animation diễn ra
-      });
+      if (!isNaN(lat) && !isNaN(lng)) {
+        marker.setLngLat([lng, lat]);
+        map.flyTo({
+          center: [lng, lat],
+          zoom: 12,
+          essential: true // Đảm bảo animation diễn ra
+        });
+      }
     }
-  }
 
-  // Thêm event listeners
-  latInput.addEventListener('change', updateMarker);
-  lngInput.addEventListener('change', updateMarker);
+    // Thêm event listeners
+    latInput.addEventListener('change', updateMarker);
+    lngInput.addEventListener('change', updateMarker);
 
-  // Auto-generate slug từ tên
-  const nameInput = document.getElementById('name');
-  const slugInput = document.getElementById('slug');
+    // Auto-generate slug từ tên
+    const nameInput = document.getElementById('name');
+    const slugInput = document.getElementById('slug');
 
-  nameInput.addEventListener('input', function() {
-    if (!slugInput.dataset.userModified || slugInput.dataset.userModified === 'false') {
-      slugInput.value = this.value
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
+    nameInput.addEventListener('input', function() {
+      if (!slugInput.dataset.userModified || slugInput.dataset.userModified === 'false') {
+        slugInput.value = this.value
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+    });
+
+    slugInput.addEventListener('input', function() {
+      slugInput.dataset.userModified = 'true';
+    });
   });
-
-  slugInput.addEventListener('input', function() {
-    slugInput.dataset.userModified = 'true';
-  });
-});
 </script>
 
 <style>
-.required:after {
-  content: " *";
-  color: #f43f5e;
-}
+  .required:after {
+    content: " *";
+    color: #f43f5e;
+  }
 
-/* Styling cho Mapbox */
-.mapboxgl-popup {
-  max-width: 200px;
-}
+  /* Styling cho Mapbox */
+  .mapboxgl-popup {
+    max-width: 200px;
+  }
 
-.mapboxgl-popup-content {
-  text-align: center;
-  padding: 10px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
+  .mapboxgl-popup-content {
+    text-align: center;
+    padding: 10px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
 
-.mapboxgl-popup-content h3 {
-  margin: 0;
-  padding: 0;
-}
+  .mapboxgl-popup-content h3 {
+    margin: 0;
+    padding: 0;
+  }
 
-/* Marker styling */
-.mapboxgl-marker {
-  cursor: pointer;
-}
+  /* Marker styling */
+  .mapboxgl-marker {
+    cursor: pointer;
+  }
 
-/* Map container styling */
-#map-container {
-  border-radius: 0.375rem;
-  overflow: hidden;
-}
+  /* Map container styling */
+  #map-container {
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
 </style>

@@ -2,7 +2,7 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 // Định nghĩa đường dẫn gốc
 // Lấy tên thư mục project từ đường dẫn thực tế
@@ -10,9 +10,15 @@ ini_set('display_errors', 1);
 $projectFolder = basename(dirname(__DIR__));
 define('ROOT_PATH', dirname(__DIR__));
 define('ENVIRONMENT', 'development');
-// Cấu hình đường dẫn cơ sở
-define('BASE_URL', '/' . $projectFolder);
-define('PUBLIC_URL', BASE_URL . '/public');
+
+// Automatically detect the base URL
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
+$scriptName = dirname($_SERVER['SCRIPT_NAME']);
+define('BASE_URL', $protocol . '://' . $host . rtrim($scriptName, '/'));
+
+// Update other URLs to use BASE_URL
+define('PUBLIC_URL', BASE_URL);
 define('ASSETS_URL', PUBLIC_URL . '/assets');
 define('CSS_URL', ASSETS_URL . '/css');
 define('JS_URL', ASSETS_URL . '/js');
@@ -35,10 +41,6 @@ $dotenv->load();
 // Khởi tạo session
 session_start();
 
-// Routing cơ bản
-// require_once ROOT_PATH . '/app/config/App.php';
-// $app = new \App\Config\App();
-// $app->run();
 
 // V2. Router
 use App\Config\Router;
@@ -66,6 +68,16 @@ $router->get('/home/tours', 'HomeController@tours');
 $router->get('/home/home', 'HomeController@home');
 $router->get('/home/tour-details/{id}', 'HomeController@tourDetail');
 $router->get('/home/bookings/{id}', 'HomeController@bookings');
+// Add these routes to your routing configuration
+$router->get('/home/bookings/summary/{tourId}', 'HomeController@summary');
+$router->post('/home/bookings/process', 'HomeController@process');
+// Payment handling routes
+$router->get('/payments/stripe/success/{bookingId}', 'HomeController@stripeSuccess');
+$router->get('/payments/stripe/cancel/{bookingId}', 'HomeController@stripeCancel');
+// Payment handling routes
+
+// Webhook to receive Stripe events
+$router->post('/webhook/stripe', 'WebhookController@handle');
 
 
 // USERS
@@ -73,6 +85,9 @@ $router->get('/user/profile', 'UserController@profile');
 $router->post('/user/profile', 'UserController@profile');
 $router->get('/user/wishlist', 'UserController@wishlist');
 $router->get('/user/bookings', 'UserController@userBookings');
+$router->get('/user/bookings/detail/{bookingId}', 'HomeController@bookingDetail');
+$router->get('/user/bookings/cancel/{bookingId}', 'HomeController@cancelBooking');
+$router->post('/user/bookings/cancel/{bookingId}', 'HomeController@cancelBooking');
 $router->get('/user/reviews', 'UserController@reviews');
 $router->get('/user/change-password', 'UserController@changePassword');
 $router->post('/user/change-password', 'UserController@changePassword');
@@ -178,7 +193,6 @@ $router->post('/admin/locations/change-status/{id}', 'Admin\LocationController@c
 $router->get('/admin/news/categories', 'Admin\NewsController@categories');
 $router->get('/admin/news/createCategory', 'Admin\NewsController@createCategory');
 $router->post('/admin/news/store', 'Admin\NewsController@store');
-
 $router->post('/admin/news/createCategory', 'Admin\NewsController@createCategory');
 $router->get('/admin/news/updateCategory/{id}', 'Admin\NewsController@updateCategory');
 $router->post('/admin/news/updateCategory/{id}', 'Admin\NewsController@updateCategory');
@@ -192,6 +206,8 @@ $router->post('/admin/news/deleteNews/{id}', 'Admin\NewsController@deleteNews');
 $router->get('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
 $router->post('/admin/news/updateNews/{id}', 'Admin\NewsController@updateNews');
 $router->get('/admin/news/preview/{id}', 'Admin\NewsController@preview');
+$router->post('/admin/news/publish/{id}', 'Admin\NewsController@publishNews');
+$router->post('/admin/news/unpublish/{id}', 'Admin\NewsController@unpublishNews');
 
 
 // ADMIN/CONTACT

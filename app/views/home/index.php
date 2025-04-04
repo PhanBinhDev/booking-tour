@@ -554,7 +554,7 @@ $title = 'Trang chủ - Di Travel';
             </p>
             <div class="flex items-center">
               <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                <img src="https://via.placeholder.com/50x50" alt="Sarah Johnson" class="w-full h-full object-cover" />
+                <img src="https://placeholder.co/50x50" alt="Sarah Johnson" class="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 class="font-semibold text-gray-800">Sarah Johnson</h4>
@@ -577,7 +577,7 @@ $title = 'Trang chủ - Di Travel';
             </p>
             <div class="flex items-center">
               <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                <img src="https://via.placeholder.com/50x50" alt="Michael Chen" class="w-full h-full object-cover" />
+                <img src="https://placeholder.co/50x50" alt="Michael Chen" class="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 class="font-semibold text-gray-800">Michael Chen</h4>
@@ -600,7 +600,7 @@ $title = 'Trang chủ - Di Travel';
             </p>
             <div class="flex items-center">
               <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
-                <img src="https://via.placeholder.com/50x50" alt="Emily Rodriguez" class="w-full h-full object-cover" />
+                <img src="https://placeholder.co/50x50" alt="Emily Rodriguez" class="w-full h-full object-cover" />
               </div>
               <div>
                 <h4 class="font-semibold text-gray-800">Emily Rodriguez</h4>

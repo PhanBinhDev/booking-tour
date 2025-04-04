@@ -9,7 +9,6 @@ use App\Models\NewsCategories;
 use App\Models\NewsModel;
 use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
-use App\Helpers\UtilsHelper;
 use Exception;
 
 
@@ -621,5 +620,110 @@ class NewsController extends BaseController
 
         // Load preview view
         $this->view('admin/news/preview', $viewData);
+    }
+
+    public function publishNews($id)
+    {
+        // Check if the article exists
+        $news = $this->NewsModel->getById($id);
+
+        if (!$news) {
+            $this->setFlashMessage('error', 'Bài viết không tồn tại');
+            $this->redirect(UrlHelper::route('admin/news/index'));
+            return;
+        }
+
+        // Check if the request method is POST for security
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->setFlashMessage('error', 'Phương thức không hợp lệ');
+            $this->redirect(UrlHelper::route('admin/news/index'));
+            return;
+        }
+
+        // Verify CSRF token if your application uses it
+        if (isset($_POST['csrf_token']) && $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+            $this->setFlashMessage('error', 'Token không hợp lệ, vui lòng thử lại');
+            $this->redirect(UrlHelper::route('admin/news/index'));
+            return;
+        }
+
+        // Get current user for tracking
+        $currentUser = $this->getCurrentUser();
+        $currentUserId = isset($currentUser['id']) ? $currentUser['id'] : null;
+
+        // Update the article status to published
+        $updateData = [
+            'status' => 'published',
+            'updated_by' => $currentUserId,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Set published_at date if not already published
+        if ($news['status'] !== 'published') {
+            $updateData['published_at'] = date('Y-m-d H:i:s');
+        }
+
+        // Update the article
+        $result = $this->NewsModel->update($id, $updateData);
+
+        if ($result) {
+            $this->setFlashMessage('success', 'Bài viết đã được xuất bản thành công');
+        } else {
+            $this->setFlashMessage('error', 'Không thể xuất bản bài viết');
+        }
+
+        // Redirect back to where we came from, or to the news index
+        $referrer = $_SERVER['HTTP_REFERER'] ?? UrlHelper::route('admin/news/index');
+        $this->redirect($referrer);
+    }
+
+    public function unpublishNews($id)
+    {
+        // Check if the article exists
+        $news = $this->NewsModel->getById($id);
+
+        if (!$news) {
+            $this->setFlashMessage('error', 'Bài viết không tồn tại');
+            $this->redirect(UrlHelper::route('admin/news/index'));
+            return;
+        }
+
+        // Check if the request method is POST for security
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->setFlashMessage('error', 'Phương thức không hợp lệ');
+            $this->redirect(UrlHelper::route('admin/news/index'));
+            return;
+        }
+
+        // Verify CSRF token if your application uses it
+        if (isset($_POST['csrf_token']) && $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+            $this->setFlashMessage('error', 'Token không hợp lệ, vui lòng thử lại');
+            $this->redirect(UrlHelper::route('admin/news/index'));
+            return;
+        }
+
+        // Get current user for tracking
+        $currentUser = $this->getCurrentUser();
+        $currentUserId = isset($currentUser['id']) ? $currentUser['id'] : null;
+
+        // Update the article status to draft
+        $updateData = [
+            'status' => 'draft',
+            'updated_by' => $currentUserId,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Update the article
+        $result = $this->NewsModel->update($id, $updateData);
+
+        if ($result) {
+            $this->setFlashMessage('success', 'Bài viết đã được chuyển về trạng thái nháp');
+        } else {
+            $this->setFlashMessage('error', 'Không thể thay đổi trạng thái bài viết');
+        }
+
+        // Redirect back to where we came from, or to the news index
+        $referrer = $_SERVER['HTTP_REFERER'] ?? UrlHelper::route('admin/news/index');
+        $this->redirect($referrer);
     }
 }

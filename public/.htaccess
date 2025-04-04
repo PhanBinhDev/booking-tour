@@ -1,10 +1,15 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Nếu không phải file hoặc thư mục thực
+    # Ensure this handles non-existent files and directories
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     
-    # Chuyển hướng đến index.php
+    # Redirect to index.php
     RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>
+
+# Ensure proper handling of base URL
+<IfModule mod_headers.c>
+    Header always set Content-Security-Policy "base-uri 'self';"
 </IfModule>

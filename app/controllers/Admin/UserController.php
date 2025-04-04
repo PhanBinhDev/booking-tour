@@ -38,19 +38,66 @@ class UserController extends BaseController
     {
         $currentUser = $this->getCurrentUser();
 
-        $users = [];
-        $query = $this->userModel->getAll();
+        // Get pagination parameters from request
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        $limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 10;
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $roleFilter = isset($_GET['role_id']) ? intval($_GET['role_id']) : null;
+        $statusFilter = isset($_GET['status']) ? trim($_GET['status']) : null;
+        $sortField = isset($_GET['sort']) ? trim($_GET['sort']) : 'created_at';
+        $sortDirection = isset($_GET['direction']) && strtolower($_GET['direction']) === 'asc' ? 'asc' : 'desc';
+
+        // Build pagination options
+        $options = [
+            'columns' => 'users.*, roles.name as role_name',
+            'joins' => [
+                'LEFT JOIN roles ON users.role_id = roles.id'
+            ],
+            'filters' => [],
+            'sort' => $sortField,
+            'direction' => $sortDirection,
+            'page' => $page,
+            'limit' => $limit,
+            'search_fields' => ['users.username', 'users.email', 'users.full_name'],
+            'table_alias' => 'users'
+        ];
+
+        // Add search term if provided
+        if (!empty($search)) {
+            $options['search_term'] = "%$search%";
+        }
+
+        // Add role filter if provided
+        if (!empty($roleFilter)) {
+            $options['filters']['users.role_id'] = $roleFilter;
+        }
+
+        // Add status filter if provided
+        if (!empty($statusFilter)) {
+            $options['filters']['users.status'] = $statusFilter;
+        }
+
+        // Get paginated users with their roles
+        $paginatedUsers = $this->userModel->getPaginatedCustom($options);
+
+        // Get all roles for filter dropdown
         $roles = $this->roleModel->getAll();
 
-        foreach ($query as $user) {
-            $userWithRole = $this->userModel->getUserWithRole($user['id']);
-            $users[] = $userWithRole;
-        }
+        // Filter parameters to pass to the view (for maintaining state in pagination links)
+        $filters = [
+            'search' => $search,
+            'role_id' => $roleFilter,
+            'status' => $statusFilter,
+            'sort' => $sortField,
+            'direction' => $sortDirection
+        ];
 
         $this->view('admin/users/index', [
             'user' => $currentUser,
-            'users' => $users,
-            'roles' => $roles
+            'users' => $paginatedUsers['items'],
+            'pagination' => $paginatedUsers['pagination'],
+            'roles' => $roles,
+            'filters' => $filters
         ]);
     }
 
@@ -114,6 +161,7 @@ class UserController extends BaseController
     public function edit($id)
     {
         $currentUser = $this->userModel->findById($id);
+        $roles = $this->roleModel->getAll();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'EDIT';
@@ -121,6 +169,7 @@ class UserController extends BaseController
         } else {
             $this->view('admin/users/edit', [
                 'user' => $currentUser,
+                'roles' => $roles
             ]);
         }
     }
