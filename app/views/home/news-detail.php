@@ -1,3 +1,8 @@
+<?php
+
+use App\Helpers\UrlHelper;
+
+?>
 <div class="min-h-screen flex flex-col ">
     <!-- Main Content -->
     <div class="flex-grow container mx-auto px-4 py-8">
@@ -6,9 +11,8 @@
             <article class="lg:w-2/3">
                 <div class="mb-4">
                     <div class="flex items-center text-sm text-gray-500 mb-2">
-                        <a href="/news" class="text-teal-500 hover:underline">News</a>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-1" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
+                        <a href="<?= UrlHelper::route('/home/news') ?>" class="text-teal-500 hover:underline">News</a>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                         <a href="/news/technology" class="text-teal-500 hover:underline">Technology</a>

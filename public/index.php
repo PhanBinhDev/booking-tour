@@ -63,6 +63,10 @@ $router->get('/home/activities', 'HomeController@activities');
 
 $router->get('/home/tours/{tourId}', 'HomeController@tourDetails');
 $router->get('/home/news', 'HomeController@news');
+<<<<<<< Updated upstream
+=======
+$router->get('/home/news-detail', 'HomeController@newsDetail');
+>>>>>>> Stashed changes
 $router->get('/home/news-detail/{id}', 'HomeController@newsDetail');
 $router->get('/home/tours', 'HomeController@tours');
 $router->get('/home/home', 'HomeController@home');
