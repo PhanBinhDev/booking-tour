@@ -59,16 +59,10 @@ class HomeController extends BaseController
       "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
       "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
       "LEFT JOIN images ON tour_images.image_id = images.id"
-      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
-      "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
-      "LEFT JOIN images ON tour_images.image_id = images.id"
     ];
 
     $conditions = ["tours.status" => "active", "tours.sale_price" => "> 0"];
 
-    $columns = "tours.id, tours.description, 
-              tour_images.tour_id, tour_images.image_id,
-              images.cloudinary_url,
     $columns = "tours.id, tours.description, 
               tour_images.tour_id, tour_images.image_id,
               images.cloudinary_url,
@@ -96,7 +90,6 @@ class HomeController extends BaseController
       null,
       $join,
       $groupBy
-      $groupBy
     );
 
     $condition = ["tours.status" => "active", "tours.featured" => "1"];
@@ -108,7 +101,6 @@ class HomeController extends BaseController
       3,
       null,
       $join,
-      $groupBy
       $groupBy
     );
 
