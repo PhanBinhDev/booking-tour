@@ -7,10 +7,7 @@ use App\Models\Booking;
 use App\Models\Tour;
 use App\Models\Contact;
 use App\Models\Categories;
-<<<<<<< Updated upstream
 use App\Models\Location;
-=======
->>>>>>> Stashed changes
 use App\Models\NewsModel;
 use App\Models\PaymentMethod;
 use App\Services\StripeService;
@@ -25,7 +22,6 @@ class HomeController extends BaseController
   private $stripeService;
   private $bookingModel;
   private $paymentMethodModel;
-  private $newsModel;
 
   function __construct()
   {
@@ -151,7 +147,7 @@ class HomeController extends BaseController
     // print_r($newsList);
     // echo "</pre>";
     // die();
-    $getActiveCategories =$this->newsModel->getActiveCategories();
+    $getActiveCategories = $this->newsModel->getActiveCategories();
 
     // Lấy 3 bài viết có lượt xem cao nhất
     $topViewedNews = $this->newsModel->getTopViewedNews(3);
@@ -160,7 +156,7 @@ class HomeController extends BaseController
     $featuredNews = $this->newsModel->getOldestFeaturedNews();
 
     $this->view('home/news', [
-      'newsList' => $newsList, 
+      'newsList' => $newsList,
       'getActiveCategories' => $getActiveCategories,
       'topViewedNews' => $topViewedNews,
       'featuredNews' => $featuredNews
