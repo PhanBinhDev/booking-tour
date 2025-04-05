@@ -174,8 +174,12 @@ class HomeController extends BaseController
   function newsDetail($id)
   {
     $news = $this->newsModel->getById($id);
+    $topViewedNews = $this->newsModel->getTopViewedNews(3);
     var_dump($news);
-    $this->view('home/news-detail', ['news' => $news]);
+    $this->view('home/news-detail', [
+      'news' => $news,
+      'topViewedNews' => $topViewedNews
+    ]);
   }
 
   function faq()

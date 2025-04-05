@@ -38,7 +38,7 @@ $activePage = 'news';
                             </div>
                             <h3 class="text-2xl font-bold text-gray-800 mb-3"><?php echo $featuredNews['title']; ?></h3>
                             <p class="text-gray-600 mb-4 line-clamp-3 text-sm md:text-base"><?php echo $featuredNews['content']; ?></p>
-                            <a href="#" class="inline-flex items-center text-teal-600 hover:text-teal-700 font-medium">
+                            <a href="<?= UrlHelper::route('/home/news-detail/') ?><?= $featuredNews['id'] ?>" class="inline-flex items-center text-teal-600 hover:text-teal-700 font-medium">
                                 Đọc tiếp
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -144,8 +144,6 @@ $activePage = 'news';
                         </nav>
                     </div>
                 </div>
-
-
             </div>
 
             <!-- Sidebar -->
@@ -186,9 +184,6 @@ $activePage = 'news';
                         <?php } ?>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>

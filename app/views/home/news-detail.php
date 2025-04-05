@@ -4,22 +4,13 @@ use App\Helpers\UrlHelper;
 
 ?>
 <div class="min-h-screen flex flex-col ">
-    <!-- Main Content -->
+    <!-- Nội dung chính -->
     <div class="flex-grow container mx-auto px-4 py-8">
         <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Article Content -->
+            <!-- Nội dung bài viết -->
             <article class="lg:w-2/3">
                 <div class="mb-4">
-                    <div class="flex items-center text-sm text-gray-500 mb-2">
-                        <a href="<?= UrlHelper::route('/home/news') ?>" class="text-teal-500 hover:underline">News</a>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-1" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        <a href="/news/technology" class="text-teal-500 hover:underline">Technology</a>
-                    </div>
-                    <h1 class="text-3xl md:text-4xl font-bold mb-4">The Future of Artificial Intelligence in Modern Healthcare
-                        Systems</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-4"><?= $news['title'] ?></h1>
 
                     <div class="flex flex-wrap items-center text-gray-500 text-sm mb-6">
                         <div class="flex items-center mr-4 mb-2">
@@ -28,7 +19,7 @@ use App\Helpers\UrlHelper;
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span>March 28, 2025</span>
+                            <span><?= $news['created_at']?></span>
                         </div>
                         <div class="flex items-center mr-4 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
@@ -36,106 +27,45 @@ use App\Helpers\UrlHelper;
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                            <span>By John Smith</span>
-                        </div>
-                        <div class="flex items-center mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>5 min read</span>
+                            <span>Bởi John Smith</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="relative w-full h-[400px] mb-6 rounded-lg overflow-hidden">
-                    <img src="https://placeholder.co/1200x800" alt="AI in Healthcare"
+                    <img src="<?= $news['featured_image'] ?>" alt="Tin tức"
                         class="absolute inset-0 w-full h-full object-cover" />
                 </div>
 
                 <div class="prose max-w-none">
                     <p class="text-lg leading-relaxed mb-4">
-                        Artificial intelligence is revolutionizing healthcare delivery across the globe, offering unprecedented
-                        opportunities to improve patient outcomes, reduce costs, and enhance the efficiency of medical systems.
+                        <?= $news['content'] ?>
                     </p>
+                    <h2 class="text-2xl font-bold mt-8 mb-4">Khả năng chẩn đoán</h2>
 
                     <p class="mb-4">
-                        Recent advancements in machine learning algorithms have enabled AI systems to analyze complex medical data
-                        with remarkable accuracy. From diagnostic imaging to predictive analytics, these technologies are
-                        transforming how healthcare providers approach patient care.
+                        Một trong những ứng dụng đầy hứa hẹn nhất của AI trong chăm sóc sức khỏe là trong lĩnh vực chẩn đoán hình ảnh. Các hệ thống được hỗ trợ bởi AI hiện có thể phát hiện những bất thường tinh vi trong ảnh X-quang, MRI và CT scan mà các bác sĩ X-quang có thể bỏ sót. Những hệ thống này học từ hàng triệu hình ảnh, liên tục cải thiện độ chính xác theo thời gian.
                     </p>
 
-                    <h2 class="text-2xl font-bold mt-8 mb-4">Diagnostic Capabilities</h2>
-
-                    <p class="mb-4">
-                        One of the most promising applications of AI in healthcare is in diagnostic imaging. AI-powered systems can
-                        now detect subtle abnormalities in X-rays, MRIs, and CT scans that might be missed by human radiologists.
-                        These systems learn from millions of images, continuously improving their accuracy over time.
-                    </p>
-
-                    <blockquote class="border-l-4 border-teal-500 pl-4 italic my-6">
-                        "AI doesn't replace doctors; it empowers them with tools to make better decisions faster. The combination of
-                        human expertise and machine intelligence is where the true revolution lies." — Dr. Sarah Johnson, Chief of
-                        Radiology at Memorial Hospital
-                    </blockquote>
-
-                    <h2 class="text-2xl font-bold mt-8 mb-4">Predictive Analytics</h2>
-
-                    <p class="mb-4">
-                        Beyond diagnostics, AI systems excel at analyzing vast datasets to identify patterns and predict outcomes.
-                        Hospitals are increasingly using these capabilities to forecast patient admissions, optimize staffing
-                        levels, and identify patients at risk of readmission.
-                    </p>
-
-                    <p class="mb-4">
-                        By analyzing electronic health records, AI can identify patients who might benefit from preventive
-                        interventions, potentially avoiding serious health complications and reducing healthcare costs.
-                    </p>
-
-                    <h2 class="text-2xl font-bold mt-8 mb-4">Challenges and Ethical Considerations</h2>
-
-                    <p class="mb-4">
-                        Despite its promise, the integration of AI into healthcare systems faces significant challenges. Data
-                        privacy concerns, algorithm bias, and questions about liability when AI systems make mistakes all need to be
-                        addressed.
-                    </p>
-
-                    <p class="mb-4">
-                        Regulatory frameworks are still evolving to keep pace with technological advancements, creating uncertainty
-                        for healthcare providers and technology developers alike.
-                    </p>
-
-                    <h2 class="text-2xl font-bold mt-8 mb-4">The Road Ahead</h2>
-
-                    <p class="mb-4">
-                        As AI technology continues to mature, its role in healthcare will likely expand. From virtual nursing
-                        assistants to robotic surgery, the possibilities are vast and exciting.
-                    </p>
-
-                    <p class="mb-4">
-                        However, successful implementation will require collaboration between technologists, healthcare providers,
-                        policymakers, and patients to ensure these powerful tools are used responsibly and effectively.
-                    </p>
+                    
                 </div>
 
-                <!-- Tags -->
-                <div class="mt-8 pt-6 border-t border-gray-200">
-                    <h3 class="text-lg font-semibold mb-3">Tags:</h3>
+                <!-- Thẻ -->
+                <!-- <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h3 class="text-lg font-semibold mb-3">Thẻ:</h3>
                     <div class="flex flex-wrap gap-2">
                         <a href="/tag/ai" class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">AI</a>
                         <a href="/tag/healthcare"
-                            class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">Healthcare</a>
+                            class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">Y tế</a>
                         <a href="/tag/technology"
-                            class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">Technology</a>
-                        <a href="/tag/machine-learning" class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">Machine
-                            Learning</a>
+                            class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">Công nghệ</a>
+                        <a href="/tag/machine-learning" class="px-3 py-1 bg-gray-100 hover:bg-teal-100 rounded-full text-sm">Học máy</a>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Share -->
+                <!-- Chia sẻ -->
                 <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-3">Share:</h3>
+                    <h3 class="text-lg font-semibold mb-3">Chia sẻ:</h3>
                     <div class="flex space-x-4">
                         <button class="p-2 bg-blue-600 text-white rounded-full">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -166,89 +96,60 @@ use App\Helpers\UrlHelper;
                 </div>
             </article>
 
-            <!-- Sidebar -->
+            <!-- Thanh bên -->
             <aside class="lg:w-1/3">
-                <!-- Author -->
+                <!-- Tác giả -->
                 <div class="bg-gray-50 p-6 rounded-lg mb-8">
                     <div class="flex items-center mb-4">
                         <div class="relative w-16 h-16 rounded-full overflow-hidden mr-4">
-                            <img src="https://placeholder.co/200" alt="Author" class="absolute inset-0 w-full h-full object-cover" />
+                            <img src="https://placeholder.co/200" alt="Tác giả" class="absolute inset-0 w-full h-full object-cover" />
                         </div>
                         <div>
                             <h3 class="font-bold text-lg">John Smith</h3>
-                            <p class="text-gray-600">Senior Health Reporter</p>
+                            <p class="text-gray-600">Phóng viên Y tế cấp cao</p>
                         </div>
                     </div>
                     <p class="text-gray-700 mb-4">
-                        John has been covering healthcare and technology for over a decade, with a special focus on emerging medical
-                        technologies.
+                        John đã đưa tin về y tế và công nghệ trong hơn một thập kỷ, với sự tập trung đặc biệt vào các công nghệ y tế mới nổi.
                     </p>
-                    <a href="/author/john-smith" class="text-teal-500 hover:underline font-medium">
-                        View all posts
-                    </a>
                 </div>
 
-                <!-- Related Articles -->
+                <!-- Bài viết liên quan -->
                 <div class="bg-gray-50 p-6 rounded-lg mb-8">
-                    <h3 class="font-bold text-xl mb-4 pb-2 border-b border-gray-200">Related Articles</h3>
+                    <h3 class="font-bold text-xl mb-4 pb-2 border-b border-gray-200">Bài viết liên quan</h3>
                     <div class="space-y-4">
-                        <div class="flex items-start">
-                            <div class="relative w-20 h-20 rounded overflow-hidden flex-shrink-0">
-                                <img src="https://placeholder.co/200?text=1" alt="Related article 1"
-                                    class="absolute inset-0 w-full h-full object-cover" />
+                        <?php foreach ($topViewedNews as $news) { ?>
+                            <div class="flex items-start">
+                                <div class="relative w-20 h-20 rounded overflow-hidden flex-shrink-0">
+                                    <img src="<?= $news['featured_image'] ?>" alt="Bài viết liên quan"
+                                        class="absolute inset-0 w-full h-full object-cover" />
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-medium hover:text-teal-500">
+                                        <a href="<?= UrlHelper::route('/home/news-detail/') ?><?= $news['id'] ?>"><?= $news['title'] ?></a>
+                                    </h4>
+                                    <p class="text-sm text-gray-500 mt-1"><?= $news['views'] ?> lượt xem</p>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <h4 class="font-medium hover:text-teal-500">
-                                    <a href="/news/1">How AI is Transforming Drug Discovery</a>
-                                </h4>
-                                <p class="text-sm text-gray-500 mt-1">March 21, 2025</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="relative w-20 h-20 rounded overflow-hidden flex-shrink-0">
-                                <img src="https://placeholder.co/200?text=2" alt="Related article 2"
-                                    class="absolute inset-0 w-full h-full object-cover" />
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="font-medium hover:text-teal-500">
-                                    <a href="/news/2">The Ethics of AI in Clinical Decision Making</a>
-                                </h4>
-                                <p class="text-sm text-gray-500 mt-1">March 22, 2025</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="relative w-20 h-20 rounded overflow-hidden flex-shrink-0">
-                                <img src="https://placeholder.co/200?text=3" alt="Related article 3"
-                                    class="absolute inset-0 w-full h-full object-cover" />
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="font-medium hover:text-teal-500">
-                                    <a href="/news/3">Machine Learning Models Predict Patient Outcomes</a>
-                                </h4>
-                                <p class="text-sm text-gray-500 mt-1">March 23, 2025</p>
-                            </div>
-                        </div>
+                        <?php } ?>
                     </div>
-                    <a href="/news/technology" class="inline-block mt-4 text-teal-500 hover:underline font-medium">
-                        More in Technology
-                    </a>
                 </div>
 
-                <!-- Newsletter -->
+                <!-- Bản tin -->
                 <div class="bg-teal-50 p-6 rounded-lg border border-teal-100">
-                    <h3 class="font-bold text-xl mb-2">Subscribe to Our Newsletter</h3>
-                    <p class="text-gray-700 mb-4">Get the latest news and updates delivered to your inbox</p>
+                    <h3 class="font-bold text-xl mb-2">Đăng ký nhận Bản tin của chúng tôi</h3>
+                    <p class="text-gray-700 mb-4">Nhận tin tức và cập nhật mới nhất gửi đến hộp thư của bạn</p>
                     <form class="space-y-3">
-                        <input type="email" placeholder="Your email address"
+                        <input type="email" placeholder="Địa chỉ email của bạn"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
                             required />
                         <button type="submit"
                             class="w-full bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
-                            Subscribe
+                            Đăng ký
                         </button>
                     </form>
                     <p class="text-xs text-gray-500 mt-3">
-                        By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
+                        Bằng cách đăng ký, bạn đồng ý với Chính sách Bảo mật của chúng tôi và đồng ý nhận thông tin cập nhật từ công ty chúng tôi.
                     </p>
                 </div>
             </aside>
