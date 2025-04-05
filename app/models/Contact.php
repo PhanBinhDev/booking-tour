@@ -25,7 +25,7 @@ class Contact extends BaseModel
                     message, 
                     status,
                     ip_address, 
-                    user_agent,
+                    user_agent
                 ) VALUES (
                     :name, 
                     :email, 
@@ -34,7 +34,7 @@ class Contact extends BaseModel
                     :message, 
                     :status,
                     :ip_address, 
-                    :user_agent,
+                    :user_agent
                 )";
 
 
