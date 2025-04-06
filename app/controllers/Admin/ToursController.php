@@ -6,10 +6,12 @@ use App\Controllers\BaseController;
 use App\Models\Booking;
 use App\Models\Categories;
 use App\Models\Tour;
+use App\Models\Image;
 use App\Models\Role;
 use App\Models\User;
 use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
+
 
 use Exception;
 
@@ -17,6 +19,7 @@ use Exception;
 class ToursController extends BaseController
 {
     private $tourModel;
+    private $imgModel;
     private $bookingModel;
     private $categoriesModel;
     private $roleModel;
@@ -25,6 +28,7 @@ class ToursController extends BaseController
     public function __construct()
     {
         $this->userModel = new User();
+        $this->imgModel = new Image();
         $this->tourModel = new Tour();
         $this->bookingModel = new Booking();
         $this->categoriesModel = new Categories();
@@ -99,6 +103,28 @@ class ToursController extends BaseController
         ]);
     }
 
+
+    public function updateStatus($id)
+    {
+        $status = $_POST['status'] ?? null;
+
+        $allowed = ['pending', 'confirmed', 'completed', 'cancelled'];
+
+        if (!in_array($status, $allowed)) {
+            die("Trạng thái không hợp lệ.");
+        }
+
+        $success = $this->bookingModel->updateStatus($id, $status);
+
+        if ($success) {
+            $this->setFlashMessage('success', 'Sửa trạng thái thành công');
+            header("Location: " . UrlHelper::route('admin/bookings'));
+            exit;
+        } else {
+            $this->setFlashMessage('error', 'Sửa trạng thái thất bại');
+            exit;
+        }
+    }
 
     ////////////////////////////////////////////
     ///////////////  TOURS  ///////////////
@@ -256,6 +282,18 @@ class ToursController extends BaseController
             $tourId = $this->tourModel->insertTour($tourData);
             $this->tourModel->attachImage($tourId, $imageId, $is_featured);
 
+            $tourDates = $_POST['tour_dates'] ?? [];
+
+            foreach ($tourDates as $dateItem) {
+                if (!empty($dateItem['start_date']) && !empty($dateItem['end_date'])) {
+                    $this->tourModel->addTourDate($tourId, [
+                        'start_date' => $dateItem['start_date'],
+                        'end_date' => $dateItem['end_date'],
+                        'available_seats' => $dateItem['available_seats'] ?? null,
+                    ]);
+                }
+            }
+
             // Xử lý upload nhiều ảnh chi tiết
             if (isset($_FILES['detail_image']) && !empty($_FILES['detail_image']['name'][0])) {
                 $detailImagesCount = count($_FILES['detail_image']['name']);
@@ -355,7 +393,10 @@ class ToursController extends BaseController
         $locations = $this->categoriesModel->getTitle('id', 'name', 'locations');
         $feature_img = $this->tourModel->getFeaturedImageByTourId($id);
         $details_img = $this->tourModel->getAllImagesExcludingFeatured($id);
-        var_dump($details_img);
+
+        // Lấy lịch khởi hành hiện tại
+        $tour_dates = $this->tourModel->getTourDates($id);
+        $currentTour['dates'] = $tour_dates;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Thông tin cơ bản
@@ -424,7 +465,79 @@ class ToursController extends BaseController
                 'id' => $id,
             ];
 
-            if (isset($_FILES['featured_image']) &&  !empty($_FILES['featured_image']['tmp_name'])) {
+            // Cập nhật tour trước để đảm bảo ID tour hợp lệ
+            $result = $this->tourModel->updateTour($tourData);
+            if (!$result) {
+                $this->setFlashMessage('error', 'Không thể cập nhật tour. Vui lòng kiểm tra lại dữ liệu.');
+                header('location:' . UrlHelper::route('admin/tours'));
+                exit;
+            }
+
+            // Xử lý lịch khởi hành (tour_dates)
+            if (isset($_POST['tour_dates']) && is_array($_POST['tour_dates'])) {
+                // Lấy danh sách date ID hiện tại để xóa những ngày không còn tồn tại
+                $existingDateIds = array_column($tour_dates, 'id');
+                $updatedDateIds = [];
+
+                foreach ($_POST['tour_dates'] as $dateIndex => $dateData) {
+                    $dateId = isset($dateData['id']) ? $dateData['id'] : null;
+                    $startDate = $dateData['start_date'] ?? null;
+                    $endDate = $dateData['end_date'] ?? null;
+                    $availableSeats = $dateData['available_seats'] ?? null;
+
+                    // Validate date inputs
+                    if (empty($startDate) || empty($endDate)) {
+                        continue;
+                    }
+
+                    $tourDateData = [
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'available_seats' => $availableSeats
+                    ];
+
+                    if ($dateId && in_array($dateId, $existingDateIds)) {
+                        // Update existing date
+                        $this->tourModel->updateTourDate($dateId, $tourDateData);
+                        $updatedDateIds[] = $dateId;
+                    } else {
+                        // Insert new date using the existing addTourDate method
+                        $this->tourModel->addTourDate($id, $tourDateData);
+                    }
+                }
+
+                // Delete dates that were removed
+                $datesToDelete = array_diff($existingDateIds, $updatedDateIds);
+                foreach ($datesToDelete as $dateId) {
+                    $this->tourModel->deleteTourDate($dateId);
+                }
+            }
+
+            // Xử lý xóa ảnh đại diện nếu có yêu cầu
+            if (isset($_POST['remove_featured_image']) && !empty($_POST['remove_featured_image'])) {
+                // Xóa ảnh đại diện cũ
+                $this->tourModel->resetFeaturedImages($id);
+                error_log('Đã xóa ảnh đại diện cũ của tour ID=' . $id);
+            }
+
+            // Xử lý xóa ảnh chi tiết nếu có yêu cầu
+            if (isset($_POST['remove_detail_images']) && is_array($_POST['remove_detail_images'])) {
+                foreach ($_POST['remove_detail_images'] as $imageIdentifier) {
+                    // Cần xác định image_id từ cloudinary_id hoặc url
+                    $imageId = $this->tourModel->getImageIdByIdentifier($imageIdentifier);
+                    if ($imageId) {
+                        $this->tourModel->removeImage($id, $imageId);
+                        error_log('Đã xóa ảnh chi tiết ID=' . $imageId . ' khỏi tour ID=' . $id);
+                    }
+                }
+            }
+
+            // Xử lý ảnh đại diện mới
+            if (
+                isset($_FILES['featured_image']) &&
+                $_FILES['featured_image']['error'] === UPLOAD_ERR_OK &&
+                !empty($_FILES['featured_image']['tmp_name'])
+            ) {
                 $imageData = [
                     'title' => $title,
                     'description' => $description,
@@ -434,6 +547,10 @@ class ToursController extends BaseController
                 ];
 
                 try {
+                    // Xóa ảnh đại diện cũ nếu có
+                    $this->tourModel->resetFeaturedImages($id);
+
+                    // Tải lên và lưu ảnh mới
                     $imageId = CloudinaryHelper::uploadAndSave(
                         $_FILES['featured_image']['tmp_name'],
                         $imageData,
@@ -442,19 +559,29 @@ class ToursController extends BaseController
                     );
 
                     if ($imageId) {
-                        $this->tourModel->updateImage($currentTour['id'], $imageId, 1);
+                        // Cập nhật ảnh đại diện mới
+                        $this->tourModel->updateImage($id, $imageId, 1);
+                        error_log('Cập nhật ảnh đại diện thành công: ID=' . $imageId);
                     }
                 } catch (\Exception $e) {
-                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh đại diện: ' . $e->getMessage());
+                    error_log('Lỗi khi upload ảnh đại diện: ' . $e->getMessage());
+                    $this->setFlashMessage('error', 'Lỗi khi upload ảnh: ' . $e->getMessage());
                 }
             }
 
-            // Xử lý upload nhiều ảnh chi tiết
-            if (isset($_FILES['detail_image']) && !empty($_FILES['detail_image']['name'][0])) {
+            // Xử lý ảnh chi tiết mới
+            if (
+                isset($_FILES['detail_image']) &&
+                is_array($_FILES['detail_image']['name']) &&
+                !empty($_FILES['detail_image']['name'][0])
+            ) {
                 $detailImagesCount = count($_FILES['detail_image']['name']);
 
                 for ($i = 0; $i < $detailImagesCount; $i++) {
-                    if ($_FILES['detail_image']['error'][$i] === UPLOAD_ERR_OK && !empty($_FILES['detail_image']['tmp_name'][$i])) {
+                    if (
+                        $_FILES['detail_image']['error'][$i] === UPLOAD_ERR_OK &&
+                        !empty($_FILES['detail_image']['tmp_name'][$i])
+                    ) {
                         $tempFile = $_FILES['detail_image']['tmp_name'][$i];
                         $detailImageData = [
                             'title' => $title . ' - Chi tiết ' . ($i + 1),
@@ -473,7 +600,9 @@ class ToursController extends BaseController
                             );
 
                             if ($detailImageId) {
-                                $this->tourModel->updateImage($currentTour['id'], $detailImageId, 0);
+                                // Cập nhật ảnh chi tiết (không phải ảnh đại diện)
+                                $this->tourModel->updateImage($id, $detailImageId, 0);
+                                error_log('Cập nhật ảnh chi tiết thành công: ID=' . $detailImageId);
                             }
                         } catch (\Exception $e) {
                             error_log('Lỗi khi upload ảnh chi tiết ' . ($i + 1) . ': ' . $e->getMessage());
@@ -483,12 +612,7 @@ class ToursController extends BaseController
                 }
             }
 
-            $result = $this->tourModel->updateTour($tourData);
-            if ($result) {
-                $this->setFlashMessage('success', 'Sửa tour thành công');
-            } else {
-                $this->setFlashMessage('error', 'Không thể cập nhật tour. Vui lòng kiểm tra lại dữ liệu.');
-            }
+            $this->setFlashMessage('success', 'Sửa tour thành công');
             header('location:' . UrlHelper::route('admin/tours'));
             exit;
         } else {
@@ -777,27 +901,5 @@ class ToursController extends BaseController
         $this->setFlashMessage('success', 'Xóa danh mục thành công');
         header('location:' . UrlHelper::route('admin/tours/categories'));
         exit;
-    }
-
-    public function updateStatus($id)
-    {
-        $status = $_POST['status'] ?? null;
-
-        $allowed = ['pending', 'confirmed', 'completed', 'cancelled'];
-
-        if (!in_array($status, $allowed)) {
-            die("Trạng thái không hợp lệ.");
-        }
-
-        $success = $this->bookingModel->updateStatus($id, $status);
-
-        if ($success) {
-            $this->setFlashMessage('success', 'Sửa trạng thái thành công');
-            header("Location: " . UrlHelper::route('admin/bookings'));
-            exit;
-        } else {
-            $this->setFlashMessage('error', 'Sửa trạng thái thất bại');
-            exit;
-        }
     }
 }
