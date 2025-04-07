@@ -32,7 +32,7 @@ $childPrice = $displayPrice * 0.7;
 
         <!-- Tour Title Section -->
         <div class="mb-10">
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+            <h1 class="text-3xl  font-bold text-gray-800 mb-4">
                 <?= htmlspecialchars($tourDetails['title']) ?>
             </h1>
             <div class="flex flex-wrap items-center gap-6">

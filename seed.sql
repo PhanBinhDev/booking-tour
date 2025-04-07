@@ -135,6 +135,22 @@ CREATE TABLE IF NOT EXISTS `images` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
+
+
+-- -----------------------------------------------------
+-- Table `tour_images`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tour_images` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `tour_id` INT NOT NULL,
+  `image_id` INT NOT NULL,
+  `is_featured` BOOLEAN DEFAULT FALSE,
+  `sort_order` INT DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`tour_id`) REFERENCES `tours` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE
+);
+
 -- -----------------------------------------------------
 -- Table `tours`
 -- -----------------------------------------------------
@@ -168,20 +184,6 @@ CREATE TABLE IF NOT EXISTS `tours` (
   FOREIGN KEY (`departure_location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL,
   FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
   FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
-);
-
--- -----------------------------------------------------
--- Table `tour_images`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tour_images` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `tour_id` INT NOT NULL,
-  `image_id` INT NOT NULL,
-  `is_featured` BOOLEAN DEFAULT FALSE,
-  `sort_order` INT DEFAULT 0,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`tour_id`) REFERENCES `tours` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------

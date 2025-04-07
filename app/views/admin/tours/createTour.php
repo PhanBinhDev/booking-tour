@@ -43,13 +43,48 @@ use App\Helpers\UrlHelper;
                         </div>
 
                         <div class="col-span-2">
-                            <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+                            <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug <span class="text-red-500">*</span></label>
                             <div class="flex">
                                 <input type="text" id="slug" name="slug" required class="w-full px-2.5 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <button type="button" id="generate-slug" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-150 shadow-sm text-sm leading-4 font-medium rounded-md  text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
                                     Tạo slug
                                 </button>
                             </div>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục tour <span class="text-red-500">*</span></label>
+                            <select id="category_id" name="category_id" required class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                                <option value="">-- Chọn danh mục --</option>
+                                <?php
+                                foreach ($categories as $value) { ?>
+                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
+                                <?php } ?>
+
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm đến <span class="text-red-500">*</span></label>
+                            <select id="location_id" name="location_id" required class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                                <option value="">-- Chọn điểm đến --</option>
+                                <?php
+                                foreach ($locations as $value) { ?>
+                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
+                                <?php } ?>
+
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="departure_location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm khởi hành <span class="text-red-500">*</span></label>
+                            <select id="departure_location_id" required name="departure_location_id" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                                <option value="">-- Chọn điểm khởi hành --</option>
+                                <?php
+                                foreach ($locations as $value) { ?>
+                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
+                                <?php } ?>
+
+                            </select>
                         </div>
 
                         <div>
@@ -63,67 +98,125 @@ use App\Helpers\UrlHelper;
                         </div>
 
                         <div>
-                            <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Thời gian tour</label>
-                            <input type="text" id="duration" name="duration" required placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                            <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Thời gian tour <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                id="duration"
+                                name="duration"
+                                required
+                                placeholder="Ví dụ: 3 ngày 2 đêm"
+                                class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-200 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
                         <div>
-                            <label for="group_size" class="block text-sm font-medium text-gray-700 mb-1">Số người tối đa</label>
+                            <label for="group_size" class="block text-sm font-medium text-gray-700 mb-1">Số người tối đa <span class="text-red-500">*</span></label>
                             <input type="text" id="group_size" name="group_size" placeholder="Ví dụ: 20 người" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                         </div>
 
-                        <div>
-                            <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục tour</label>
-                            <select id="category_id" name="category_id" required class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                                <option value="">-- Chọn danh mục --</option>
-                                <?php
-                                foreach ($categories as $value) { ?>
-                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
-                                <?php } ?>
-
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm đến</label>
-                            <select id="location_id" name="location_id" required class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                                <option value="">-- Chọn điểm đến --</option>
-                                <?php
-                                foreach ($locations as $value) { ?>
-                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
-                                <?php } ?>
-
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="departure_location_id" class="block text-sm font-medium text-gray-700 mb-1">Điểm khởi hành</label>
-                            <select id="departure_location_id" required name="departure_location_id" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                                <option value="">-- Chọn điểm khởi hành --</option>
-                                <?php
-                                foreach ($locations as $value) { ?>
-                                    <option value="<?= $value['id'] ?>"><?= $value['name'] ?></option>
-                                <?php } ?>
-
-                            </select>
-                        </div>
-
                         <div class="col-span-2">
-                            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
-                            <textarea id="description" name="description" rows="3" class="w-full border-2 px-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
+                            <div id="tour-dates-wrapper">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Lịch khởi hành <span class="text-red-500">*</span>
+                                </label>
+
+                                <!-- Table-like headers -->
+                                <div class="grid grid-cols-3 gap-4 mb-2 px-3">
+                                    <div class="text-xs text-gray-500 font-medium">Ngày khởi hành</div>
+                                    <div class="text-xs text-gray-500 font-medium">Ngày kết thúc</div>
+                                    <div class="text-xs text-gray-500 font-medium">Số chỗ</div>
+                                </div>
+
+                                <div class="tour-date-item mb-4 border p-3 rounded-md bg-gray-50">
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <input type="date" name="tour_dates[0][start_date]" placeholder="Ngày khởi hành" class="w-full p-2 border rounded" required>
+                                        <input type="date" name="tour_dates[0][end_date]" placeholder="Ngày kết thúc" class="w-full p-2 border rounded" required>
+                                        <input type="number" name="tour_dates[0][available_seats]" placeholder="Số chỗ" class="w-full p-2 border rounded">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="addTourDate()" class="text-blue-600 mt-2 text-sm">+ Thêm lịch khởi hành</button>
                         </div>
 
-                        <div class="col-span-2">
-                            <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Nội dung chi tiết</label>
-                            <textarea id="content" name="content" rows="6" class="w-full rounded-md border-2 px-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
-                            <p class="mt-1 text-xs text-gray-500">Mô tả chi tiết về tour du lịch</p>
-                        </div>
+
+                        <script>
+                            let dateIndex = 1;
+
+                            function setMinDates() {
+                                const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                                const dateInputs = document.querySelectorAll('input[type="date"]');
+
+                                dateInputs.forEach(input => {
+                                    input.min = today;
+
+                                    // Add event listener to validate end date is after start date
+                                    if (input.name.includes('end_date')) {
+                                        const itemIndex = input.name.match(/\d+/)[0];
+                                        const startDateInput = document.querySelector(`input[name="tour_dates[${itemIndex}][start_date]"]`);
+
+                                        if (startDateInput) {
+                                            startDateInput.addEventListener('change', function() {
+                                                if (this.value) {
+                                                    input.min = this.value;
+                                                }
+                                            });
+
+                                            // If start date already has a value, set end date min
+                                            if (startDateInput.value) {
+                                                input.min = startDateInput.value;
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+
+                            // Initialize min dates on page load
+                            document.addEventListener('DOMContentLoaded', function() {
+                                setMinDates();
+                            });
+
+                            function addTourDate() {
+                                const wrapper = document.getElementById('tour-dates-wrapper');
+                                const newDiv = document.createElement('div');
+                                newDiv.className = 'tour-date-item mb-4 border p-3 rounded-md bg-gray-50';
+
+                                newDiv.innerHTML = `
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <input type="date" name="tour_dates[${dateIndex}][start_date]" placeholder="Ngày khởi hành" class="w-full p-2 border rounded" required>
+                                        <input type="date" name="tour_dates[${dateIndex}][end_date]" placeholder="Ngày kết thúc" class="w-full p-2 border rounded" required>
+                                        <div class="flex items-center">
+                                            <input type="number" name="tour_dates[${dateIndex}][available_seats]" placeholder="Số chỗ" class="w-full p-2 border rounded">
+                                            <button type="button" onclick="removeTourDate(this)" class="text-red-600 text-sm ml-2">Xoá</button>
+                                        </div>
+                                    </div>
+                                `;
+
+                                wrapper.appendChild(newDiv);
+                                dateIndex++;
+                            }
+
+                            function removeTourDate(button) {
+                                const tourDateItem = button.closest('.tour-date-item');
+                                tourDateItem.remove();
+                            }
+                        </script>
+
                     </div>
                 </div>
 
                 <!-- Chi tiết tour -->
                 <div id="details" class="tab-content hidden">
                     <div class="grid grid-cols-1 gap-6">
+
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
+                            <textarea id="description" name="description" rows="3" class="w-full border-2 px-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Nội dung chi tiết</label>
+                            <textarea id="content" name="content" rows="6" class="w-full rounded-md border-2 px-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20"></textarea>
+                            <p class="mt-1 text-xs text-gray-500">Mô tả chi tiết về tour du lịch</p>
+                        </div>
                         <div>
                             <label for="included" class="block text-sm font-medium text-gray-700 mb-1">Dịch vụ bao gồm</label>
                             <textarea id="included" name="included" rows="4" class="w-full px-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20" placeholder="Mỗi dịch vụ một dòng"></textarea>

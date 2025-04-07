@@ -220,10 +220,10 @@ class HomeController extends BaseController
       "JOIN tour_categories ON tour_categories.id = tours.category_id",
       "JOIN locations ON locations.id = tours.location_id",
       "LEFT JOIN (
-      SELECT tour_id, AVG(rating) as avg_rating, COUNT(*) as review_count 
-      FROM tour_reviews 
-      GROUP BY tour_id
-      ) as tr ON tr.tour_id = tours.id",
+    SELECT tour_id, AVG(rating) as avg_rating, COUNT(*) as review_count 
+    FROM tour_reviews 
+    GROUP BY tour_id
+    ) as tr ON tr.tour_id = tours.id",
       "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
       "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
       "LEFT JOIN images ON tour_images.image_id = images.id"
@@ -267,8 +267,8 @@ class HomeController extends BaseController
         $orderBy = 'tr.avg_rating DESC, tr.review_count DESC';
         break;
     }
-    $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id,images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
 
+    $groupBy = "GROUP BY tours.id, tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
 
     $allTours = $this->tourModel->getAll(
       $columns,

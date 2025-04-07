@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use PDOException;
 use PDO;
 
 class Tour extends BaseModel
@@ -148,18 +149,15 @@ class Tour extends BaseModel
                 locations.description AS location_des,
                 locations.latitude AS location_la,
                 tour_categories.name AS category_name, 
-                tour_dates.start_date, 
-                tour_dates.end_date,
                 GROUP_CONCAT(images.cloudinary_url) AS images
             FROM tours
             LEFT JOIN tour_categories ON tours.category_id = tour_categories.id 
-            LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id 
             LEFT JOIN locations ON locations.id = tours.location_id 
             LEFT JOIN tour_images ON tour_images.tour_id = tours.id
             LEFT JOIN images ON images.id = tour_images.image_id
             WHERE tours.id = :id
             GROUP BY tours.id, locations.name, locations.description, locations.latitude, 
-                     tour_categories.name, tour_dates.start_date, tour_dates.end_date";
+                     tour_categories.name";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $tourId, \PDO::PARAM_INT);
@@ -167,15 +165,25 @@ class Tour extends BaseModel
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Chuyển danh sách URL từ chuỗi thành mảng
-        if ($result && !empty($result['images'])) {
-            $result['images'] = explode(',', $result['images']);
-        } else {
-            $result['images'] = [];
+        if (!$result) {
+            return null;
         }
+
+        $result['images'] = !empty($result['images']) ? explode(',', $result['images']) : [];
+
+        $sqlDates = "SELECT start_date, end_date, available_seats 
+                 FROM tour_dates 
+                 WHERE tour_id = :id";
+
+        $stmtDates = $this->db->prepare($sqlDates);
+        $stmtDates->bindValue(':id', $tourId, \PDO::PARAM_INT);
+        $stmtDates->execute();
+
+        $result['dates'] = $stmtDates->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
+
 
 
     /**
@@ -344,53 +352,191 @@ class Tour extends BaseModel
         ]);
     }
 
-    public function updateImage($tourId, $imageId, $isFeatured = null)
+    /**
+     * Cập nhật ảnh cho tour
+     * 
+     * @param int $tourId ID của tour
+     * @param int $imageId ID của ảnh
+     * @param bool $isFeatured Có phải ảnh đại diện không
+     * @return bool Kết quả cập nhật
+     */
+    public function updateImage($tourId, $imageId, $isFeatured = 0)
     {
-        $sql = "UPDATE `tour_images` SET ";
+        try {
+            $db = $this->db;
 
-        $params = ['tour_id' => $tourId, 'image_id' => $imageId];
+            // Kiểm tra xem liên kết đã tồn tại chưa
+            $checkSql = "SELECT id FROM tour_images WHERE tour_id = ? AND image_id = ?";
+            $checkStmt = $db->prepare($checkSql);
+            $checkStmt->execute([$tourId, $imageId]);
+            $existingRecord = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!is_null($isFeatured)) {
-            $sql .= "`is_featured` = :is_featured, ";
-            $params['is_featured'] = $isFeatured;
+            if ($isFeatured) {
+                // Nếu là ảnh đại diện, đặt tất cả ảnh khác của tour này thành không phải đại diện
+                $resetFeaturedSql = "UPDATE tour_images SET is_featured = 0 WHERE tour_id = ?";
+                $resetStmt = $db->prepare($resetFeaturedSql);
+                $resetStmt->execute([$tourId]);
+            }
+
+            if ($existingRecord) {
+                // Nếu liên kết đã tồn tại, chỉ cập nhật trạng thái is_featured
+                $updateSql = "UPDATE tour_images SET is_featured = ? WHERE tour_id = ? AND image_id = ?";
+                $updateStmt = $db->prepare($updateSql);
+                $result = $updateStmt->execute([$isFeatured, $tourId, $imageId]);
+            } else {
+                // Thêm liên kết mới
+                $sortOrder = $this->getNextSortOrder($tourId);
+                $insertSql = "INSERT INTO tour_images (tour_id, image_id, is_featured, sort_order) VALUES (?, ?, ?, ?)";
+                $insertStmt = $db->prepare($insertSql);
+                $result = $insertStmt->execute([$tourId, $imageId, $isFeatured, $sortOrder]);
+            }
+
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Lỗi cập nhật ảnh cho tour: " . $e->getMessage());
+            return false;
         }
-
-        $sql = rtrim($sql, ', ');
-
-        $sql .= " WHERE `tour_id` = :tour_id AND `image_id` = :image_id";
-
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute($params);
     }
 
-    public function getFeaturedImageByTourId($tourId)
+    /**
+     * Lấy thứ tự sắp xếp tiếp theo cho ảnh mới
+     * 
+     * @param int $tourId ID của tour
+     * @return int Thứ tự sắp xếp tiếp theo
+     */
+    private function getNextSortOrder($tourId)
     {
-        $sql = "
-        SELECT i.file_path, i.file_name, i.file_type, i.cloudinary_url
-        FROM tour_images ti
-        INNER JOIN images i ON ti.image_id = i.id
-        WHERE ti.tour_id = :tour_id AND ti.is_featured = 1
-        LIMIT 1";
-
+        $sql = "SELECT MAX(sort_order) as max_order FROM tour_images WHERE tour_id = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['tour_id' => $tourId]);
+        $stmt->execute([$tourId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['max_order'] !== null) ? $result['max_order'] + 1 : 0;
     }
 
+    /**
+     * Xóa liên kết ảnh của tour
+     * 
+     * @param int $tourId ID của tour
+     * @param int $imageId ID của ảnh cần xóa, nếu null sẽ xóa tất cả ảnh của tour
+     * @return bool Kết quả xóa
+     */
+    public function removeImage($tourId, $imageId = null)
+    {
+        try {
+            $db = $this->db;
+
+            if ($imageId !== null) {
+                // Xóa một ảnh cụ thể
+                $sql = "DELETE FROM tour_images WHERE tour_id = ? AND image_id = ?";
+                $stmt = $db->prepare($sql);
+                return $stmt->execute([$tourId, $imageId]);
+            } else {
+                // Xóa tất cả ảnh của tour
+                $sql = "DELETE FROM tour_images WHERE tour_id = ?";
+                $stmt = $db->prepare($sql);
+                return $stmt->execute([$tourId]);
+            }
+        } catch (PDOException $e) {
+            error_log("Lỗi xóa ảnh cho tour: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Đặt tất cả ảnh của tour thành không phải ảnh đại diện
+     * 
+     * @param int $tourId ID của tour
+     * @return bool Kết quả
+     */
+    public function resetFeaturedImages($tourId)
+    {
+        try {
+            $sql = "UPDATE tour_images SET is_featured = 0 WHERE tour_id = ?";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([$tourId]);
+        } catch (PDOException $e) {
+            error_log("Lỗi reset ảnh đại diện: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Lấy tất cả ảnh không phải ảnh đại diện của tour
+     * 
+     * @param int $tourId ID của tour
+     * @return array Danh sách ảnh
+     */
     public function getAllImagesExcludingFeatured($tourId)
     {
-        $sql = "
-        SELECT i.cloudinary_url
-        FROM tour_images ti
-        INNER JOIN images i ON ti.image_id = i.id
-        WHERE ti.tour_id = :tour_id AND ti.is_featured = 0
-        ORDER BY ti.sort_order ASC";
+        try {
+            $sql = "SELECT i.*, ti.image_id, ti.is_featured 
+                FROM tour_images ti 
+                JOIN images i ON ti.image_id = i.id 
+                WHERE ti.tour_id = ? AND ti.is_featured = 0 
+                ORDER BY ti.sort_order ASC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$tourId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Lỗi lấy danh sách ảnh chi tiết: " . $e->getMessage());
+            return [];
+        }
+    }
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(['tour_id' => $tourId]);
+    /**
+     * Lấy ảnh đại diện của tour
+     * 
+     * @param int $tourId ID của tour
+     * @return array|null Thông tin ảnh đại diện hoặc null nếu không có
+     */
+    public function getFeaturedImageByTourId($tourId)
+    {
+        try {
+            $sql = "SELECT i.*, ti.image_id, ti.is_featured 
+                FROM tour_images ti 
+                JOIN images i ON ti.image_id = i.id 
+                WHERE ti.tour_id = ? AND ti.is_featured = 1 
+                LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$tourId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Lỗi lấy ảnh đại diện: " . $e->getMessage());
+            return null;
+        }
+    }
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    /**
+     * Get image ID by a cloudinary identifier (usually the file name or public ID)
+     * 
+     * @param string $identifier The cloudinary identifier (from URL or public ID)
+     * @return int|null The image ID or null if not found
+     */
+    public function getImageIdByIdentifier($identifier)
+    {
+        // Strip path and extension if present
+        $cleanIdentifier = basename($identifier);
+        $cleanIdentifier = preg_replace('/\.[^.]+$/', '', $cleanIdentifier);
+
+        $sql = "SELECT id FROM images WHERE 
+            cloudinary_id LIKE :identifier OR 
+            cloudinary_url LIKE :url OR
+            file_name LIKE :filename";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':identifier', "%$cleanIdentifier%", PDO::PARAM_STR);
+            $stmt->bindValue(':url', "%$cleanIdentifier%", PDO::PARAM_STR);
+            $stmt->bindValue(':filename', "%$cleanIdentifier%", PDO::PARAM_STR);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['id'] : null;
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
+            return null;
+        }
     }
 
 
@@ -444,6 +590,20 @@ class Tour extends BaseModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function addTourDate($tourId, $data)
+    {
+        $sql = "INSERT INTO tour_dates (tour_id, start_date, end_date, available_seats) 
+            VALUES (:tour_id, :start_date, :end_date, :available_seats)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':tour_id' => $tourId,
+            ':start_date' => $data['start_date'],
+            ':end_date' => $data['end_date'],
+            ':available_seats' => $data['available_seats'],
+        ]);
+    }
+
+
     public function updateTourDate($tourDateId, $data)
     {
         $setClause = implode(', ', array_map(fn($key) => "`$key` = :$key", array_keys($data)));
@@ -451,5 +611,32 @@ class Tour extends BaseModel
         $stmt = $this->db->prepare($sql);
         $data['id'] = $tourDateId;
         return $stmt->execute($data);
+    }
+
+    /**
+     * Lấy tất cả lịch khởi hành cho một tour cụ thể
+     * 
+     * @param int $tourId ID của tour
+     * @return array Mảng các lịch khởi hành
+     */
+    public function getTourDates($tourId)
+    {
+        $sql = "SELECT * FROM `tour_dates` WHERE `tour_id` = :tour_id ORDER BY `start_date` ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['tour_id' => $tourId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Xóa một lịch khởi hành theo ID
+     * 
+     * @param int $dateId ID của lịch khởi hành cần xóa
+     * @return bool Thành công hay thất bại
+     */
+    public function deleteTourDate($dateId)
+    {
+        $sql = "DELETE FROM `tour_dates` WHERE `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute(['id' => $dateId]);
     }
 }

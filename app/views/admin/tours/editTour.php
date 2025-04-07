@@ -13,7 +13,7 @@ use App\Helpers\UrlHelper;
         </div>
 
         <!-- Form thêm tour -->
-        <form action="<?= UrlHelper::route('admin/tours/editTour/' . $tour['id']) ?>" method="POST" class="bg-white shadow-md rounded-lg overflow-hidden">
+        <form action="<?= UrlHelper::route('admin/tours/editTour/' . $tour['id']) ?>" method="POST" class="bg-white shadow-md rounded-lg overflow-hidden" enctype="multipart/form-data">
             <!-- Tabs điều hướng -->
             <div class="border-b border-gray-200">
                 <nav class="flex -mb-px">
@@ -58,35 +58,7 @@ use App\Helpers\UrlHelper;
                             <p class="mt-1 text-xs text-gray-500">Để trống để tự động tạo từ tên tour</p>
                         </div>
 
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Giá tour (VNĐ) <span class="text-red-500">*</span></label>
-                            <input type="number" id="price" name="price"
-                                value="<?= $tour['price'] ?>"
-                                required min="0" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                        </div>
-
-                        <div>
-                            <label for="sale_price" class="block text-sm font-medium text-gray-700 mb-1">Giá khuyến mãi (VNĐ)</label>
-                            <input type="number" id="sale_price" name="sale_price" min="0"
-                                value="<?= $tour['sale_price'] ?>"
-                                class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                        </div>
-
-                        <div>
-                            <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Thời gian tour</label>
-                            <input type="text" id="duration" name="duration"
-                                value="<?= $tour['duration'] ?>"
-                                placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                        </div>
-
-                        <div>
-                            <label for="group_size" class="block text-sm font-medium text-gray-700 mb-1">Số người tối đa</label>
-                            <input type="text" id="group_size" name="group_size"
-                                value="<?= $tour['group_size'] ?>"
-                                placeholder="Ví dụ: 20 người" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
-                        </div>
-
-                        <div>
+                        <div class="col-span-2">
                             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Danh mục tour</label>
                             <select id="category_id" name="category_id" class="w-full p-2 rounded-md border-2 focus:outline-none border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
                                 <option value="">-- Chọn danh mục --</option>
@@ -124,8 +96,148 @@ use App\Helpers\UrlHelper;
                             </select>
                         </div>
 
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Giá tour (VNĐ) <span class="text-red-500">*</span></label>
+                            <input type="number" id="price" name="price"
+                                value="<?= $tour['price'] ?>"
+                                required min="0" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                        </div>
+
+                        <div>
+                            <label for="sale_price" class="block text-sm font-medium text-gray-700 mb-1">Giá khuyến mãi (VNĐ)</label>
+                            <input type="number" id="sale_price" name="sale_price" min="0"
+                                value="<?= $tour['sale_price'] ?>"
+                                class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                        </div>
+
+                        <div>
+                            <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Thời gian tour</label>
+                            <input type="text" id="duration" name="duration"
+                                value="<?= $tour['duration'] ?>"
+                                placeholder="Ví dụ: 3 ngày 2 đêm" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                        </div>
+
+                        <div>
+                            <label for="group_size" class="block text-sm font-medium text-gray-700 mb-1">Số người tối đa</label>
+                            <input type="text" id="group_size" name="group_size"
+                                value="<?= $tour['group_size'] ?>"
+                                placeholder="Ví dụ: 20 người" class="w-full p-2 border-2 focus:outline-none rounded-md border-gray-150 shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:ring-opacity-20">
+                        </div>
+
 
                         <div class="col-span-2">
+                            <div id="tour-dates-wrapper">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Lịch khởi hành <span class="text-red-500">*</span>
+                                </label>
+
+                                <!-- Table-like headers -->
+                                <div class="flex gap-5 mb-2 px-3">
+                                    <div class="w-full text-xs text-gray-500 font-medium">Ngày khởi hành</div>
+                                    <div class="w-full text-xs text-gray-500 font-medium">Ngày kết thúc</div>
+                                    <div class="w-full text-xs text-gray-500 font-medium">Số chỗ</div>
+                                    <div class="w-10"></div> <!-- Empty space for the delete button -->
+                                </div>
+
+                                <?php foreach ($tour['dates'] as $i => $date) { ?>
+                                    <div class="tour-date-item mb-4 border p-3 rounded-md bg-gray-50 flex gap-5">
+                                        <input type="date" value="<?= $date['start_date'] ?>" name="tour_dates[<?= $i ?>][start_date]" placeholder="Ngày khởi hành" class="mb-2 w-full p-2 border rounded" required>
+                                        <input type="date" value="<?= $date['end_date'] ?>" name="tour_dates[<?= $i ?>][end_date]" placeholder="Ngày kết thúc" class="mb-2 w-full p-2 border rounded" required>
+                                        <input type="number" value="<?= $date['available_seats'] ?>" name="tour_dates[<?= $i ?>][available_seats]" placeholder="Số chỗ" class="mb-2 w-full p-2 border rounded">
+                                        <button type="button" onclick="removeTourDate(this)" class="text-red-600 text-sm mt-1">Xoá</button>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <button type="button" onclick="addTourDate()" class="text-blue-600 mt-2 text-sm">+ Thêm lịch khởi hành</button>
+                        </div>
+
+                        <script>
+                            let dateIndex = <?= count($tour['dates']) ?>;
+
+                            // Get today's date in YYYY-MM-DD format
+                            function getTodayString() {
+                                return new Date().toISOString().split('T')[0];
+                            }
+
+                            // Set up date validation for a single tour date item
+                            function setupDateValidation(dateItem) {
+                                const today = getTodayString();
+                                const startDateInput = dateItem.querySelector('input[name*="[start_date]"]');
+                                const endDateInput = dateItem.querySelector('input[name*="[end_date]"]');
+
+                                if (startDateInput && endDateInput) {
+                                    // Set minimum date for start date
+                                    startDateInput.min = today;
+
+                                    // Set minimum date for end date based on start date
+                                    if (startDateInput.value) {
+                                        endDateInput.min = startDateInput.value;
+                                    } else {
+                                        endDateInput.min = today;
+                                    }
+
+                                    // Update end date min when start date changes
+                                    startDateInput.addEventListener('change', function() {
+                                        if (this.value) {
+                                            endDateInput.min = this.value;
+                                        } else {
+                                            endDateInput.min = today;
+                                        }
+                                    });
+                                }
+                            }
+
+                            // Set up date validation for all tour date items
+                            function setMinDates() {
+                                const dateItems = document.querySelectorAll('.tour-date-item');
+                                dateItems.forEach(setupDateValidation);
+                            }
+
+                            // Initialize min dates on page load
+                            document.addEventListener('DOMContentLoaded', function() {
+                                setMinDates();
+                            });
+
+                            function addTourDate() {
+                                const wrapper = document.getElementById('tour-dates-wrapper');
+                                const newDiv = document.createElement('div');
+                                newDiv.className = 'tour-date-item mb-4 border p-3 rounded-md bg-gray-50 flex gap-5';
+
+                                const today = getTodayString();
+
+                                newDiv.innerHTML = `
+                                    <input type="date" name="tour_dates[${dateIndex}][start_date]" placeholder="Ngày khởi hành" class="mb-2 w-full p-2 border rounded" min="${today}" required>
+                                    <input type="date" name="tour_dates[${dateIndex}][end_date]" placeholder="Ngày kết thúc" class="mb-2 w-full p-2 border rounded" min="${today}" required>
+                                    <input type="number" name="tour_dates[${dateIndex}][available_seats]" placeholder="Số chỗ" class="mb-2 w-full p-2 border rounded">
+                                    <button type="button" onclick="removeTourDate(this)" class="text-red-600 text-sm mt-1">Xoá</button>
+                                `;
+
+                                wrapper.appendChild(newDiv);
+
+                                // Set up date validation for the new item
+                                setupDateValidation(newDiv);
+
+                                dateIndex++;
+                            }
+
+                            function removeTourDate(button) {
+                                const tourDateItem = button.closest('.tour-date-item');
+                                if (tourDateItem) {
+                                    tourDateItem.remove();
+                                } else {
+                                    // Fallback to parent if closest doesn't work
+                                    button.parentElement.remove();
+                                }
+                            }
+                        </script>
+
+                    </div>
+                </div>
+
+                <!-- Chi tiết tour -->
+                <div id="details" class="tab-content hidden">
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
                             <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
                             <textarea id="description" name="description" rows="3"
                                 class="w-full rounded-md border-2 px-2 focus:outline-none border-gray-150 
@@ -133,7 +245,7 @@ use App\Helpers\UrlHelper;
                             focus:ring-opacity-20"><?= $tour['description'] ?></textarea>
                         </div>
 
-                        <div class="col-span-2">
+                        <div>
                             <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Nội dung chi tiết</label>
                             <textarea id="content" name="content" rows="6"
                                 class="w-full rounded-md border-2 px-2 focus:outline-none border-gray-150 
@@ -141,12 +253,7 @@ use App\Helpers\UrlHelper;
                             focus:ring-opacity-20"><?= $tour['content'] ?></textarea>
                             <p class="mt-1 text-xs text-gray-500">Mô tả chi tiết về tour du lịch</p>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Chi tiết tour -->
-                <div id="details" class="tab-content hidden">
-                    <div class="grid grid-cols-1 gap-6">
                         <div>
                             <label for="included" class="block text-sm font-medium text-gray-700 mb-1">Dịch vụ bao gồm</label>
                             <textarea id="included" name="included" rows="4"
@@ -164,14 +271,22 @@ use App\Helpers\UrlHelper;
                             focus:ring-opacity-20" placeholder="Mỗi dịch vụ một dòng"><?= $tour['excluded'] ?></textarea>
                             <p class="mt-1 text-xs text-gray-500">Liệt kê các dịch vụ không bao gồm trong tour</p>
                         </div>
-
                         <div class="flex flex-col md:flex-row md:space-x-4">
                             <!-- Hình ảnh nổi bật (Featured Image) - Smaller and on the left -->
                             <div class="w-full md:w-1/3 mb-4 md:mb-0">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Hình ảnh nổi bật</label>
                                 <div class="mt-1 border-2 border-gray-200 border-dashed rounded-lg hover:bg-gray-50 transition-colors duration-150 h-full">
-                                    <div id="featured-image-preview" class="hidden p-2 flex-wrap gap-2"></div>
-                                    <div id="featured-image-upload" class="p-4 text-center">
+                                    <div id="featured-image-preview" class="<?= isset($feature_img['cloudinary_url']) && !empty($feature_img['cloudinary_url']) ? 'flex' : 'hidden' ?> p-2 flex-wrap gap-2">
+                                        <?php if (isset($feature_img['cloudinary_url']) && !empty($feature_img['cloudinary_url'])) { ?>
+                                            <div class="relative group">
+                                                <div class="w-24 h-24 border rounded-md overflow-hidden bg-gray-100">
+                                                    <img src="<?= $feature_img['cloudinary_url'] ?>" alt="Featured image" class="w-full h-full object-cover">
+                                                </div>
+                                                <button type="button" class="absolute top-0 right-1 text-gray rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                    <div id="featured-image-upload" class="p-4 text-center <?= isset($feature_img['cloudinary_url']) && !empty($feature_img['cloudinary_url']) ? 'hidden' : '' ?>">
                                         <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                                             <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
@@ -181,12 +296,7 @@ use App\Helpers\UrlHelper;
                                                 <input type="file" id="featured_image" name="featured_image" accept="image/*" class="sr-only">
                                             </label>
                                         </div>
-                                        <?php if (isset($feature_img['cloudinary_url']) && !empty($feature_img['cloudinary_url'])) { ?>
-                                            <div class="w-24 h-24 border rounded-md overflow-hidden bg-gray-100">
-                                                <img src="<?= $feature_img['cloudinary_url'] ?>" alt="Featured image" class="max-h-40 mx-auto object-contain rounded-md border border-gray-200 shadow-sm">
-                                            </div>
-                                        <?php } ?>
-                                        <p class="text-xs text-gray-500 mt-3">PNG, JPG, GIF tối đa 10MB</p>
+                                        <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF tối đa 10MB</p>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +305,18 @@ use App\Helpers\UrlHelper;
                             <div class="w-full md:w-2/3">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Hình ảnh chi tiết</label>
                                 <div class="mt-1 border-2 border-gray-200 border-dashed rounded-lg hover:bg-gray-50 transition-colors duration-150 h-full">
-                                    <div id="detail-images-preview" class="hidden p-2 flex-wrap gap-2"></div>
+                                    <div id="detail-images-preview" class="<?= isset($details_img) && !empty($details_img) ? 'flex' : 'hidden' ?> p-2 flex-wrap gap-2">
+                                        <?php if (isset($details_img) && !empty($details_img)) { ?>
+                                            <?php foreach ($details_img as $img) { ?>
+                                                <div class="relative group">
+                                                    <div class="w-24 h-24 border rounded-md overflow-hidden bg-gray-100">
+                                                        <img src="<?= $img['cloudinary_url'] ?>" alt="Detail image" class="w-full h-full object-cover">
+                                                    </div>
+                                                    <button type="button" class="absolute top-0 right-1 text-gray rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                                                </div>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </div>
                                     <div id="detail-images-upload" class="p-4 text-center">
                                         <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                                             <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -206,16 +327,7 @@ use App\Helpers\UrlHelper;
                                                 <input type="file" id="file-detail_image" name="detail_image[]" accept="image/*" multiple class="sr-only">
                                             </label>
                                         </div>
-                                        <?php if (isset($details_img) && !empty($details_img)) { ?>
-                                            <div class="mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                                                <?php foreach ($details_img as $img) { ?>
-                                                    <div class="relative group">
-                                                        <img src="<?= $img['cloudinary_url'] ?>" alt="Detail image" class="h-24 w-full object-cover rounded-md border border-gray-200 shadow-sm">
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
-                                        <?php } ?>
-                                        <p class="text-xs text-gray-500 mt-3">PNG, JPG, GIF tối đa 10MB</p>
+                                        <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF tối đa 10MB</p>
                                     </div>
                                 </div>
                             </div>
@@ -505,9 +617,75 @@ use App\Helpers\UrlHelper;
             const input = document.getElementById(inputId);
             const previewContainer = document.getElementById(previewId);
             const uploadContainer = document.getElementById(uploadId);
+            const form = document.querySelector('form');
 
             // Store selected files for multiple uploads
             let selectedFiles = [];
+
+            // Xử lý ảnh cũ đã được tải lên trước đó
+            const existingImages = previewContainer.querySelectorAll('.relative.group');
+            if (existingImages.length > 0) {
+                // Nếu đã có ảnh cũ, hiển thị container preview
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+
+                if (!multiple) {
+                    // Nếu là ảnh đại diện (single), ẩn container upload
+                    uploadContainer.classList.add('hidden');
+                }
+
+                // Thêm thông báo về ảnh cũ
+                const existingLabel = document.createElement('div');
+                existingLabel.className = 'text-xs text-gray-500 w-full mb-2';
+                existingLabel.textContent = multiple ?
+                    `${existingImages.length} ảnh đã được tải lên trước đó` :
+                    'Ảnh hiện tại';
+                previewContainer.prepend(existingLabel);
+
+                // Thêm sự kiện cho nút xóa của ảnh cũ
+                existingImages.forEach(imageWrapper => {
+                    const removeBtn = imageWrapper.querySelector('button');
+                    const imageElement = imageWrapper.querySelector('img');
+
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            // Thêm input hidden để đánh dấu xóa hình ảnh này trên server
+                            if (imageElement && imageElement.src) {
+                                const imageUrl = imageElement.src;
+                                const imageIdentifier = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+                                // Tạo input hidden tương ứng với loại ảnh
+                                const hiddenInput = document.createElement('input');
+                                hiddenInput.type = 'hidden';
+                                hiddenInput.name = multiple ? 'remove_detail_images[]' : 'remove_featured_image';
+                                hiddenInput.value = imageIdentifier;
+                                form.appendChild(hiddenInput);
+                            }
+
+                            // Xóa preview
+                            imageWrapper.remove();
+
+                            // Kiểm tra nếu không còn ảnh nào trong container
+                            const remainingImages = previewContainer.querySelectorAll('.relative.group');
+                            if (remainingImages.length === 0) {
+                                // Xóa label thông báo ảnh cũ nếu còn
+                                const existingLabel = previewContainer.querySelector('.text-xs.text-gray-500.w-full');
+                                if (existingLabel) {
+                                    existingLabel.remove();
+                                }
+
+                                // Ẩn container preview và hiện container upload
+                                previewContainer.classList.add('hidden');
+                                previewContainer.classList.remove('flex');
+                                uploadContainer.classList.remove('hidden');
+                            }
+                        });
+                    }
+                });
+            }
 
             input.addEventListener('change', function() {
                 const files = this.files;
@@ -516,8 +694,21 @@ use App\Helpers\UrlHelper;
 
                 // Clear previous preview for single image
                 if (!multiple) {
+                    // Xóa label thông báo ảnh cũ nếu có
+                    const existingLabel = previewContainer.querySelector('.text-xs.text-gray-500.w-full');
+                    if (existingLabel) {
+                        existingLabel.remove();
+                    }
+
+                    // Xóa tất cả ảnh cũ
                     previewContainer.innerHTML = '';
                     selectedFiles = [];
+
+                    // Nếu đã có hidden input để xóa ảnh cũ, hãy xóa nó vì chúng ta đang thay thế bằng ảnh mới
+                    const existingRemoveInput = form.querySelector('input[name="remove_featured_image"]');
+                    if (existingRemoveInput) {
+                        existingRemoveInput.remove();
+                    }
                 }
 
                 // Process each selected file
@@ -572,7 +763,7 @@ use App\Helpers\UrlHelper;
                         updateInputFiles(input, selectedFiles, multiple);
 
                         // Show/hide containers based on whether we have files
-                        toggleContainers();
+                        toggleContainers(previewContainer, uploadContainer, selectedFiles, multiple);
                     });
 
                     // Assemble preview
@@ -582,14 +773,16 @@ use App\Helpers\UrlHelper;
                     previewContainer.appendChild(previewWrapper);
 
                     // Show preview container, hide upload container if needed
-                    toggleContainers();
+                    toggleContainers(previewContainer, uploadContainer, selectedFiles, multiple);
                 }
-
             });
 
             // Function to toggle visibility of containers
-            function toggleContainers() {
-                if (selectedFiles.length > 0) {
+            function toggleContainers(previewContainer, uploadContainer, selectedFiles, multiple) {
+                // Kiểm tra có ảnh nào trong container không (cả ảnh mới và ảnh cũ)
+                const totalImages = previewContainer.querySelectorAll('.relative.group').length;
+
+                if (totalImages > 0) {
                     previewContainer.classList.remove('hidden');
                     previewContainer.classList.add('flex');
 
@@ -598,6 +791,12 @@ use App\Helpers\UrlHelper;
                         uploadContainer.classList.add('hidden');
                     }
                 } else {
+                    // Xóa label thông báo ảnh cũ nếu còn
+                    const existingLabel = previewContainer.querySelector('.text-xs.text-gray-500.w-full');
+                    if (existingLabel) {
+                        existingLabel.remove();
+                    }
+
                     previewContainer.classList.add('hidden');
                     previewContainer.classList.remove('flex');
                     uploadContainer.classList.remove('hidden');
@@ -619,7 +818,10 @@ use App\Helpers\UrlHelper;
 
                 // If no files and single image, show upload container
                 if (files.length === 0 && !multiple) {
-                    uploadContainer.classList.remove('hidden');
+                    const totalImages = previewContainer.querySelectorAll('.relative.group').length;
+                    if (totalImages === 0) {
+                        uploadContainer.classList.remove('hidden');
+                    }
                 }
             }
         }
