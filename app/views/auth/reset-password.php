@@ -18,7 +18,7 @@ use App\Helpers\UrlHelper;
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
       <div class="p-6 sm:p-8">
         <?php if (isset($errors['reset'])): ?>
-          <div class="bg-red-50 text-red-700 border border-red-200 px-4 py-3 rounded-lg mb-6" role="alert">
+          <div class="bg-red-50 text-red-700 border border-red-200 px-4 py-3 rounded-md mb-6" role="alert">
             <span class="block sm:inline"><?php echo $errors['reset']; ?></span>
           </div>
         <?php endif; ?>
@@ -32,11 +32,8 @@ use App\Helpers\UrlHelper;
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i class="fas fa-lock text-gray-400"></i>
               </div>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                class="pl-10 w-full px-4 py-3 border <?php echo isset($errors['password']) ? 'border-red-300 text-red-900 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500'; ?> rounded-lg shadow-sm"
+              <input type="password" id="password" name="password"
+                class="pl-10 w-full px-4 py-3 bg-blue-50 border-0 <?php echo isset($errors['password']) ? 'text-red-900 focus:outline-none focus:ring-1 focus:ring-red-500' : 'text-gray-900 focus:outline-none focus:ring-1 focus:ring-teal-500'; ?> rounded-md shadow-sm"
                 required>
             </div>
             <?php if (isset($errors['password'])): ?>
@@ -51,16 +48,14 @@ use App\Helpers\UrlHelper;
           </div>
 
           <div class="mb-6">
-            <label for="password_confirm" class="block text-sm font-medium text-gray-700 mb-2">Xác nhận mật khẩu mới</label>
+            <label for="password_confirm" class="block text-sm font-medium text-gray-700 mb-2">Xác nhận mật khẩu
+              mới</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i class="fas fa-lock text-gray-400"></i>
               </div>
-              <input
-                type="password"
-                id="password_confirm"
-                name="password_confirm"
-                class="pl-10 w-full px-4 py-3 border <?php echo isset($errors['password_confirm']) ? 'border-red-300 text-red-900 focus:outline-none focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500'; ?> rounded-lg shadow-sm"
+              <input type="password" id="password_confirm" name="password_confirm"
+                class="pl-10 w-full px-4 py-3 bg-blue-50 border-0 <?php echo isset($errors['password_confirm']) ? 'text-red-900 focus:outline-none focus:ring-1 focus:ring-red-500' : 'text-gray-900 focus:outline-none focus:ring-1 focus:ring-teal-500'; ?> rounded-md shadow-sm"
                 required>
             </div>
             <?php if (isset($errors['password_confirm'])): ?>
@@ -71,13 +66,15 @@ use App\Helpers\UrlHelper;
           </div>
 
           <div class="mb-6">
-            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors">
+            <button type="submit"
+              class="w-full flex justify-center py-3 px-4 border-0 rounded-md shadow-sm text-sm font-medium text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors">
               Đặt lại mật khẩu
             </button>
           </div>
 
           <div class="text-center">
-            <a href="<?php echo UrlHelper::route('auth/login'); ?>" class="text-sm font-medium text-teal-600 hover:text-teal-500 flex items-center justify-center">
+            <a href="<?php echo UrlHelper::route('auth/login'); ?>"
+              class="text-sm font-medium text-teal-500 hover:text-teal-600 flex items-center justify-center">
               <i class="fas fa-arrow-left mr-2"></i>
               Quay lại đăng nhập
             </a>

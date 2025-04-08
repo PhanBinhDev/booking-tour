@@ -430,37 +430,27 @@ class NewsModel extends BaseModel
             return false;
         }
     }
+    /**
+     * Lấy danh sách danh mục kèm theo số lượng bài viết
+     */
     public function getActiveCategories()
     {
         try {
-            $sql = "SELECT 
-                    nc.id,
-                    nc.name,
-                    nc.slug,
-                    nc.description,
-                    nc.image,
-                    COUNT(ncr.news_id) as post_count
-                FROM 
-                    news_categories nc
-                LEFT JOIN 
-                    news_category_relations ncr ON nc.id = ncr.category_id
-                WHERE 
-                    nc.status = 'active'
-                GROUP BY 
-                    nc.id, nc.name, nc.slug, nc.description, nc.image
-                ORDER BY 
-                    nc.name ASC";
+            // Đếm số lượng bài viết cho mỗi danh mục một cách độc lập
+            // không phụ thuộc vào filter hiện tại
+            $sql = "SELECT c.id, c.name, COUNT(n.id) as post_count
+                FROM news_categories c
+                LEFT JOIN news n ON n.category_id = c.id AND n.status = 'published'
+                WHERE c.status = 'active'
+                GROUP BY c.id, c.name
+                ORDER BY c.name ASC";
 
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
-
-            // Lấy kết quả dạng mảng kết hợp
-            $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $categories;
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
-            error_log("Lỗi khi lấy danh mục và số lượng bài viết: " . $e->getMessage());
-            return false;
+            error_log("Lỗi khi lấy danh mục tin tức: " . $e->getMessage());
+            return [];
         }
     }
     /**
@@ -496,6 +486,51 @@ class NewsModel extends BaseModel
     }
 
     /**
+     * Tăng lượt xem cho bài viết
+     */
+    /**
+     * Tăng lượt xem cho bài viết
+     */
+    public function incrementViews($id)
+    {
+        try {
+            $sql = "UPDATE news SET views = views + 1 WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log("Lỗi khi tăng lượt xem: " . $e->getMessage());
+            return false;
+        }
+    }
+    /**
+     * Lấy các bài viết liên quan (cùng danh mục, không bao gồm bài hiện tại)
+     */
+    public function getRelatedNews($categoryId, $currentId, $limit = 4)
+    {
+        try {
+            $sql = "SELECT id, title, featured_image, created_at 
+                FROM news 
+                WHERE category_id = :category_id 
+                AND id != :current_id 
+                AND status = 'published'
+                ORDER BY created_at DESC 
+                LIMIT :limit";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':category_id', $categoryId, \PDO::PARAM_INT);
+            $stmt->bindValue(':current_id', $currentId, \PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy bài viết liên quan: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * Lấy bài viết nổi bật (featured) được tạo sớm nhất với trạng thái published
      * 
      * @return array|false Thông tin bài viết hoặc false nếu có lỗi hoặc không tìm thấy
@@ -526,5 +561,188 @@ class NewsModel extends BaseModel
             return false;
         }
     }
-    
+
+    /**
+     * Lấy tin tức có bộ lọc (danh mục, tag, tìm kiếm)
+     */
+    public function getFilteredNews($categoryId = 0, $tag = '', $search = '', $limit = 10, $offset = 0)
+    {
+        try {
+            $conditions = ["n.status = 'published'"];
+            $params = [];
+
+            // Lọc theo danh mục
+            if ($categoryId > 0) {
+                $conditions[] = "n.category_id = :category_id";
+                $params[':category_id'] = $categoryId;
+            }
+
+            // Lọc theo tag
+            if (!empty($tag)) {
+                $conditions[] = "n.tags LIKE :tag";
+                $params[':tag'] = '%' . $tag . '%';
+            }
+
+            // Lọc theo tìm kiếm
+            if (!empty($search)) {
+                $conditions[] = "(n.title LIKE :search OR n.content LIKE :search OR n.summary LIKE :search)";
+                $params[':search'] = '%' . $search . '%';
+            }
+
+            $whereClause = !empty($conditions) ? "WHERE " . implode(" AND ", $conditions) : "";
+
+            $sql = "SELECT n.*, c.name as category_name 
+                FROM news n 
+                LEFT JOIN news_categories c ON n.category_id = c.id 
+                $whereClause 
+                ORDER BY n.created_at DESC
+                LIMIT :limit OFFSET :offset";
+
+            $stmt = $this->db->prepare($sql);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+
+            $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            // Lấy các danh mục cho mỗi bài viết - PHẦN CẦN SỬA
+            foreach ($results as $key => $item) {
+                // Thay getById() bằng getNewsCategoriesById() để lấy chính xác danh mục
+                // getById đang ghi đè toàn bộ thông tin bài viết!
+                $results[$key]['categories'] = $this->getNewsCategoriesById($item['id']);
+            }
+
+            return $results;
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy tin tức lọc: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Lấy danh mục của một bài viết theo ID
+     * Cần thêm phương thức này nếu chưa có
+     */
+    public function getNewsCategoriesById($newsId)
+    {
+        try {
+            $sql = "SELECT nc.id, nc.name as category_name
+                FROM news_categories nc 
+                JOIN news_category_relations ncr ON nc.id = ncr.category_id 
+                WHERE ncr.news_id = :news_id
+                ORDER BY nc.name ASC";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':news_id', $newsId, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy danh mục bài viết: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Đếm tổng số tin tức theo bộ lọc
+     */
+    public function countFilteredNews($categoryId = 0, $tag = '', $search = '')
+    {
+        try {
+            $conditions = ["status = 'published'"];
+            $params = [];
+
+            if ($categoryId > 0) {
+                $conditions[] = "category_id = :category_id";
+                $params[':category_id'] = $categoryId;
+            }
+
+            if (!empty($tag)) {
+                $conditions[] = "tags LIKE :tag";
+                $params[':tag'] = '%' . $tag . '%';
+            }
+
+            if (!empty($search)) {
+                $conditions[] = "(title LIKE :search OR content LIKE :search OR summary LIKE :search)";
+                $params[':search'] = '%' . $search . '%';
+            }
+
+            $whereClause = !empty($conditions) ? "WHERE " . implode(" AND ", $conditions) : "";
+
+            $sql = "SELECT COUNT(*) as total FROM news $whereClause";
+
+            $stmt = $this->db->prepare($sql);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+
+            $stmt->execute();
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            return (int)$result['total'];
+        } catch (\Exception $e) {
+            error_log("Lỗi khi đếm tin tức: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Lấy bài viết nổi bật
+     */
+    public function getFeaturedNews()
+    {
+        try {
+            $sql = "SELECT * FROM news 
+                WHERE status = 'published' AND is_featured = 1
+                ORDER BY created_at DESC
+                LIMIT 1";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy bài nổi bật: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Lấy tags phổ biến
+     */
+    public function getPopularTags($limit = 10)
+    {
+        try {
+            $sql = "SELECT DISTINCT TRIM(t.tag) as name, COUNT(n.id) as count
+                FROM news n
+                JOIN (
+                    SELECT id, SUBSTRING_INDEX(SUBSTRING_INDEX(CONCAT(tags, ','), ',', numbers.n), ',', -1) as tag
+                    FROM news
+                    JOIN (
+                        SELECT 1 as n UNION ALL
+                        SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
+                        SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL
+                        SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
+                    ) numbers ON CHAR_LENGTH(tags) - CHAR_LENGTH(REPLACE(tags, ',', '')) >= numbers.n - 1
+                    WHERE tags IS NOT NULL AND tags != ''
+                ) t ON n.id = t.id
+                WHERE n.status = 'published'
+                GROUP BY TRIM(t.tag)
+                ORDER BY count DESC
+                LIMIT :limit";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy tags phổ biến: " . $e->getMessage());
+            return [];
+        }
+    }
 }

@@ -18,10 +18,10 @@ $activePage = 'login';
 
       <!-- Form Card -->
       <div class="bg-white rounded-xl shadow-md p-8 border border-gray-100">
-        <?php if(isset($errors['login'])): ?>
-        <div class="mb-6 p-4 rounded-md bg-red-50 text-red-600 text-sm border-l-4 border-red-500">
-          <?= $errors['login'] ?>
-        </div>
+        <?php if (isset($errors['login'])): ?>
+          <div class="mb-6 p-4 rounded-md bg-red-50 text-red-600 text-sm border-l-4 border-red-500">
+            <?= $errors['login'] ?>
+          </div>
         <?php endif; ?>
 
         <form action="<?= UrlHelper::route('auth/login') ?>" method="POST" class="space-y-6">
@@ -36,7 +36,7 @@ $activePage = 'login';
                 </svg>
               </div>
               <input type="email" name="email" id="email"
-                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all"
+                class="bg-blue-50 border-0 text-gray-900 text-sm rounded-md focus:outline-none focus:ring-1 focus:ring-teal-500 block w-full pl-10 p-3 transition-all"
                 value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
             </div>
           </div>
@@ -44,8 +44,8 @@ $activePage = 'login';
           <div>
             <div class="flex items-center justify-between mb-2">
               <label for="password" class="block text-gray-700 text-sm font-medium">Password</label>
-              <a href="<?= UrlHelper::route('auth/forgot-password')?>"
-                class="text-xs text-teal-600 hover:text-teal-800 transition-colors">
+              <a href="<?= UrlHelper::route('auth/forgot-password') ?>"
+                class="text-xs text-teal-500 hover:text-teal-600 transition-colors">
                 Forgot password?
               </a>
             </div>
@@ -59,26 +59,26 @@ $activePage = 'login';
                 </svg>
               </div>
               <input type="password" name="password" id="password"
-                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 block w-full pl-10 p-3 transition-all"
+                class="bg-blue-50 border-0 text-gray-900 text-sm rounded-md focus:outline-none focus:ring-1 focus:ring-teal-500 block w-full pl-10 p-3 transition-all"
                 required>
             </div>
           </div>
 
           <div class="flex items-center">
             <input type="checkbox" name="remember" id="remember"
-              class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500">
+              class="w-4 h-4 text-teal-500 bg-blue-50 border-0 rounded focus:ring-teal-500">
             <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
           </div>
 
           <button type="submit"
-            class="w-full bg-teal-600 hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 text-white font-medium rounded-lg text-sm px-5 py-3.5 text-center transition-all shadow-md hover:shadow-lg">
+            class="w-full bg-teal-500 hover:bg-teal-600 focus:ring-4 focus:ring-teal-300 text-white font-medium rounded-md text-sm px-5 py-3 text-center transition-all shadow-md hover:shadow-lg">
             Sign In
           </button>
 
           <div class="text-center mt-4">
             <p class="text-sm text-gray-600">
-              Don't have an account? <a href="<?= UrlHelper::route('auth/register')?>"
-                class="text-teal-600 hover:underline font-medium">Create an account</a>
+              Don't have an account? <a href="<?= UrlHelper::route('auth/register') ?>"
+                class="text-teal-500 hover:underline font-medium">Create an account</a>
             </p>
           </div>
         </form>
@@ -87,7 +87,7 @@ $activePage = 'login';
       <!-- Footer -->
       <div class="mt-8 text-center">
         <div class="flex justify-center space-x-6">
-          <a href="#" class="text-gray-500 hover:text-teal-600">
+          <a href="#" class="text-gray-500 hover:text-teal-500">
             <span class="sr-only">Help</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd"
@@ -95,7 +95,7 @@ $activePage = 'login';
                 clip-rule="evenodd" />
             </svg>
           </a>
-          <a href="#" class="text-gray-500 hover:text-teal-600">
+          <a href="#" class="text-gray-500 hover:text-teal-500">
             <span class="sr-only">Privacy</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd"
@@ -103,7 +103,7 @@ $activePage = 'login';
                 clip-rule="evenodd" />
             </svg>
           </a>
-          <a href="#" class="text-gray-500 hover:text-teal-600">
+          <a href="#" class="text-gray-500 hover:text-teal-500">
             <span class="sr-only">Terms</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd"

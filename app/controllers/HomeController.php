@@ -147,38 +147,99 @@ class HomeController extends BaseController
     $this->view('home/contact');
   }
 
-  public function news()
+  function news()
   {
-    $newsList = $this->newsModel->getAllNews();
+    // Xử lý các tham số từ URL
+    $categoryId = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+    $tag = isset($_GET['tag']) ? trim($_GET['tag']) : '';
+    $search = isset($_GET['s']) ? trim($_GET['s']) : '';
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-    // echo "<pre>";
-    // print_r($newsList);
-    // echo "</pre>";
-    // die();
+    // Kích thước trang và vị trí bắt đầu
+    $perPage = 6;
+    $offset = ($page - 1) * $perPage;
+
+    // Lấy danh sách các danh mục tin tức
     $getActiveCategories = $this->newsModel->getActiveCategories();
 
-    // Lấy 3 bài viết có lượt xem cao nhất
-    $topViewedNews = $this->newsModel->getTopViewedNews(3);
+    // Lấy tên danh mục hiện tại nếu có
+    $currentCategoryName = '';
+    if ($categoryId > 0) {
+      foreach ($getActiveCategories as $cat) {
+        if ($cat['id'] == $categoryId) {
+          $currentCategoryName = $cat['name'];
+          break;
+        }
+      }
+    }
 
-    // Lấy 1 bài viết nổi bật (featured = 1) được tạo sớm nhất
-    $featuredNews = $this->newsModel->getOldestFeaturedNews();
+    // Lấy bài viết
+    $newsList = $this->newsModel->getFilteredNews($categoryId, $tag, $search, $perPage, $offset);
+
+    // Tính tổng số bài viết và số trang
+    $totalNewsCount = $this->newsModel->countFilteredNews($categoryId, $tag, $search);
+    $totalPages = ceil($totalNewsCount / $perPage);
+
+    // Lấy bài nổi bật (chỉ khi không lọc)
+    $featuredNews = null;
+    if ($page == 1 && empty($categoryId) && empty($tag) && empty($search)) {
+      $featuredNews = $this->newsModel->getFeaturedNews();
+    }
+
+    // Lấy bài viết xem nhiều nhất
+    $topViewedNews = $this->newsModel->getTopViewedNews(5);
+
+    // Lấy danh sách tags phổ biến
+    $popularTags = $this->newsModel->getPopularTags(10);
 
     $this->view('home/news', [
-      'newsList' => $newsList,
       'getActiveCategories' => $getActiveCategories,
+      'newsList' => $newsList,
+      'featuredNews' => $featuredNews,
       'topViewedNews' => $topViewedNews,
-      'featuredNews' => $featuredNews
+      'popularTags' => $popularTags,
+      'currentCategoryName' => $currentCategoryName,
+      'totalNewsCount' => $totalNewsCount,
+      'currentPage' => $page,
+      'totalPages' => $totalPages
     ]);
   }
 
   function newsDetail($id)
   {
+    // Lấy thông tin bài viết hiện tại
     $news = $this->newsModel->getById($id);
+
+    if (!$news) {
+      $this->setFlashMessage('error', 'Không tìm thấy bài viết');
+      $this->redirect(UrlHelper::route('home/news'));
+      return;
+    }
+
+    // Tăng lượt xem cho bài viết
+    if (isset($news['views'])) {
+      $this->newsModel->incrementViews($id);
+      $news['views'] = $news['views'] + 1;
+    }
+
+    // Lấy các bài viết xem nhiều nhất
     $topViewedNews = $this->newsModel->getTopViewedNews(3);
-    var_dump($news);
+
+    // Lấy các bài viết liên quan (cùng danh mục, không bao gồm bài hiện tại)
+    $relatedNews = [];
+    if (isset($news['category_id'])) {
+      $relatedNews = $this->newsModel->getRelatedNews($news['category_id'], $id, 4);
+    }
+
+    // Lấy danh sách danh mục tin tức
+    $categories = $this->newsModel->getActiveCategories();
+
+    // Hiển thị view với dữ liệu đầy đủ
     $this->view('home/news-detail', [
       'news' => $news,
-      'topViewedNews' => $topViewedNews
+      'topViewedNews' => $topViewedNews,
+      'relatedNews' => $relatedNews,
+      'categories' => $categories
     ]);
   }
 
@@ -794,8 +855,6 @@ class HomeController extends BaseController
       }
     } catch (\Exception $e) {
       $this->setFlashMessage('error', 'Có lỗi xảy ra khi xử lý thanh toán: ' . $e->getMessage());
-      var_dump($e->getMessage());
-      die();
       $this->redirect(UrlHelper::route('user/bookings'));
     }
   }
