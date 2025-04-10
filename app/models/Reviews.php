@@ -155,7 +155,7 @@ class Reviews extends BaseModel
         try {
             $this->db->beginTransaction();
             $stmt = $this->db->prepare("DELETE FROM {$tb} WHERE id = :id");
-            $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
             $this->db->commit();
