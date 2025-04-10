@@ -7,9 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const icon = btn.querySelector('svg');
-            let isFavorited = icon.classList.contains('text-teal-500');
+            let isFavorited = icon.classList.contains('text-red-500');
             
             const tourId = this.getAttribute('data-tour-id');
+
+            console.log({tourId});
+            // return;
             
             // Sử dụng biến URL đã được định nghĩa
             fetch(toggleFavoriteUrl, {

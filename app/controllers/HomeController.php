@@ -61,8 +61,9 @@ class HomeController extends BaseController
     $news = $this->newsModel->getAll($newsColumns, $newsConditions, null, 3);
 
     $currentUser = $this->getCurrentUser();
-    $userId = $currentUser['id'];
-    if ($userId) {
+    $userFavorites = [];
+    if ($currentUser) {
+      $userId = $currentUser['id'];
       $userFavorites = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
     }
 

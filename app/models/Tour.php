@@ -144,7 +144,7 @@ class Tour extends BaseModel
     public function getTourDetails($tourId)
     {
         $sql = "SELECT 
-                tours.*, 
+                tours.*, tour_reviews.rating,
                 locations.name AS location_name,
                 locations.description AS location_des,
                 locations.latitude AS location_la,
@@ -155,8 +155,9 @@ class Tour extends BaseModel
             LEFT JOIN locations ON locations.id = tours.location_id 
             LEFT JOIN tour_images ON tour_images.tour_id = tours.id
             LEFT JOIN images ON images.id = tour_images.image_id
+            LEFT JOIN tour_reviews ON tour_reviews.tour_id = tours.id
             WHERE tours.id = :id
-            GROUP BY tours.id, locations.name, locations.description, locations.latitude, 
+            GROUP BY tours.id,tour_reviews.rating, locations.name, locations.description, locations.latitude, 
                      tour_categories.name";
 
         $stmt = $this->db->prepare($sql);

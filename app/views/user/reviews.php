@@ -55,6 +55,9 @@ $title = 'Danh sách đặt tour';
                                 Đánh giá
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Trạng thái
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Ngày tạo
                             </th>
 
@@ -100,6 +103,24 @@ $title = 'Danh sách đặt tour';
                                         <?= $review['review'] ?>
                                     </div>
 
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php
+                                    $status = [
+                                        'approved' => 'bg-green-100 text-green-800',
+                                        'rejected' => 'bg-red-100 text-red-800',
+                                        'pending' => 'bg-yellow-100 text-yellow-800'
+                                    ][$review['status']] ?? 'bg-gray-100 text-gray-800';
+
+                                    $label = [
+                                        'approved' => 'Đã xác nhận',
+                                        'rejected' => 'Đã từ chối',
+                                        'pending' => 'Chờ xác nhận'
+                                    ][$review['status']] ?? $review['status'];
+                                    ?>
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full <?= $status ?>">
+                                        <?= $label ?>
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
