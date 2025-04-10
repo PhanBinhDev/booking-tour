@@ -35,7 +35,7 @@ abstract class BaseModel
      * @param int $offset Vị trí bắt đầu
      * @return array Danh sách bản ghi
      */
-    public function getAll($columns = "*", $conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null, $joins = [], $groupBy = '')
+    public function getAll($columns = "*", $conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null, $joins = [], $groupBy = '', $having = '')
     {
         $sql = "SELECT {$columns} FROM {$this->table}";
 
@@ -50,11 +50,17 @@ abstract class BaseModel
             $whereClauses = [];
 
             foreach ($conditions as $key => $value) {
+                // Xử lý đặc biệt cho custom_where
+                if ($key === "custom_where") {
+                    $whereClauses[] = $value;
+                    unset($conditions[$key]);
+                    continue;
+                }
                 $paramName = str_replace('.', '_', $key);
 
                 // Kiểm tra xem giá trị có phải là chuỗi và bắt đầu bằng toán tử so sánh không
-                if (is_string($value) && preg_match('/^\s*([<>=!]+)\s*(.+)$/', $value, $matches)) {
-                    $operator = $matches[1]; // Lấy toán tử (>, <, =, !=, >=, <=)
+                if (is_string($value) && preg_match('/^\s*([<>=!]+|LIKE)\s*(.+)$/', $value, $matches)) {
+                    $operator = $matches[1]; // Lấy toán tử (>, <, =, !=, >=, <=, LIKE)
                     $actualValue = $matches[2]; // Lấy giá trị thực
                     $whereClauses[] = "$key $operator :$paramName";
                     $value = $actualValue; // Cập nhật giá trị để bind
@@ -70,6 +76,15 @@ abstract class BaseModel
 
         if (!empty($groupBy)) {
             $sql .= " " . $groupBy;
+        }
+
+        // Thêm điều kiện HAVING nếu có
+        if (!empty($having)) {
+            // Kiểm tra nếu GROUP BY chưa có và cần HAVING, thêm nhóm theo khóa chính
+            if (empty($groupBy)) {
+                $sql .= " GROUP BY {$this->table}.id";
+            }
+            $sql .= " HAVING " . $having;
         }
 
         if ($orderBy) {
@@ -89,7 +104,12 @@ abstract class BaseModel
         if (!empty($conditions)) {
             foreach ($conditions as $key => $value) {
                 $paramName = str_replace('.', '_', $key);
-                $stmt->bindValue(":$paramName", $value);
+                // Xử lý đặc biệt cho các truy vấn LIKE
+                if (is_string($value) && strpos($value, '%') !== false) {
+                    $stmt->bindValue(":$paramName", $value, PDO::PARAM_STR);
+                } else {
+                    $stmt->bindValue(":$paramName", $value);
+                }
             }
         }
 

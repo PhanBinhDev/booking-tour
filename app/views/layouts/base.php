@@ -30,6 +30,10 @@ use App\Helpers\UrlHelper;
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <link rel="stylesheet" href="<?= UrlHelper::css('swiper.css') ?>">
+  <script>
+    const toggleFavoriteUrl = '<?= UrlHelper::route('user/toggle') ?>';
+    const homepageUrl = '<?= UrlHelper::route('home/index') ?>';
+  </script>
 </head>
 
 <body class="bg-gray-50 min-h-screen font-sans flex flex-col">

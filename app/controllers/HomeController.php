@@ -8,6 +8,7 @@ use App\Models\Tour;
 use App\Models\Contact;
 use App\Models\Categories;
 use App\Models\Location;
+use App\Models\Favorites;
 use App\Models\NewsModel;
 use App\Models\PaymentMethod;
 use App\Services\StripeService;
@@ -21,6 +22,7 @@ class HomeController extends BaseController
   private $categoriesModel;
   private $stripeService;
   private $bookingModel;
+  private $favoriteModel;
   private $paymentMethodModel;
 
   function __construct()
@@ -41,80 +43,36 @@ class HomeController extends BaseController
     $this->bookingModel = new Booking();
     $this->paymentMethodModel = new PaymentMethod();
     $this->newsModel = new NewsModel();
+    $this->favoriteModel = new Favorites();
   }
-  function index()
+  public function index()
   {
     $categories = $this->categoriesModel->getAll();
     $locations = $this->locationModel->getAll();
-    $currentDate = date('Y-m-d');
 
-    $join = [
-      "JOIN tour_categories ON tour_categories.id = tours.category_id",
-      "JOIN locations ON locations.id = tours.location_id",
-      "LEFT JOIN (
-      SELECT tour_id, AVG(rating) as avg_rating, COUNT(*) as review_count 
-      FROM tour_reviews 
-      GROUP BY tour_id
-      ) as tr ON tr.tour_id = tours.id",
-      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
-      "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
-      "LEFT JOIN images ON tour_images.image_id = images.id"
-    ];
+    $allTours = $this->tourModel->getTours([], 'default', true, 8);
 
-    $conditions = ["tours.status" => "active", "tours.sale_price" => "> 0"];
+    // Lấy tour nổi bật
+    $allFeaturedTours = $this->tourModel->getFeaturedTours(3, false);
 
-    $columns = "tours.id, tours.description, 
-              tour_images.tour_id, tour_images.image_id,
-              images.cloudinary_url,
-              tr.avg_rating, 
-              tr.review_count,
-              tours.title, tours.price, tours.duration, tours.sale_price,
-              MIN(CASE WHEN tour_dates.start_date >= '$currentDate' THEN tour_dates.start_date ELSE NULL END) as next_start_date,
-              MIN(CASE WHEN tour_dates.end_date >= '$currentDate' THEN tour_dates.end_date ELSE NULL END) as next_end_date,
-              COUNT(DISTINCT tour_dates.id) as date_count,
-              GROUP_CONCAT(DISTINCT CONCAT(tour_dates.start_date, '|', tour_dates.end_date) ORDER BY tour_dates.start_date) as all_dates,
-              tour_categories.name AS category_name, 
-              locations.name AS location_name";
-
-    $orderBy = 'tours.id DESC';
-    $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
-
-    $groupBy =  "GROUP BY tours.id,tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
-
-
-    $allTours = $this->tourModel->getAll(
-      $columns,
-      $conditions,
-      $orderBy,
-      8,
-      null,
-      $join,
-      $groupBy
-    );
-
-    $condition = ["tours.status" => "active", "tours.featured" => "1"];
-
-    $allFeaturedTours = $this->tourModel->getAll(
-      $columns,
-      $condition,
-      $orderBy,
-      3,
-      null,
-      $join,
-      $groupBy
-    );
-
+    // Lấy tin tức
     $newsColumns = 'id, title, summary, featured_image, created_at';
     $newsConditions = ['featured' => 1];
-
     $news = $this->newsModel->getAll($newsColumns, $newsConditions, null, 3);
+
+    $currentUser = $this->getCurrentUser();
+    $userId = $currentUser['id'];
+    if ($userId) {
+      $userFavorites = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
+    }
 
     $this->view('home/index', [
       'allTours' => $allTours,
       'categories' => $categories,
       'allFeaturedTours' => $allFeaturedTours,
       'news' => $news,
-      'locations' => $locations
+      'locations' => $locations,
+      'userFavorites' => $userFavorites
     ]);
   }
 
@@ -202,11 +160,11 @@ class HomeController extends BaseController
     $this->view('home/activities');
   }
 
-  function tours()
+  public function tours()
   {
     $categories = $this->categoriesModel->getAll();
-    $currentDate = date('Y-m-d');
 
+    // Lấy tham số lọc từ URL
     $category_id = isset($_GET['category']) && $_GET['category'] !== 'Tất cả danh mục' ?
       filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT) : null;
     $location_id = isset($_GET['location']) && $_GET['location'] !== 'Tất cả địa điểm' ?
@@ -216,69 +174,16 @@ class HomeController extends BaseController
     $durations = isset($_GET['duration']) ? $_GET['duration'] : [];
     $ratings = isset($_GET['rating']) ? $_GET['rating'] : [];
 
-    $join = [
-      "JOIN tour_categories ON tour_categories.id = tours.category_id",
-      "JOIN locations ON locations.id = tours.location_id",
-      "LEFT JOIN (
-    SELECT tour_id, AVG(rating) as avg_rating, COUNT(*) as review_count 
-    FROM tour_reviews 
-    GROUP BY tour_id
-    ) as tr ON tr.tour_id = tours.id",
-      "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
-      "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
-      "LEFT JOIN images ON tour_images.image_id = images.id"
+    // Chuẩn bị các tham số lọc
+    $filters = [
+      'category_id' => $category_id,
+      'location_id' => $location_id,
+      'price_ranges' => $price_ranges,
+      'durations' => $durations,
+      'ratings' => $ratings
     ];
 
-    $conditions = ["tours.status" => "active"];
-
-    if ($category_id) {
-      $conditions["tours.category_id"] = $category_id;
-    }
-
-    if ($location_id) {
-      $conditions["tours.location_id"] = $location_id;
-    }
-
-
-    $columns = "tours.id, tour_images.tour_id, tour_images.image_id,
-            images.cloudinary_url,
-            tr.avg_rating, 
-            tr.review_count,
-            tours.title, tours.price, tours.duration, tours.sale_price,
-            MIN(CASE WHEN tour_dates.start_date >= '$currentDate' THEN tour_dates.start_date ELSE NULL END) as next_start_date,
-            MIN(CASE WHEN tour_dates.end_date >= '$currentDate' THEN tour_dates.end_date ELSE NULL END) as next_end_date,
-            COUNT(DISTINCT tour_dates.id) as date_count,
-            GROUP_CONCAT(DISTINCT CONCAT(tour_dates.start_date, '|', tour_dates.end_date) ORDER BY tour_dates.start_date) as all_dates,
-            tour_categories.name AS category_name, 
-            locations.name AS location_name";
-
-    $orderBy = 'tours.id DESC';
-    switch ($sort_option) {
-      case 'popular':
-        $orderBy = 'tr.review_count DESC, tr.avg_rating DESC';
-        break;
-      case 'price_asc':
-        $orderBy = 'CASE WHEN tours.sale_price > 0 THEN tours.sale_price ELSE tours.price END ASC';
-        break;
-      case 'price_desc':
-        $orderBy = 'CASE WHEN tours.sale_price > 0 THEN tours.sale_price ELSE tours.price END DESC';
-        break;
-      case 'rating':
-        $orderBy = 'tr.avg_rating DESC, tr.review_count DESC';
-        break;
-    }
-
-    $groupBy = "GROUP BY tours.id, tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
-
-    $allTours = $this->tourModel->getAll(
-      $columns,
-      $conditions,
-      $orderBy,
-      null,
-      null,
-      $join,
-      $groupBy
-    );
+    $allTours = $this->tourModel->getTours($filters, $sort_option, false);
 
     $this->view('home/tours', [
       'allTours' => $allTours,
@@ -290,7 +195,6 @@ class HomeController extends BaseController
       'selectedRatings' => $ratings
     ]);
   }
-
 
   function tourDetail($id)
   {

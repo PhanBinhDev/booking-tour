@@ -60,6 +60,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
 );
 
+
+CREATE TABLE `favorites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `tour_id` int(11) NOT NULL,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
+  KEY `fk_1` (`user_id`),
+  KEY `fk_2` (`tour_id`),
+  CONSTRAINT `fk_1` FOREIGN KEY (`user_id`) REFERENCES `booking_travel`.`users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_2` FOREIGN KEY (`tour_id`) REFERENCES `booking_travel`.`tours` (`id`) ON DELETE CASCADE
+);
+
 -- -----------------------------------------------------
 -- Table `user_profiles`
 -- -----------------------------------------------------
@@ -134,7 +147,6 @@ CREATE TABLE IF NOT EXISTS `images` (
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
-
 
 
 -- -----------------------------------------------------
@@ -566,20 +578,7 @@ CREATE TABLE IF NOT EXISTS `invoices` (
 
 -- -----------------------------------------------------
 -- Table `favorites`
--- -----------------------------------------------------
-
-CREATE TABLE `favorites` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `tour_id` int(11) NOT NULL,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
-  KEY `fk_1` (`user_id`),
-  KEY `fk_2` (`tour_id`),
-  CONSTRAINT `fk_1` FOREIGN KEY (`user_id`) REFERENCES `booking_travel`.`users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_2` FOREIGN KEY (`tour_id`) REFERENCES `booking_travel`.`tours` (`id`) ON DELETE CASCADE
-);
-
+-- ----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Table `news_category_relations`

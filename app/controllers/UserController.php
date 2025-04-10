@@ -7,6 +7,8 @@ use App\Helpers\UrlHelper;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\Reviews;
+use App\Models\Favorites;
+use App\Models\Tour;
 use Exception;
 use Stripe\Review;
 
@@ -14,13 +16,17 @@ class UserController extends BaseController
 {
     private $userModel;
     private $bookingModel;
+    private $favoriteModel;
     private $reviewsModel;
+    private $tourModel;
 
     public function __construct()
     {
         $this->userModel = new User();
         $this->bookingModel = new Booking();
         $this->reviewsModel = new Reviews();
+        $this->favoriteModel = new Favorites();
+        $this->tourModel = new Tour();
     }
 
     public function dashboard()
@@ -171,12 +177,6 @@ class UserController extends BaseController
         $this->view('user/user-bookings', ['bookings' => $bookings]);
     }
 
-
-    public function wishlist()
-    {
-        $this->view('user/wishlist');
-    }
-
     public function reviews()
     {
         $currentUser = $this->getCurrentUser();
@@ -191,11 +191,91 @@ class UserController extends BaseController
         // var_dump($reviews);
         $this->view('user/reviews', ['reviews' => $reviews]);
     }
+
     public function deleteReview($id)
     {
         $this->reviewsModel->delete($id);
         header('location:' . UrlHelper::route('user/reviews'));
         $this->setFlashMessage('success', 'Xóa bình luận thành công');
         exit;
+    }
+
+    public function favorite()
+    {
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('auth/login');
+            return;
+        }
+
+        $currentUser = $this->getCurrentUser();
+        $userId = $currentUser['id'];
+
+        // Lấy danh sách ID của các tour yêu thích
+        $favoriteTourIds = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
+
+        // Nếu người dùng không có tour yêu thích nào
+        if (empty($favoriteTourIds)) {
+            $this->view('user/wishlist', [
+                'favoriteTours' => [],
+                'count' => 0
+            ]);
+            return;
+        }
+
+        $filters = [
+            'tour_ids' => $favoriteTourIds
+        ];
+
+        $favoriteTours = $this->tourModel->getTours($filters);
+
+        $this->view('user/wishlist', [
+            'favoriteTours' => $favoriteTours,
+            'count' => count($favoriteTours)
+        ]);
+    }
+
+    public function toggle()
+    {
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Vui lòng đăng nhập để sử dụng tính năng này']);
+            exit;
+        }
+
+        // Kiểm tra request method
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $userId = $_SESSION['user_id'];
+            $tourId = isset($_POST['tour_id']) ? trim($_POST['tour_id']) : null;
+
+            if (!$tourId) {
+                echo json_encode(['status' => 'error', 'message' => 'Thiếu thông tin tour']);
+                exit;
+            }
+
+            $favoriteModel = new Favorites();
+
+            // Kiểm tra xem tour đã được yêu thích chưa
+            if ($favoriteModel->checkFavoriteExists($userId, $tourId)) {
+                // Nếu đã tồn tại, xóa khỏi danh sách yêu thích
+                if ($favoriteModel->removeFavorite($userId, $tourId)) {
+                    echo json_encode(['status' => 'success', 'action' => 'removed']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Không thể xóa khỏi danh sách yêu thích']);
+                }
+            } else {
+                // Nếu chưa tồn tại, thêm vào danh sách yêu thích
+                if ($favoriteModel->addFavorite($userId, $tourId)) {
+                    echo json_encode(['status' => 'success', 'action' => 'added']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Không thể thêm vào danh sách yêu thích']);
+                }
+            }
+
+            exit;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Phương thức không được hỗ trợ']);
+            exit;
+        }
     }
 }

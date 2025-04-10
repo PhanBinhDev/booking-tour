@@ -19,7 +19,7 @@ use App\Helpers\UrlHelper;
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span><?= $news['created_at']?></span>
+                            <span><?= $news['created_at'] ?></span>
                         </div>
                         <div class="flex items-center mr-4 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
@@ -37,18 +37,7 @@ use App\Helpers\UrlHelper;
                         class="absolute inset-0 w-full h-full object-cover" />
                 </div>
 
-                <div class="prose max-w-none">
-                    <p class="text-lg leading-relaxed mb-4">
-                        <?= $news['content'] ?>
-                    </p>
-                    <h2 class="text-2xl font-bold mt-8 mb-4">Khả năng chẩn đoán</h2>
 
-                    <p class="mb-4">
-                        Một trong những ứng dụng đầy hứa hẹn nhất của AI trong chăm sóc sức khỏe là trong lĩnh vực chẩn đoán hình ảnh. Các hệ thống được hỗ trợ bởi AI hiện có thể phát hiện những bất thường tinh vi trong ảnh X-quang, MRI và CT scan mà các bác sĩ X-quang có thể bỏ sót. Những hệ thống này học từ hàng triệu hình ảnh, liên tục cải thiện độ chính xác theo thời gian.
-                    </p>
-
-                    
-                </div>
 
                 <!-- Thẻ -->
                 <!-- <div class="mt-8 pt-6 border-t border-gray-200">
@@ -135,23 +124,7 @@ use App\Helpers\UrlHelper;
                     </div>
                 </div>
 
-                <!-- Bản tin -->
-                <div class="bg-teal-50 p-6 rounded-lg border border-teal-100">
-                    <h3 class="font-bold text-xl mb-2">Đăng ký nhận Bản tin của chúng tôi</h3>
-                    <p class="text-gray-700 mb-4">Nhận tin tức và cập nhật mới nhất gửi đến hộp thư của bạn</p>
-                    <form class="space-y-3">
-                        <input type="email" placeholder="Địa chỉ email của bạn"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-                            required />
-                        <button type="submit"
-                            class="w-full bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
-                            Đăng ký
-                        </button>
-                    </form>
-                    <p class="text-xs text-gray-500 mt-3">
-                        Bằng cách đăng ký, bạn đồng ý với Chính sách Bảo mật của chúng tôi và đồng ý nhận thông tin cập nhật từ công ty chúng tôi.
-                    </p>
-                </div>
+
             </aside>
         </div>
     </div>
