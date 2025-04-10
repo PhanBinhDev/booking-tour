@@ -79,12 +79,31 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : null;
                 <!-- Tour Grid -->
                 <div id="toursGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <?php
-                    foreach ($allTours as $tour) { ?>
+                    foreach ($allTours as $tour) {
+                        $isFavorited = isset($_SESSION['user_id']) && in_array($tour['id'], $userFavorites);
+
+                        $heartClass = $isFavorited ? "text-red-500" : "text-teal-500"; ?>
                         <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
                             <div class="relative">
                                 <!-- Tour Image -->
-                                <div class="h-56 overflow-hidden">
-                                    <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="h-56 overflow-hidden relative rounded-lg bg-gray-100">
+                                    <!-- Placeholder hiển thị trước khi ảnh load -->
+                                    <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                                        id="placeholder-<?= $tour['id'] ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-30" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                            <polyline points="21 15 16 10 5 21"></polyline>
+                                        </svg>
+                                    </div>
+
+                                    <!-- Ảnh chính -->
+                                    <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
+                                        class="w-full h-full object-cover transition-all duration-300 ease-in-out hover:scale-105"
+                                        onload="document.getElementById('placeholder-<?= $tour['id'] ?>').style.display='none'; this.style.opacity='1';"
+                                        onerror="this.onerror=null; this.style.display='none'; showErrorPlaceholder('<?= $tour['id'] ?>', '<?= htmlspecialchars($tour['title'], ENT_QUOTES) ?>');"
+                                        style="opacity: 0;">
                                 </div>
 
                                 <!-- Discount Badge -->
@@ -98,7 +117,7 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : null;
                                 <!-- Favorite Button -->
                                 <button data-tour-id="<?php echo $tour['id']; ?>"
                                     class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 <?= $heartClass ?> fill-current" viewBox="0 0 24 24">
                                         <path
                                             d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                     </svg>

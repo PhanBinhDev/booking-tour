@@ -86,7 +86,7 @@ $title = 'Trang chủ - Di Travel';
                 class="w-full p-3 pl-4 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none">
                 <option>Tất cả danh mục</option>
                 <?php foreach ($categories as $category) { ?>
-                <option value="<?= $category["id"] ?>"><?= $category["name"] ?></option>
+                  <option value="<?= $category["id"] ?>"><?= $category["name"] ?></option>
                 <?php } ?>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -105,7 +105,7 @@ $title = 'Trang chủ - Di Travel';
                 <option>Tất cả địa điểm</option>
                 <?php
                 foreach ($locations as $location) { ?>
-                <option value="<?= $location["id"] ?>"><?= $location["name"] ?></option>
+                  <option value="<?= $location["id"] ?>"><?= $location["name"] ?></option>
                 <?php } ?>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -149,92 +149,72 @@ $title = 'Trang chủ - Di Travel';
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Destination Card 1 -->
-        <?php foreach ($allFeaturedTours as $tour) { ?>
-        <div
-          class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
-          <div class="relative">
-            <!-- Tour Image -->
-            <div class="h-56 overflow-hidden relative rounded-lg bg-gray-100">
-              <!-- Placeholder hiển thị trước khi ảnh load -->
-              <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
-                id="placeholder-<?= $tour['id'] ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-30" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
+        <?php foreach ($allFeaturedTours as $tour) {
+          $isFavorited = isset($_SESSION['user_id']) && in_array($tour['id'], $userFavorites);
+
+          $heartClass = $isFavorited ? "text-red-500" : "text-teal-500";
+        ?>
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden relative rounded-lg bg-gray-100">
+                <!-- Placeholder hiển thị trước khi ảnh load -->
+                <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                  id="placeholder-<?= $tour['id'] ?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-30" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+
+                <!-- Ảnh chính -->
+                <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
+                  class="w-full h-full object-cover transition-all duration-300 ease-in-out hover:scale-105"
+                  onload="document.getElementById('placeholder-<?= $tour['id'] ?>').style.display='none'; this.style.opacity='1';"
+                  onerror="this.onerror=null; this.style.display='none'; showErrorPlaceholder('<?= $tour['id'] ?>', '<?= htmlspecialchars($tour['title'], ENT_QUOTES) ?>');"
+                  style="opacity: 0;">
               </div>
 
-              <!-- Ảnh chính -->
-              <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
-                class="w-full h-full object-cover transition-all duration-300 ease-in-out hover:scale-105"
-                onload="document.getElementById('placeholder-<?= $tour['id'] ?>').style.display='none'; this.style.opacity='1';"
-                onerror="this.onerror=null; this.style.display='none'; showErrorPlaceholder('<?= $tour['id'] ?>', '<?= htmlspecialchars($tour['title'], ENT_QUOTES) ?>');"
-                style="opacity: 0;">
-            </div>
+              <!-- Discount Badge -->
 
-            <!-- Discount Badge -->
-
-            <?= $tour['sale_price'] ?
+              <?= $tour['sale_price'] ?
                 ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
                 number_format((($tour['price'] - $tour['sale_price']) / $tour['price']) * 100) . '%'
                 . '</div>'
                 : ''
               ?>
 
-            <!-- Favorite Button -->
-            <button
-              class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
-                <path
-                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-            </button>
+              <!-- Favorite Button -->
+              <button data-tour-id="<?php echo $tour['id']; ?>"
+                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 <?= $heartClass ?> fill-current" viewBox="0 0 24 24">
+                  <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- Destination Card 1 -->
-          <?php
-          foreach ($allFeaturedTours as $tour) {
-            $isFavorited = isset($_SESSION['user_id']) && in_array($tour['id'], $userFavorites);
-            $heartClass = $isFavorited ? "text-teal-500" : "text-gray-400";
-          ?>
-            <!-- Duration Badge -->
-            <div
-              class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
-              <?= $tour['duration'] ?>
+              <!-- Duration Badge -->
+              <div
+                class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                <?= $tour['duration'] ?>
+              </div>
             </div>
-          </div>
 
-                <!-- Discount Badge -->
+            <div class="p-5">
+              <!-- Tour Title -->
+              <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                  <?= $tour['title'] ?>
+                </h3>
+              </a>
 
-                <?= $tour['sale_price'] ?
-                  ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
-                  number_format((($tour['price'] - $tour['sale_price']) / $tour['price']) * 100) . '%'
-                  . '</div>'
-                  : ''
-                ?>
-
-                <!-- Favorite Button -->
-                <button data-tour-id="<?php echo $tour['id']; ?>"
-                  class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 <?= $heartClass ?> text-teal-500 fill-current" viewBox="0 0 24 24">
-                    <path
-                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                </button>
-          <div class="p-5">
-            <!-- Tour Title -->
-            <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>">
-              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
-                <?= $tour['title'] ?>
-              </h3>
-            </a>
-
-            <!-- Rating -->
-            <div class="flex items-center mb-3">
-              <div class="flex text-yellow-400">
-                <?php
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <?php
                   $avgRating = isset($tour['avg_rating']) ? floatval($tour['avg_rating']) : 0;
                   $reviewCount = isset($tour['review_count']) ? intval($tour['review_count']) : 0;
 
@@ -248,53 +228,53 @@ $title = 'Trang chủ - Di Travel';
                     }
                   }
                   ?>
-              </div>
-              <span class="text-gray-600 ml-2">
-                <?= number_format($avgRating, 1) ?>
-                (<?= $reviewCount ?> đánh giá)
-              </span>
-            </div>
-
-            <!-- Description -->
-            <p class="text-gray-600 mb-4 text-sm line-clamp-2 h-10">
-              <?= $tour['description'] ?>
-            </p>
-
-            <!-- Departure Date -->
-            <div class="flex items-center mb-4 text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-
-              <?php if (!empty($tour['next_start_date'])) { ?>
-              <?php if ($tour['date_count'] == 1) { ?>
-              Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
-              <?php } else { ?>
-              Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
-              <?php } ?>
-              <?php } ?>
-            </div>
-
-            <!-- Price and Action -->
-            <div class="flex justify-between items-end">
-              <div>
-                <span class="text-gray-400 line-through text-sm block">
-                  <?= $tour['sale_price'] ? number_format($tour['price'], 0, ',', '.') . ' đ'  :  '' ?>
-                </span>
-                <span class="text-red-500 font-bold text-xl">
-                  <?= $tour['sale_price'] ? number_format($tour['sale_price'], 0, ',', '.') : number_format($tour['price'], 0, ',', '.')  ?>
-                  đ
+                </div>
+                <span class="text-gray-600 ml-2">
+                  <?= number_format($avgRating, 1) ?>
+                  (<?= $reviewCount ?> đánh giá)
                 </span>
               </div>
-              <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>"
-                class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                Xem chi tiết
-              </a>
+
+              <!-- Description -->
+              <p class="text-gray-600 mb-4 text-sm line-clamp-2 h-10">
+                <?= $tour['description'] ?>
+              </p>
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+
+                <?php if (!empty($tour['next_start_date'])) { ?>
+                  <?php if ($tour['date_count'] == 1) { ?>
+                    Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
+                  <?php } else { ?>
+                    Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
+                  <?php } ?>
+                <?php } ?>
+              </div>
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">
+                    <?= $tour['sale_price'] ? number_format($tour['price'], 0, ',', '.') . ' đ'  :  '' ?>
+                  </span>
+                  <span class="text-red-500 font-bold text-xl">
+                    <?= $tour['sale_price'] ? number_format($tour['sale_price'], 0, ',', '.') : number_format($tour['price'], 0, ',', '.')  ?>
+                    đ
+                  </span>
+                </div>
+                <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>"
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                  Xem chi tiết
+                </a>
+              </div>
             </div>
           </div>
-        </div>
         <?php } ?>
 
       </div>
@@ -321,83 +301,70 @@ $title = 'Trang chủ - Di Travel';
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <?php foreach ($allTours as $tour) { ?>
-        <div
-          class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
-          <div class="relative">
-            <!-- Tour Image -->
-            <div class="h-56 overflow-hidden relative rounded-lg bg-gray-100">
-              <!-- Placeholder hiển thị trước khi ảnh load -->
-              <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
-                id="placeholder-offer-<?= $tour['id'] ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-30" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
+        <?php foreach ($allTours as $tour) {
+          $isFavorited = isset($_SESSION['user_id']) && in_array($tour['id'], $userFavorites);
+
+          $heartClass = $isFavorited ? "text-red-500" : "text-teal-500"; ?>
+          <div
+            class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+            <div class="relative">
+              <!-- Tour Image -->
+              <div class="h-56 overflow-hidden relative rounded-lg bg-gray-100">
+                <!-- Placeholder hiển thị trước khi ảnh load -->
+                <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                  id="placeholder-offer-<?= $tour['id'] ?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-30" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+
+                <!-- Ảnh chính -->
+                <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
+                  class="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
+                  onload="document.getElementById('placeholder-offer-<?= $tour['id'] ?>').style.display='none'; this.style.opacity='1';"
+                  onerror="this.onerror=null; this.style.display='none'; showErrorPlaceholder('placeholder-offer-<?= $tour['id'] ?>', '<?= htmlspecialchars($tour['title'], ENT_QUOTES) ?>');"
+                  style="opacity: 0;">
               </div>
 
-              <!-- Ảnh chính -->
-              <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
-                class="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
-                onload="document.getElementById('placeholder-offer-<?= $tour['id'] ?>').style.display='none'; this.style.opacity='1';"
-                onerror="this.onerror=null; this.style.display='none'; showErrorPlaceholder('placeholder-offer-<?= $tour['id'] ?>', '<?= htmlspecialchars($tour['title'], ENT_QUOTES) ?>');"
-                style="opacity: 0;">
-            </div>
-
-            <!-- Discount Badge -->
-            <?= $tour['sale_price'] ?
+              <!-- Discount Badge -->
+              <?= $tour['sale_price'] ?
                 ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
                 number_format((($tour['price'] - $tour['sale_price']) / $tour['price']) * 100) . '%'
                 . '</div>'
                 : ''
               ?>
 
-            <!-- Favorite Button -->
-            <button
-              class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
-                <path
-                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-            </button>
+              <!-- Favorite Button -->
+              <button data-tour-id="<?php echo $tour['id']; ?>"
+                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 <?= $heartClass ?> fill-current" viewBox="0 0 24 24">
+                  <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
 
-                <!-- Discount Badge -->
-                <?= $tour['sale_price'] ?
-                  ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
-                  number_format((($tour['price'] - $tour['sale_price']) / $tour['price']) * 100) . '%'
-                  . '</div>'
-                  : ''
-                ?>
-
-                <!-- Favorite Button -->
-                <button data-tour-id="<?php echo $tour['id']; ?>"
-                  class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
-                    <path
-                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                </button>
-            <!-- Duration Badge -->
-            <div
-              class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
-              <?= $tour['duration'] ?>
+              <!-- Duration Badge -->
+              <div
+                class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
+                <?= $tour['duration'] ?>
+              </div>
             </div>
-          </div>
 
-          <div class="p-5">
-            <!-- Tour Title -->
-            <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>">
-              <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
-                <?= $tour['title'] ?>
-              </h3>
-            </a>
+            <div class="p-5">
+              <!-- Tour Title -->
+              <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 h-14">
+                  <?= $tour['title'] ?>
+                </h3>
+              </a>
 
-            <!-- Rating -->
-            <div class="flex items-center mb-3">
-              <div class="flex text-yellow-400">
-                <?php
+              <!-- Rating -->
+              <div class="flex items-center mb-3">
+                <div class="flex text-yellow-400">
+                  <?php
                   $avgRating = isset($tour['avg_rating']) ? floatval($tour['avg_rating']) : 0;
                   $reviewCount = isset($tour['review_count']) ? intval($tour['review_count']) : 0;
 
@@ -411,48 +378,48 @@ $title = 'Trang chủ - Di Travel';
                     }
                   }
                   ?>
-              </div>
-              <span class="text-gray-600 ml-2">
-                <?= number_format($avgRating, 1) ?>
-                (<?= $reviewCount ?> đánh giá)
-              </span>
-            </div>
-
-            <!-- Departure Date -->
-            <div class="flex items-center mb-4 text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-
-              <?php if (!empty($tour['next_start_date'])) { ?>
-              <?php if ($tour['date_count'] == 1) { ?>
-              Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
-              <?php } else { ?>
-              Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
-              <?php } ?>
-              <?php } ?>
-            </div>
-
-            <!-- Price and Action -->
-            <div class="flex justify-between items-end">
-              <div>
-                <span class="text-gray-400 line-through text-sm block">
-                  <?= $tour['sale_price'] ? number_format($tour['price'], 0, ',', '.') . ' đ'  :  '' ?>
-                </span>
-                <span class="text-red-500 font-bold text-xl">
-                  <?= $tour['sale_price'] ? number_format($tour['sale_price'], 0, ',', '.') : number_format($tour['price'], 0, ',', '.')  ?>
-                  đ
+                </div>
+                <span class="text-gray-600 ml-2">
+                  <?= number_format($avgRating, 1) ?>
+                  (<?= $reviewCount ?> đánh giá)
                 </span>
               </div>
-              <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>"
-                class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
-                Xem chi tiết
-              </a>
+
+              <!-- Departure Date -->
+              <div class="flex items-center mb-4 text-sm text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+
+                <?php if (!empty($tour['next_start_date'])) { ?>
+                  <?php if ($tour['date_count'] == 1) { ?>
+                    Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
+                  <?php } else { ?>
+                    Khởi hành: <?= date('d/m/Y', strtotime($tour['next_start_date'])) ?>
+                  <?php } ?>
+                <?php } ?>
+              </div>
+
+              <!-- Price and Action -->
+              <div class="flex justify-between items-end">
+                <div>
+                  <span class="text-gray-400 line-through text-sm block">
+                    <?= $tour['sale_price'] ? number_format($tour['price'], 0, ',', '.') . ' đ'  :  '' ?>
+                  </span>
+                  <span class="text-red-500 font-bold text-xl">
+                    <?= $tour['sale_price'] ? number_format($tour['sale_price'], 0, ',', '.') : number_format($tour['price'], 0, ',', '.')  ?>
+                    đ
+                  </span>
+                </div>
+                <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>"
+                  class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                  Xem chi tiết
+                </a>
+              </div>
             </div>
           </div>
-        </div>
         <?php } ?>
       </div>
     </div>
@@ -533,58 +500,58 @@ $title = 'Trang chủ - Di Travel';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- News Card 1 -->
           <?php foreach ($news as $item) { ?>
-          <div
-            class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-            <div class="h-48 overflow-hidden relative bg-gray-100">
-              <!-- Placeholder hiển thị trước khi ảnh load -->
-              <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
-                id="placeholder-news-<?= $item['id'] ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 opacity-30" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-              </div>
-
-              <!-- Ảnh chính -->
-              <img src="<?= $item['featured_image'] ?>" alt="<?= $item['title'] ?>"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                onload="document.getElementById('placeholder-news-<?= $item['id'] ?>').style.display='none'; this.style.opacity='1';"
-                onerror="this.onerror=null; this.style.display='none'; showErrorNewsPlaceholder('placeholder-news-<?= $item['id'] ?>', '<?= htmlspecialchars($item['title'], ENT_QUOTES) ?>');"
-                style="opacity: 0;">
-            </div>
-
-            <div class="p-5">
-              <div class="flex items-center text-gray-500 text-sm mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <?= $item['created_at'] ?>
-              </div>
-
-              <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>">
-                <h3 class="font-bold text-gray-800 text-lg mb-2"><?= $item['title'] ?></h3>
-              </a>
-
-              <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                <?= $item['summary'] ?>
-              </p>
-
-              <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>"
-                class="inline-flex items-center text-teal-500 hover:text-teal-600 font-medium text-sm">
-                <span class="w-6 h-6 rounded-full border border-teal-500 flex items-center justify-center mr-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <div
+              class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+              <div class="h-48 overflow-hidden relative bg-gray-100">
+                <!-- Placeholder hiển thị trước khi ảnh load -->
+                <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                  id="placeholder-news-<?= $item['id'] ?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 opacity-30" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
                   </svg>
-                </span>
-                Xem chi tiết
-              </a>
+                </div>
+
+                <!-- Ảnh chính -->
+                <img src="<?= $item['featured_image'] ?>" alt="<?= $item['title'] ?>"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  onload="document.getElementById('placeholder-news-<?= $item['id'] ?>').style.display='none'; this.style.opacity='1';"
+                  onerror="this.onerror=null; this.style.display='none'; showErrorNewsPlaceholder('placeholder-news-<?= $item['id'] ?>', '<?= htmlspecialchars($item['title'], ENT_QUOTES) ?>');"
+                  style="opacity: 0;">
+              </div>
+
+              <div class="p-5">
+                <div class="flex items-center text-gray-500 text-sm mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <?= $item['created_at'] ?>
+                </div>
+
+                <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>">
+                  <h3 class="font-bold text-gray-800 text-lg mb-2"><?= $item['title'] ?></h3>
+                </a>
+
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                  <?= $item['summary'] ?>
+                </p>
+
+                <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>"
+                  class="inline-flex items-center text-teal-500 hover:text-teal-600 font-medium text-sm">
+                  <span class="w-6 h-6 rounded-full border border-teal-500 flex items-center justify-center mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  Xem chi tiết
+                </a>
+              </div>
             </div>
-          </div>
           <?php } ?>
 
 
@@ -804,45 +771,38 @@ $title = 'Trang chủ - Di Travel';
           </button>
         </a>
       </div>
-    </section>
-  </main>
-
-  <!-- Your footer goes here -->
-</body>
-<script src="<?= UrlHelper::route('assets/js/admin/favorites.js') ?>"></script>
-=======
     </div>
   </section>
 </main>
 
 
 <script>
-// Thêm vào phần script hiện có
-function handleTestimonialImageError(img, placeholderId, name) {
-  img.style.display = 'none';
-  const placeholder = document.getElementById(placeholderId);
-  if (placeholder) {
-    // Tạo viết tắt từ tên
-    const initials = name.split(' ')
-      .map(part => part.charAt(0))
-      .join('')
-      .substring(0, 2);
+  // Thêm vào phần script hiện có
+  function handleTestimonialImageError(img, placeholderId, name) {
+    img.style.display = 'none';
+    const placeholder = document.getElementById(placeholderId);
+    if (placeholder) {
+      // Tạo viết tắt từ tên
+      const initials = name.split(' ')
+        .map(part => part.charAt(0))
+        .join('')
+        .substring(0, 2);
 
-    // Hiển thị viết tắt trong một vòng tròn có màu
-    placeholder.innerHTML = `
+      // Hiển thị viết tắt trong một vòng tròn có màu
+      placeholder.innerHTML = `
       <div class="w-full h-full flex items-center justify-center bg-teal-100">
         <span class="font-semibold text-teal-600 text-lg">${initials}</span>
       </div>
     `;
-    placeholder.style.display = 'flex';
+      placeholder.style.display = 'flex';
+    }
   }
-}
 
-// Thêm function này vào đoạn script xử lý ảnh
-function showErrorPlaceholder(placeholderId, title) {
-  const placeholder = document.getElementById(placeholderId);
-  if (placeholder) {
-    placeholder.innerHTML = `
+  // Thêm function này vào đoạn script xử lý ảnh
+  function showErrorPlaceholder(placeholderId, title) {
+    const placeholder = document.getElementById(placeholderId);
+    if (placeholder) {
+      placeholder.innerHTML = `
       <div class="flex flex-col items-center justify-center h-full">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-teal-500" viewBox="0 0 24 24" fill="none" 
              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -855,14 +815,14 @@ function showErrorPlaceholder(placeholderId, title) {
         <span class="text-gray-600 text-center px-4 text-sm">${title || 'Tour du lịch'}</span>
       </div>
     `;
-    placeholder.style.display = 'flex';
+      placeholder.style.display = 'flex';
+    }
   }
-}
 
-function showErrorNewsPlaceholder(placeholderId, title) {
-  const placeholder = document.getElementById(placeholderId);
-  if (placeholder) {
-    placeholder.innerHTML = `
+  function showErrorNewsPlaceholder(placeholderId, title) {
+    const placeholder = document.getElementById(placeholderId);
+    if (placeholder) {
+      placeholder.innerHTML = `
       <div class="flex flex-col items-center justify-center h-full">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-teal-500 mb-2" viewBox="0 0 24 24" fill="none" 
              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -875,7 +835,8 @@ function showErrorNewsPlaceholder(placeholderId, title) {
         <span class="text-gray-600 text-center px-4 text-sm">${title || 'Tin tức'}</span>
       </div>
     `;
-    placeholder.style.display = 'flex';
+      placeholder.style.display = 'flex';
+    }
   }
-}
 </script>
+<script src="<?= UrlHelper::route('assets/js/admin/favorites.js') ?>"></script>

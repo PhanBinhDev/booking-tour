@@ -228,10 +228,14 @@ class UserController extends BaseController
         ];
 
         $favoriteTours = $this->tourModel->getTours($filters);
+        if ($userId) {
+            $userFavorites = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
+        }
 
         $this->view('user/wishlist', [
             'favoriteTours' => $favoriteTours,
-            'count' => count($favoriteTours)
+            'count' => count($favoriteTours),
+            "userFavorites" => $userFavorites
         ]);
     }
 
