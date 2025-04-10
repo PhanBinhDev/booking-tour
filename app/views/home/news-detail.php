@@ -67,6 +67,14 @@ use App\Helpers\UrlHelper;
                             </div>
                         </div>
 
+                    <div class="flex flex-wrap items-center text-gray-500 text-sm mb-6">
+                        <div class="flex items-center mr-4 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span><?= $news['created_at'] ?></span>
                         <!-- Ảnh chính -->
                         <img src="<?= $news['featured_image'] ?>" alt="<?= $news['title'] ?>"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300"
@@ -130,6 +138,7 @@ use App\Helpers\UrlHelper;
                                 Twitter
                             </a>
 
+
                             <!-- LinkedIn -->
                             <a href="#" onclick="shareArticle('linkedin')"
                                 class="share-btn flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-md transition-colors">
@@ -160,7 +169,6 @@ use App\Helpers\UrlHelper;
                                 </svg>
                                 Email
                             </a>
-
                             <!-- Copy link -->
                             <button id="copy-link-btn"
                                 class="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md transition-colors border border-gray-300">
@@ -299,6 +307,7 @@ use App\Helpers\UrlHelper;
                         <p class="text-gray-500 text-center">Không có danh mục nào</p>
                     <?php endif; ?>
                 </div>
+
 
                 <!-- Newsletter Subscribe -->
                 <div class="bg-gradient-to-br from-teal-500 to-teal-600 p-6 rounded-xl shadow-sm text-white">

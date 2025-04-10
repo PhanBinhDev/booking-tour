@@ -639,4 +639,154 @@ class Tour extends BaseModel
         $stmt = $this->db->prepare($sql);
         return $stmt->execute(['id' => $dateId]);
     }
+
+    public function getTours($filters = [], $sortOption = 'default', $onlySalePrice = false, $limit = null, $offset = null)
+    {
+        $currentDate = date('Y-m-d');
+
+        // Các bảng join mặc định
+        $joins = [
+            "JOIN tour_categories ON tour_categories.id = tours.category_id",
+            "JOIN locations ON locations.id = tours.location_id",
+            "LEFT JOIN (
+            SELECT tour_id, AVG(rating) as avg_rating, COUNT(*) as review_count 
+            FROM tour_reviews 
+            GROUP BY tour_id
+        ) as tr ON tr.tour_id = tours.id",
+            "LEFT JOIN tour_dates ON tour_dates.tour_id = tours.id",
+            "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS tour_images ON tour_images.tour_id = tours.id",
+            "LEFT JOIN images ON tour_images.image_id = images.id"
+        ];
+
+        // Các cột mặc định cần lấy
+        $columns = "tours.id, tours.description, 
+        tour_images.tour_id, tour_images.image_id,
+        images.cloudinary_url,
+        tr.avg_rating, 
+        tr.review_count,
+        tours.title, tours.price, tours.duration, tours.sale_price,
+        MIN(CASE WHEN tour_dates.start_date >= '$currentDate' THEN tour_dates.start_date ELSE NULL END) as next_start_date,
+        MIN(CASE WHEN tour_dates.end_date >= '$currentDate' THEN tour_dates.end_date ELSE NULL END) as next_end_date,
+        COUNT(DISTINCT tour_dates.id) as date_count,
+        GROUP_CONCAT(DISTINCT CONCAT(tour_dates.start_date, '|', tour_dates.end_date) ORDER BY tour_dates.start_date) as all_dates,
+        tour_categories.name AS category_name, 
+        locations.name AS location_name";
+
+        // GROUP BY mặc định
+        $groupBy = "GROUP BY tours.id, tour_images.tour_id, tour_images.image_id, images.cloudinary_url, tr.avg_rating, tr.review_count, tours.title, tours.price, tours.duration, tours.sale_price, tour_categories.name, locations.name";
+
+        // Điều kiện lọc mặc định
+        $conditions = ["tours.status" => "active"];
+
+        // Thêm điều kiện sale_price > 0 nếu được yêu cầu
+        if ($onlySalePrice) {
+            $conditions["tours.sale_price"] = "> 0";
+        }
+
+        // Thêm các điều kiện lọc từ tham số
+        if (!empty($filters['category_id'])) {
+            $conditions["tours.category_id"] = $filters['category_id'];
+        }
+
+        if (!empty($filters['location_id'])) {
+            $conditions["tours.location_id"] = $filters['location_id'];
+        }
+
+        if (!empty($filters['featured'])) {
+            $conditions["tours.featured"] = $filters['featured'];
+        }
+
+        // Thêm điều kiện lọc theo danh sách ID tour
+        if (!empty($filters['tour_ids']) && is_array($filters['tour_ids'])) {
+            // Chuyển đổi mảng ID thành chuỗi cho SQL IN clause
+            $conditions["custom_where"] = "tours.id IN (" . implode(',', array_map('intval', $filters['tour_ids'])) . ")";
+        }
+
+        // Phần còn lại của hàm giữ nguyên như cũ
+        // Xây dựng điều kiện HAVING cho các bộ lọc nâng cao
+        $having = "";
+
+        // Lọc theo giá
+        if (!empty($filters['price_ranges'])) {
+            $priceConditions = [];
+            foreach ($filters['price_ranges'] as $range) {
+                list($min, $max) = explode('-', $range);
+                if ($max === 'max') {
+                    $priceConditions[] = "(CASE WHEN tours.sale_price > 0 THEN tours.sale_price ELSE tours.price END >= $min)";
+                } else {
+                    $priceConditions[] = "(CASE WHEN tours.sale_price > 0 THEN tours.sale_price ELSE tours.price END BETWEEN $min AND $max)";
+                }
+            }
+            if (!empty($priceConditions)) {
+                $having .= (!empty($having) ? " AND " : "") . "(" . implode(" OR ", $priceConditions) . ")";
+            }
+        }
+
+        // Lọc theo thời lượng
+        if (!empty($filters['durations'])) {
+            $durationConditions = [];
+            foreach ($filters['durations'] as $duration) {
+                list($min, $max) = explode('-', $duration);
+                if ($max === 'max') {
+                    $durationConditions[] = "(tours.duration >= $min)";
+                } else {
+                    $durationConditions[] = "(tours.duration BETWEEN $min AND $max)";
+                }
+            }
+            if (!empty($durationConditions)) {
+                $having .= (!empty($having) ? " AND " : "") . "(" . implode(" OR ", $durationConditions) . ")";
+            }
+        }
+
+        // Lọc theo đánh giá
+        if (!empty($filters['ratings'])) {
+            $ratingConditions = [];
+            foreach ($filters['ratings'] as $rating) {
+                $ratingConditions[] = "(tr.avg_rating >= $rating)";
+            }
+            if (!empty($ratingConditions)) {
+                $having .= (!empty($having) ? " AND " : "") . "(" . implode(" OR ", $ratingConditions) . ")";
+            }
+        }
+
+        // Lọc theo từ khóa (nếu có)
+        if (!empty($filters['keyword'])) {
+            $keyword = $filters['keyword'];
+            $conditions["tours.title"] = "LIKE %{$keyword}%";
+        }
+
+        // Xác định cách sắp xếp
+        $orderBy = 'tours.id DESC';
+        switch ($sortOption) {
+            case 'popular':
+                $orderBy = 'tr.review_count DESC, tr.avg_rating DESC';
+                break;
+            case 'price_asc':
+                $orderBy = 'CASE WHEN tours.sale_price > 0 THEN tours.sale_price ELSE tours.price END ASC';
+                break;
+            case 'price_desc':
+                $orderBy = 'CASE WHEN tours.sale_price > 0 THEN tours.sale_price ELSE tours.price END DESC';
+                break;
+            case 'rating':
+                $orderBy = 'tr.avg_rating DESC, tr.review_count DESC';
+                break;
+        }
+
+        // Thực hiện truy vấn sử dụng hàm getAll
+        return $this->getAll(
+            $columns,
+            $conditions,
+            $orderBy,
+            $limit,
+            $offset,
+            $joins,
+            $groupBy,
+            $having
+        );
+    }
+
+    public function getFeaturedTours($limit = 3, $onlySalePrice = false)
+    {
+        return $this->getTours(['featured' => 1], 'default', $onlySalePrice, $limit);
+    }
 }

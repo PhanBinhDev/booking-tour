@@ -192,6 +192,13 @@ $title = 'Trang chủ - Di Travel';
               </svg>
             </button>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Destination Card 1 -->
+          <?php
+          foreach ($allFeaturedTours as $tour) {
+            $isFavorited = isset($_SESSION['user_id']) && in_array($tour['id'], $userFavorites);
+            $heartClass = $isFavorited ? "text-teal-500" : "text-gray-400";
+          ?>
             <!-- Duration Badge -->
             <div
               class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -199,6 +206,23 @@ $title = 'Trang chủ - Di Travel';
             </div>
           </div>
 
+                <!-- Discount Badge -->
+
+                <?= $tour['sale_price'] ?
+                  ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
+                  number_format((($tour['price'] - $tour['sale_price']) / $tour['price']) * 100) . '%'
+                  . '</div>'
+                  : ''
+                ?>
+
+                <!-- Favorite Button -->
+                <button data-tour-id="<?php echo $tour['id']; ?>"
+                  class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 <?= $heartClass ?> text-teal-500 fill-current" viewBox="0 0 24 24">
+                    <path
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </button>
           <div class="p-5">
             <!-- Tour Title -->
             <a href="<?= UrlHelper::route('home/tour-details/' . $tour['id']) ?>">
@@ -339,6 +363,22 @@ $title = 'Trang chủ - Di Travel';
               </svg>
             </button>
 
+                <!-- Discount Badge -->
+                <?= $tour['sale_price'] ?
+                  ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
+                  number_format((($tour['price'] - $tour['sale_price']) / $tour['price']) * 100) . '%'
+                  . '</div>'
+                  : ''
+                ?>
+
+                <!-- Favorite Button -->
+                <button data-tour-id="<?php echo $tour['id']; ?>"
+                  class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 favorite-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-500 fill-current" viewBox="0 0 24 24">
+                    <path
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </button>
             <!-- Duration Badge -->
             <div
               class="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -764,6 +804,13 @@ $title = 'Trang chủ - Di Travel';
           </button>
         </a>
       </div>
+    </section>
+  </main>
+
+  <!-- Your footer goes here -->
+</body>
+<script src="<?= UrlHelper::route('assets/js/admin/favorites.js') ?>"></script>
+=======
     </div>
   </section>
 </main>
