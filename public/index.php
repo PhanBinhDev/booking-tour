@@ -221,6 +221,13 @@ $router->post('/admin/contacts/mark-read', 'Admin\ContactController@markRead');
 $router->post('/admin/contacts/send-reply', 'Admin\ContactController@sendReply');
 
 
+// ADMIN/REVIEWS
+$router->get('/admin/reviews', 'Admin\ReviewController@index');
+$router->get('/admin/reviews/reviewDetail/{id}', 'Admin\ReviewController@reviewDetail');
+$router->get('/admin/reviews/deleteReview/{id}', 'Admin\ReviewController@deleteReview');
+$router->post('/admin/reviews/updateStatus/{id}', 'Admin\ReviewController@updateStatus');
+
+
 // ADMIN/SYSTEM
 $router->get('/admin/system/activity-logs', 'Admin\DashboardController@activityLogs');
 
