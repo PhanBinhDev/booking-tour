@@ -121,6 +121,7 @@ use App\Helpers\FormatHelper;
                     <a href="<?= UrlHelper::route('admin/reviews') ?>" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition-colors">
                         Hủy
                     </a>
+                    <?php if($getTourReviewById['status'] !== 'rejected'){?>
                     <form action="<?= UrlHelper::route('admin/reviews/updateStatus/' . $getTourReviewById['id']) ?>" method="POST">
                         <input type="hidden" name="review_id" value="<?= $getTourReviewById['id'] ?>">
                         <input type="hidden" name="status" value="rejected">
@@ -129,6 +130,8 @@ use App\Helpers\FormatHelper;
                             Từ chối
                         </button>
                     </form>
+                    <?php } ?>
+                    <?php if($getTourReviewById['status'] !== 'approved'){?>
                     <form action="<?= UrlHelper::route('admin/reviews/updateStatus/' . $getTourReviewById['id']) ?>" method="POST">
                         <input type="hidden" name="review_id" value="<?= $getTourReviewById['id'] ?>">
                         <input type="hidden" name="status" value="approved">
@@ -137,6 +140,7 @@ use App\Helpers\FormatHelper;
                             Chấp nhận
                         </button>
                     </form>
+                    <?php } ?>
                 </div>
             </div>
         </div>
