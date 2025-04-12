@@ -274,10 +274,10 @@ ob_start();
 
           <!-- Comments Management -->
           <li>
-            <a href="<?= UrlHelper::route('admin/comments') ?>"
+            <a href="<?= UrlHelper::route('admin/reviews') ?>"
               class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors <?= $activePage === 'comments' ? 'bg-gray-700 text-white' : '' ?>">
               <i class="fas fa-comments w-5 h-5 mr-3"></i>
-              <span>Quản lý Bình luận</span>
+              <span>Quản lý Đánh giá</span>
             </a>
           </li>
 
