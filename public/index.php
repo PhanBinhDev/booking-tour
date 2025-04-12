@@ -26,7 +26,7 @@ define('IMAGES_URL', ASSETS_URL . '/images');
 define('ADMIN_URL', PUBLIC_URL . '/admin');
 define('DEBUG', true);
 
-define('REQUIRE_EMAIL_VERIFICATION', false);
+define('REQUIRE_EMAIL_VERIFICATION', true);
 
 // Load CONSTANT FROM PERMISSION
 require_once ROOT_PATH . '/app/config/Permission.php';
@@ -101,6 +101,7 @@ $router->post('/auth/login', 'AuthController@login');
 $router->get('/auth/register', 'AuthController@register');
 $router->post('/auth/register', 'AuthController@register');
 $router->get('/auth/logout', 'AuthController@logout');
+$router->get('/auth/verify-email', 'AuthController@verifyEmail');
 $router->get('/auth/forgot-password', 'AuthController@forgotPassword');
 $router->post('/auth/forgot-password', 'AuthController@forgotPassword');
 $router->get('/auth/reset-password/{token}', 'AuthController@resetPassword');

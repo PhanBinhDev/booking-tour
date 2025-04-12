@@ -155,15 +155,15 @@ class AuthController extends BaseController
             }
 
             if (empty($errors)) {
-                $userId = $this->userModel->create([
+                $userId = $this->userModel->createUser([
                     'username' => $username,
                     'email' => $email,
                     'password' => password_hash($password, PASSWORD_DEFAULT),
                     'full_name' => $fullName,
                     'phone' => $phone,
-                    'role_id' => 4,  // Role ID cho người dùng thông thường
+                    'role_id' => 3,  // Role ID cho người dùng thông thường
                     'status' => 'active',
-                    'email_verified' => REQUIRE_EMAIL_VERIFICATION
+                    'email_verified' => REQUIRE_EMAIL_VERIFICATION ? 0 : 1
                 ]);
 
                 if ($userId) {
@@ -187,6 +187,7 @@ class AuthController extends BaseController
                     }
                 } else {
                     var_dump($errors);
+                    die();
                     $errors['register'] = 'Đăng ký thất bại. Vui lòng thử lại.';
                 }
             }

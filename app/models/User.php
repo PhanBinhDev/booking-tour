@@ -111,14 +111,15 @@ class User extends BaseModel
      * @param array $data Dữ liệu người dùng
      * @return int|false ID người dùng mới hoặc false nếu thất bại
      */
-    public function create($data)
+    public function createUser($data)
     {
         try {
             $this->db->beginTransaction();
 
             // Tạo người dùng
-            $sql = "INSERT INTO {$this->table} (username, email, password, full_name, phone, role_id, status, email_verified, created_at) 
-                    VALUES (:username, :email, :password, :full_name, :phone, :role_id, :status, :email_verified, NOW())";
+            $sql = "INSERT INTO {$this->table} 
+                (username, email, password, full_name, phone, role_id, status, email_verified, created_at) 
+                VALUES (:username, :email, :password, :full_name, :phone, :role_id, :status, :email_verified, :created_at)";
 
             $stmt = $this->db->prepare($sql);
 
@@ -131,14 +132,16 @@ class User extends BaseModel
             $stmt->bindValue(':role_id', $data['role_id']);
             $stmt->bindValue(':status', $data['status'] ?? 'active');
             $stmt->bindValue(':email_verified', $data['email_verified'] ?? false, PDO::PARAM_BOOL);
+            $stmt->bindValue(':created_at', date('Y-m-d H:i:s')); // Truyền thời gian từ PHP
 
             $stmt->execute();
             $userId = $this->db->lastInsertId();
 
             // Tạo hồ sơ người dùng
-            $sql = "INSERT INTO user_profiles (user_id, created_at) VALUES (:user_id, NOW())";
+            $sql = "INSERT INTO user_profiles (user_id, created_at) VALUES (:user_id, :created_at)";
             $stmt = $this->db->prepare($sql);
             $stmt->bindValue(':user_id', $userId);
+            $stmt->bindValue(':created_at', date('Y-m-d H:i:s')); // Truyền thời gian từ PHP
             $stmt->execute();
 
             // Ghi log hoạt động
@@ -161,10 +164,19 @@ class User extends BaseModel
      */
     private function updateLastLogin($userId)
     {
-        $sql = "UPDATE {$this->table} SET last_login = NOW() WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $userId);
-        return $stmt->execute();
+        try {
+            $sql = "UPDATE {$this->table} SET last_login = :last_login WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+
+            // Truyền thời gian hiện tại từ PHP
+            $stmt->bindValue(':last_login', date('Y-m-d H:i:s'));
+            $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            error_log("Error updating last login: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -321,10 +333,11 @@ class User extends BaseModel
     public function resetPassword($token, $password)
     {
         $sql = "SELECT id FROM {$this->table} 
-                WHERE reset_token = :token AND reset_token_expires > NOW()";
+        WHERE reset_token = :token AND reset_token_expires > :current_time";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':token', $token);
+        $stmt->bindValue(':current_time', date('Y-m-d H:i:s'));
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -358,8 +371,8 @@ class User extends BaseModel
      */
     private function logActivity($userId, $action, $entityType, $entityId, $description)
     {
-        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent) 
-                VALUES (:user_id, :action, :entity_type, :entity_id, :description, :ip_address, :user_agent NOW())";
+        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, description, ip_address, user_agent, created_at) 
+                VALUES (:user_id, :action, :entity_type, :entity_id, :description, :ip_address, :user_agent, :created_at)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -370,7 +383,7 @@ class User extends BaseModel
         $stmt->bindParam(':description', $description);
         $stmt->bindValue(':ip_address', $_SERVER['REMOTE_ADDR'] ?? null);
         $stmt->bindValue(':user_agent', $_SERVER['HTTP_USER_AGENT'] ?? null);
-
+        $stmt->bindValue(':created_at', date('Y-m-d H:i:s'));
         return $stmt->execute();
     }
     public function updateProfile($data)
@@ -378,12 +391,12 @@ class User extends BaseModel
         try {
             // Update user data in the users table
             $userSql = "UPDATE users 
-                        SET full_name = :full_name, 
-                            phone = :phone,
-                            address = :address,
-                            avatar = :avatar,
-                            updated_at = NOW()
-                        WHERE id = :user_id";
+            SET full_name = :full_name, 
+                phone = :phone,
+                address = :address,
+                avatar = :avatar,
+                updated_at = :updated_at
+            WHERE id = :user_id";
 
             $userStmt = $this->db->prepare($userSql);
             $userStmt->bindValue(':full_name', $data['full_name']);
@@ -391,6 +404,7 @@ class User extends BaseModel
             $userStmt->bindValue(':address', $data['address'] ?? null);
             $userStmt->bindValue(':avatar', $data['avatar'] ?? null);
             $userStmt->bindValue(':user_id', $data['user_id']);
+            $userStmt->bindValue(':updated_at', date('Y-m-d H:i:s'));
             $userResult = $userStmt->execute();
 
             if (!$userResult) {
@@ -407,21 +421,21 @@ class User extends BaseModel
             if ($checkStmt->rowCount() > 0) {
                 // Update existing profile
                 $profileSql = "UPDATE user_profiles 
-                            SET date_of_birth = :date_of_birth, 
-                                gender = :gender, 
-                                bio = :bio, 
-                                website = :website,
-                                facebook = :facebook,
-                                twitter = :twitter,
-                                instagram = :instagram,
-                                updated_at = NOW()
-                            WHERE user_id = :user_id";
+               SET date_of_birth = :date_of_birth, 
+                   gender = :gender, 
+                   bio = :bio, 
+                   website = :website,
+                   facebook = :facebook,
+                   twitter = :twitter,
+                   instagram = :instagram,
+                   updated_at = :updated_at
+               WHERE user_id = :user_id";
             } else {
                 // Insert new profile
                 $profileSql = "INSERT INTO user_profiles 
-                            (user_id, date_of_birth, gender, bio, website, facebook, twitter, instagram, created_at, updated_at) 
-                            VALUES 
-                            (:user_id, :date_of_birth, :gender, :bio, :website, :facebook, :twitter, :instagram, NOW(), NOW())";
+               (user_id, date_of_birth, gender, bio, website, facebook, twitter, instagram, created_at, updated_at) 
+               VALUES 
+               (:user_id, :date_of_birth, :gender, :bio, :website, :facebook, :twitter, :instagram, :created_at, :updated_at)";
             }
 
             $profileStmt = $this->db->prepare($profileSql);
@@ -433,7 +447,8 @@ class User extends BaseModel
             $profileStmt->bindValue(':facebook', $data['facebook'] ?? null);
             $profileStmt->bindValue(':twitter', $data['twitter'] ?? null);
             $profileStmt->bindValue(':instagram', $data['instagram'] ?? null);
-
+            $profileStmt->bindValue(':created_at', date('Y-m-d H:i:s'));
+            $profileStmt->bindValue(':updated_at', date('Y-m-d H:i:s'));
             $profileResult = $profileStmt->execute();
 
             if (!$profileResult) {
