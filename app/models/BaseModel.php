@@ -21,10 +21,15 @@ abstract class BaseModel
 
     public function deleteSoft($id)
     {
-        $sql = "UPDATE {$this->table} SET isDeleted = '1' WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        try {
+            $sql = "UPDATE {$this->table} SET isDeleted = '1' WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            error_log("Lỗi khi thực hiện deleteSoft: " . $e->getMessage());
+            return false;
+        }
     }
     /**
      * Lấy tất cả bản ghi
@@ -37,92 +42,92 @@ abstract class BaseModel
      */
     public function getAll($columns = "*", $conditions = [], $orderBy = 'id DESC', $limit = null, $offset = null, $joins = [], $groupBy = '', $having = '')
     {
-        $sql = "SELECT {$columns} FROM {$this->table}";
+        try {
+            $sql = "SELECT {$columns} FROM {$this->table}";
 
-        if (!empty($joins)) {
-            foreach ($joins as $join) {
-                $sql .= " " . $join;
-            }
-        }
-
-        if (!empty($conditions)) {
-            $sql .= " WHERE ";
-            $whereClauses = [];
-
-            foreach ($conditions as $key => $value) {
-                // Xử lý đặc biệt cho custom_where
-                if ($key === "custom_where") {
-                    $whereClauses[] = $value;
-                    unset($conditions[$key]);
-                    continue;
-                }
-                $paramName = str_replace('.', '_', $key);
-
-                // Kiểm tra xem giá trị có phải là chuỗi và bắt đầu bằng toán tử so sánh không
-                if (is_string($value) && preg_match('/^\s*([<>=!]+|LIKE)\s*(.+)$/', $value, $matches)) {
-                    $operator = $matches[1]; // Lấy toán tử (>, <, =, !=, >=, <=, LIKE)
-                    $actualValue = $matches[2]; // Lấy giá trị thực
-                    $whereClauses[] = "$key $operator :$paramName";
-                    $value = $actualValue; // Cập nhật giá trị để bind
-                } else {
-                    $whereClauses[] = "$key = :$paramName";
-                }
-
-                $conditions[$key] = $value; // Cập nhật giá trị trong mảng conditions
-            }
-
-            $sql .= implode(' AND ', $whereClauses);
-        }
-
-        if (!empty($groupBy)) {
-            $sql .= " " . $groupBy;
-        }
-
-        // Thêm điều kiện HAVING nếu có
-        if (!empty($having)) {
-            // Kiểm tra nếu GROUP BY chưa có và cần HAVING, thêm nhóm theo khóa chính
-            if (empty($groupBy)) {
-                $sql .= " GROUP BY {$this->table}.id";
-            }
-            $sql .= " HAVING " . $having;
-        }
-
-        if ($orderBy) {
-            $sql .= " ORDER BY $orderBy";
-        }
-
-        if ($limit !== null) {
-            $sql .= " LIMIT :limit";
-
-            if ($offset !== null) {
-                $sql .= " OFFSET :offset";
-            }
-        }
-
-        $stmt = $this->db->prepare($sql);
-
-        if (!empty($conditions)) {
-            foreach ($conditions as $key => $value) {
-                $paramName = str_replace('.', '_', $key);
-                // Xử lý đặc biệt cho các truy vấn LIKE
-                if (is_string($value) && strpos($value, '%') !== false) {
-                    $stmt->bindValue(":$paramName", $value, PDO::PARAM_STR);
-                } else {
-                    $stmt->bindValue(":$paramName", $value);
+            if (!empty($joins)) {
+                foreach ($joins as $join) {
+                    $sql .= " " . $join;
                 }
             }
-        }
 
-        if ($limit !== null) {
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            if (!empty($conditions)) {
+                $sql .= " WHERE ";
+                $whereClauses = [];
 
-            if ($offset !== null) {
-                $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+                foreach ($conditions as $key => $value) {
+                    if ($key === "custom_where") {
+                        $whereClauses[] = $value;
+                        unset($conditions[$key]);
+                        continue;
+                    }
+                    $paramName = str_replace('.', '_', $key);
+
+                    if (is_string($value) && preg_match('/^\s*([<>=!]+|LIKE)\s*(.+)$/', $value, $matches)) {
+                        $operator = $matches[1];
+                        $actualValue = $matches[2];
+                        $whereClauses[] = "$key $operator :$paramName";
+                        $value = $actualValue;
+                    } else {
+                        $whereClauses[] = "$key = :$paramName";
+                    }
+
+                    $conditions[$key] = $value;
+                }
+
+                $sql .= implode(' AND ', $whereClauses);
             }
-        }
 
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (!empty($groupBy)) {
+                $sql .= " " . $groupBy;
+            }
+
+            if (!empty($having)) {
+                if (empty($groupBy)) {
+                    $sql .= " GROUP BY {$this->table}.id";
+                }
+                $sql .= " HAVING " . $having;
+            }
+
+            if ($orderBy) {
+                $sql .= " ORDER BY $orderBy";
+            }
+
+            if ($limit !== null) {
+                $sql .= " LIMIT :limit";
+
+                if ($offset !== null) {
+                    $sql .= " OFFSET :offset";
+                }
+            }
+
+            $stmt = $this->db->prepare($sql);
+
+            if (!empty($conditions)) {
+                foreach ($conditions as $key => $value) {
+                    $paramName = str_replace('.', '_', $key);
+                    if (is_string($value) && strpos($value, '%') !== false) {
+                        $stmt->bindValue(":$paramName", $value, PDO::PARAM_STR);
+                    } else {
+                        $stmt->bindValue(":$paramName", $value);
+                    }
+                }
+            }
+
+            if ($limit !== null) {
+                $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+
+                if ($offset !== null) {
+                    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+                }
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log("Lỗi khi thực hiện getAll: " . $e->getMessage());
+            return [];
+        }
     }
 
     /**
@@ -310,11 +315,16 @@ abstract class BaseModel
      */
     public function getById($id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log("Lỗi khi thực hiện getById: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -326,24 +336,29 @@ abstract class BaseModel
      */
     public function update($id, $data)
     {
-        $sql = "UPDATE {$this->table} SET ";
-        $updateClauses = [];
+        try {
+            $sql = "UPDATE {$this->table} SET ";
+            $updateClauses = [];
 
-        foreach ($data as $key => $value) {
-            $updateClauses[] = "$key = :$key";
+            foreach ($data as $key => $value) {
+                $updateClauses[] = "$key = :$key";
+            }
+
+            $sql .= implode(', ', $updateClauses);
+            $sql .= " WHERE id = :id";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id);
+
+            foreach ($data as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            error_log("Lỗi khi thực hiện update: " . $e->getMessage());
+            return false;
         }
-
-        $sql .= implode(', ', $updateClauses);
-        $sql .= " WHERE id = :id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
-
-        foreach ($data as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
-
-        return $stmt->execute();
     }
 
     /**
@@ -432,38 +447,40 @@ abstract class BaseModel
      */
     public function create($data)
     {
-        // Tạo câu lệnh SQL
-        $columns = array_keys($data);
-        $placeholders = array_map(function ($item) {
-            return ":$item";
-        }, $columns);
+        try {
+            $columns = array_keys($data);
+            $placeholders = array_map(function ($item) {
+                return ":$item";
+            }, $columns);
 
-        $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
+            $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
             VALUES (" . implode(', ', $placeholders) . ")";
 
-        $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->prepare($sql);
 
-        // Bind các giá trị
-        foreach ($data as $key => $value) {
-            $paramType = null;
-            if (is_int($value)) {
-                $paramType = PDO::PARAM_INT;
-            } elseif (is_bool($value)) {
-                $paramType = PDO::PARAM_BOOL;
-            } elseif (is_null($value)) {
-                $paramType = PDO::PARAM_NULL;
-            } else {
-                $paramType = PDO::PARAM_STR;
+            foreach ($data as $key => $value) {
+                $paramType = null;
+                if (is_int($value)) {
+                    $paramType = PDO::PARAM_INT;
+                } elseif (is_bool($value)) {
+                    $paramType = PDO::PARAM_BOOL;
+                } elseif (is_null($value)) {
+                    $paramType = PDO::PARAM_NULL;
+                } else {
+                    $paramType = PDO::PARAM_STR;
+                }
+
+                $stmt->bindValue(":$key", $value, $paramType);
             }
 
-            $stmt->bindValue(":$key", $value, $paramType);
-        }
+            if ($stmt->execute()) {
+                return $this->db->lastInsertId();
+            }
 
-        // Thực thi và trả về kết quả
-        if ($stmt->execute()) {
-            return $this->db->lastInsertId();
+            return false;
+        } catch (\PDOException $e) {
+            error_log("Lỗi khi thực hiện create: " . $e->getMessage());
+            return false;
         }
-
-        return false;
     }
 }

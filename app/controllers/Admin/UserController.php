@@ -164,8 +164,65 @@ class UserController extends BaseController
         $roles = $this->roleModel->getAll();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            echo 'EDIT';
-            // EDIT TRRONG NÀY
+            $username = trim($_POST['username']);
+            $email = trim($_POST['email']);
+            $full_name = trim($_POST['full_name']);
+            $phone = trim($_POST['phone']);
+            $role_id = intval($_POST['role_id']);
+            $status = trim($_POST['status']);
+            $bio = trim($_POST['bio']);
+            $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_BCRYPT) : null;
+
+            $errors = [];
+
+            // Validate inputs
+            if (empty($username) || strlen($username) < 6) {
+                $errors['username'] = 'Tên người dùng phải có ít nhất 6 ký tự';
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Vui lòng nhập email hợp lệ';
+            } elseif ($this->userModel->findByEmail($email) && $email !== $currentUser['email']) {
+                $errors['email'] = 'Email này đã được sử dụng';
+            }
+
+            if (!empty($_POST['password']) && strlen($_POST['password']) < 8) {
+                $errors['password'] = 'Mật khẩu phải có ít nhất 8 ký tự';
+            }
+
+            if (!empty($_POST['password']) && $_POST['password'] !== $_POST['password_confirm']) {
+                $errors['password_confirm'] = 'Mật khẩu xác nhận không khớp';
+            }
+
+            if (empty($errors)) {
+                $data = [
+                    'username' => $username,
+                    'email' => $email,
+                    'full_name' => $full_name,
+                    'phone' => $phone,
+                    'role_id' => $role_id,
+                    'status' => $status,
+                    'bio' => $bio,
+                ];
+
+                if ($password) {
+                    $data['password'] = $password;
+                }
+
+                if ($this->userModel->update($id, $data)) {
+                    $this->setFlashMessage('success', 'Cập nhật người dùng thành công');
+                    $this->redirect(UrlHelper::route('/admin/users/index'));
+                    return;
+                } else {
+                    $errors['general'] = 'Đã xảy ra lỗi khi cập nhật người dùng';
+                }
+            }
+
+            $this->view('admin/users/edit', [
+                'user' => array_merge($currentUser, $_POST),
+                'roles' => $roles,
+                'errors' => $errors
+            ]);
         } else {
             $this->view('admin/users/edit', [
                 'user' => $currentUser,

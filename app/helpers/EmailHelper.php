@@ -27,7 +27,7 @@ class EmailHelper
     {
         $subject = "Xác thực tài khoản - Di Travel";
 
-        $verificationUrl = PUBLIC_URL . "/verify-email?token=" . $token;
+        $verificationUrl = PUBLIC_URL . "/auth/verify-email?token=" . $token;
 
         $message = "
         <html>
@@ -36,8 +36,9 @@ class EmailHelper
         </head>
         <body>
             <div style='max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;'>
-                <div style='text-align: center; margin-bottom: 20px;'>
-                    <img src='" . PUBLIC_URL . "/assets/images/logo.png' alt='Di Travel Logo' style='max-width: 150px;'>
+                <div style=\"display: inline-block; background-color: white; padding: 7px 18px; border-radius: 40px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);\">
+                    <img src=\"https://res.cloudinary.com/dr1naxx72/image/upload/v1743134201/logo_rbocpz.png\" alt=\"Di Travel Logo\"
+                        style=\"max-width: 150px; height: auto; vertical-align: middle;\">
                 </div>
                 
                 <div style='background-color: #f8f9fa; padding: 20px; border-radius: 5px;'>
