@@ -170,7 +170,7 @@ $activePage = 'about';
               d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           </svg>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">Hướng Dẫn Viên Chuyên Nghiệp</h3>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2 text-center">HDV Chuyên Nghiệp</h3>
         <p class="text-gray-600 text-center">
           Các hướng dẫn viên am hiểu của chúng tôi cung cấp góc nhìn nội địa và đảm bảo bạn trải nghiệm bản chất chân
           thực của mỗi điểm đến.
@@ -186,10 +186,10 @@ $activePage = 'about';
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Team Member 1 -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="<?= UrlHelper::image('team-1.jpg') ?>" alt="Thành viên đội ngũ"
-            class="w-full h-64 object-cover object-center" />
+          <img src="<?= UrlHelper::image('avt/binh.webp') ?>" alt="Thành viên đội ngũ"
+            class="w-full h-64 object-contain object-center" />
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-1">Nguyễn Văn Minh</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">Phan Văn Bình</h3>
             <p class="text-teal-600 mb-3">Nhà Sáng Lập & CEO</p>
             <p class="text-gray-600 text-sm">
               Với hơn 15 năm kinh nghiệm trong ngành du lịch, niềm đam mê khám phá của Minh đã dẫn đến sự ra đời của Di
@@ -200,10 +200,10 @@ $activePage = 'about';
 
         <!-- Team Member 2 -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="<?= UrlHelper::image('team-2.jpg') ?>" alt="Thành viên đội ngũ"
-            class="w-full h-64 object-cover object-center" />
+          <img src="<?= UrlHelper::image('avt/diem.jpeg') ?>" alt="Thành viên đội ngũ"
+            class="w-full h-64 object-contain object-center" />
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-1">Trần Thị Lan</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">Vương Thị Diễm</h3>
             <p class="text-teal-600 mb-3">Giám Đốc Điều Hành</p>
             <p class="text-gray-600 text-sm">
               Lan đảm bảo mỗi tour đều diễn ra suôn sẻ, kết hợp sự lên kế hoạch tỉ mỉ với hiểu biết sâu sắc về nhu cầu
@@ -214,10 +214,10 @@ $activePage = 'about';
 
         <!-- Team Member 3 -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="<?= UrlHelper::image('team-3.jpg') ?>" alt="Thành viên đội ngũ"
-            class="w-full h-64 object-cover object-center" />
+          <img src="<?= UrlHelper::image('avt/quan.webp') ?>" alt="Thành viên đội ngũ"
+            class="w-full h-64 object-contain object-center" />
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-1">Lê Quang Hải</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">Bùi Anh Quân</h3>
             <p class="text-teal-600 mb-3">Quản Lý Phát Triển Tour</p>
             <p class="text-gray-600 text-sm">
               Kinh nghiệm du lịch qua hơn 70 quốc gia giúp Hải tạo ra những lịch trình độc đáo, nắm bắt được tinh hoa
@@ -228,10 +228,10 @@ $activePage = 'about';
 
         <!-- Team Member 4 -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <img src="<?= UrlHelper::image('team-4.jpg') ?>" alt="Thành viên đội ngũ"
-            class="w-full h-64 object-cover object-center" />
+          <img src="<?= UrlHelper::image('avt/linh1.jpeg') ?>" alt="Thành viên đội ngũ"
+            class="w-full h-64 object-contain object-center" />
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-1">Phạm Thu Hà</h3>
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">Đào Thị Phương Linh</h3>
             <p class="text-teal-600 mb-3">Giám Đốc Trải Nghiệm Khách Hàng</p>
             <p class="text-gray-600 text-sm">
               Sự tận tâm của Hà đối với dịch vụ xuất sắc đảm bảo mỗi du khách đều nhận được sự chăm sóc cá nhân từ lúc
@@ -244,125 +244,112 @@ $activePage = 'about';
   </div>
 
   <!-- Testimonials Section -->
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Khách Hàng Nói Gì Về Chúng Tôi</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Testimonial 1 -->
-      <div class="bg-white p-8 rounded-lg shadow-md">
-        <div class="flex items-center mb-4">
-          <div class="text-teal-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          </div>
-        </div>
-        <p class="text-gray-600 italic mb-4">
-          "Chuyến đi gia đình của chúng tôi đến Vịnh Hạ Long thật hoàn hảo. Hướng dẫn viên rất am hiểu, chỗ ở tuyệt vời,
-          và lịch trình cho phép chúng tôi trải nghiệm cả những điểm tham quan phổ biến lẫn những địa điểm ẩn."
+  <section class="py-12 px-4 bg-teal-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Khách hàng nói gì về chúng tôi</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Cùng đọc những trải nghiệm mà các vị khách đã nhận được trong suốt những chuyến hành trình cùng Di Travel
         </p>
-        <div class="flex items-center">
-          <img src="<?= UrlHelper::image('testimonial-1.jpg') ?>" alt="Khách hàng"
-            class="w-12 h-12 rounded-full mr-4 object-cover" />
-          <div>
-            <h4 class="font-semibold text-gray-800">David Chen</h4>
-            <p class="text-gray-500 text-sm">Singapore</p>
-          </div>
-        </div>
       </div>
 
-      <div class="bg-white p-8 rounded-lg shadow-md">
-        <div class="flex items-center mb-4">
-          <div class="text-teal-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div
+          class="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400 mb-2">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-6 italic">
+            "The trip to Bali was absolutely amazing! The accommodations were perfect, and our guide was knowledgeable
+            and friendly. I can't wait to book my next adventure!"
+          </p>
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full overflow-hidden mr-4 bg-gray-100 relative">
+              <!-- Placeholder hiển thị trước khi ảnh load -->
+              <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                id="testimonial-placeholder-1">
+                <span class="font-semibold text-teal-500 text-lg">SJ</span>
+              </div>
+              <!-- Ảnh avatar -->
+              <img src="https://placeholder.co/50x50" alt="Sarah Johnson"
+                class="w-full h-full object-cover opacity-0 transition-opacity duration-300"
+                onload="this.style.opacity='1'; document.getElementById('testimonial-placeholder-1').style.display='none';"
+                onerror="handleTestimonialImageError(this, 'testimonial-placeholder-1', 'Sarah Johnson');" />
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800">Sarah Johnson</h4>
+              <p class="text-gray-500 text-sm">Bali, Indonesia</p>
+            </div>
           </div>
         </div>
-        <p class="text-gray-600 italic mb-4">
-          "Chuyến đi gia đình của chúng tôi đến Vịnh Hạ Long thật hoàn hảo. Hướng dẫn viên rất am hiểu, chỗ ở tuyệt vời,
-          và lịch trình cho phép chúng tôi trải nghiệm cả những điểm tham quan phổ biến lẫn những địa điểm ẩn."
-        </p>
-        <div class="flex items-center">
-          <img src="<?= UrlHelper::image('testimonial-1.jpg') ?>" alt="Khách hàng"
-            class="w-12 h-12 rounded-full mr-4 object-cover" />
-          <div>
-            <h4 class="font-semibold text-gray-800">David Chen</h4>
-            <p class="text-gray-500 text-sm">Singapore</p>
-          </div>
-        </div>
-      </div>
 
-      <div class="bg-white p-8 rounded-lg shadow-md">
-        <div class="flex items-center mb-4">
-          <div class="text-teal-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
+        <!-- Testimonial 2 -->
+        <div
+          class="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400 mb-2">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-6 italic">
+            "Our family trip to Japan exceeded all expectations. The itinerary was perfectly balanced with cultural
+            experiences and fun activities for the kids. Highly recommended!"
+          </p>
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full overflow-hidden mr-4 bg-gray-100 relative">
+              <!-- Placeholder hiển thị trước khi ảnh load -->
+              <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                id="testimonial-placeholder-2">
+                <span class="font-semibold text-teal-500 text-lg">MC</span>
+              </div>
+              <!-- Ảnh avatar -->
+              <img src="https://placeholder.co/50x50" alt="Michael Chen"
+                class="w-full h-full object-cover opacity-0 transition-opacity duration-300"
+                onload="this.style.opacity='1'; document.getElementById('testimonial-placeholder-2').style.display='none';"
+                onerror="handleTestimonialImageError(this, 'testimonial-placeholder-2', 'Michael Chen');" />
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800">Michael Chen</h4>
+              <p class="text-gray-500 text-sm">Tokyo, Japan</p>
+            </div>
           </div>
         </div>
-        <p class="text-gray-600 italic mb-4">
-          "Hết nước chấm..."
-        </p>
-        <div class="flex items-center">
-          <img src="<?= UrlHelper::image('testimonial-1.jpg') ?>" alt="Khách hàng"
-            class="w-12 h-12 rounded-full mr-4 object-cover" />
-          <div>
-            <h4 class="font-semibold text-gray-800">Bình Dev</h4>
-            <p class="text-gray-500 text-sm">Vietnam</p>
+
+        <!-- Testimonial 3 -->
+        <div
+          class="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400 mb-2">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-6 italic">
+            "The European tour was the trip of a lifetime! Every detail was taken care of, and we got to experience
+            the best of each city we visited. I'm already planning my next trip!"
+          </p>
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full overflow-hidden mr-4 bg-gray-100 relative">
+              <!-- Placeholder hiển thị trước khi ảnh load -->
+              <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400"
+                id="testimonial-placeholder-3">
+                <span class="font-semibold text-teal-500 text-lg">ER</span>
+              </div>
+              <!-- Ảnh avatar -->
+              <img src="https://placeholder.co/50x50" alt="Emily Rodriguez"
+                class="w-full h-full object-cover opacity-0 transition-opacity duration-300"
+                onload="this.style.opacity='1'; document.getElementById('testimonial-placeholder-3').style.display='none';"
+                onerror="handleTestimonialImageError(this, 'testimonial-placeholder-3', 'Emily Rodriguez');" />
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800">Emily Rodriguez</h4>
+              <p class="text-gray-500 text-sm">Paris, France</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div>

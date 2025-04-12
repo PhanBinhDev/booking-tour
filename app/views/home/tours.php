@@ -81,7 +81,6 @@ $currentCategory = isset($_GET['category']) ? $_GET['category'] : null;
                     <?php
                     foreach ($allTours as $tour) {
                         $isFavorited = isset($_SESSION['user_id']) && in_array($tour['id'], $userFavorites);
-
                         $heartClass = $isFavorited ? "text-red-500" : "text-teal-500"; ?>
                         <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
                             <div class="relative">

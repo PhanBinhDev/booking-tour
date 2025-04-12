@@ -64,11 +64,11 @@ $activePage = 'login';
             </div>
           </div>
 
-          <div class="flex items-center">
+          <!-- <div class="flex items-center">
             <input type="checkbox" name="remember" id="remember"
               class="w-4 h-4 text-teal-500 bg-blue-50 border-0 rounded focus:ring-teal-500">
             <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
-          </div>
+          </div> -->
 
           <button type="submit"
             class="w-full bg-teal-500 hover:bg-teal-600 focus:ring-4 focus:ring-teal-300 text-white font-medium rounded-md text-sm px-5 py-3 text-center transition-all shadow-md hover:shadow-lg">

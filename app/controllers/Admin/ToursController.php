@@ -9,9 +9,9 @@ use App\Models\Tour;
 use App\Models\Image;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Favorites;
 use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
-
 
 use Exception;
 
@@ -24,6 +24,7 @@ class ToursController extends BaseController
     private $categoriesModel;
     private $roleModel;
     private $userModel;
+    private $favoriteModel;
 
     public function __construct()
     {
@@ -33,6 +34,7 @@ class ToursController extends BaseController
         $this->bookingModel = new Booking();
         $this->categoriesModel = new Categories();
         $this->roleModel = new Role();
+        $this->favoriteModel = new Favorites();
     }
 
 
