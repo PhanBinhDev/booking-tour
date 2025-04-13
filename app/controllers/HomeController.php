@@ -144,13 +144,13 @@ class HomeController extends BaseController
     if ($page == 1 && empty($categoryId) && empty($tag) && empty($search)) {
       $featuredNews = $this->newsModel->getFeaturedNews();
     }
-    
+
     // Lấy bài viết xem nhiều nhất
     $topViewedNews = $this->newsModel->getTopViewedNews(5);
     $top1ViewedNews = $this->newsModel->getTopViewedNews(1);
     // echo "<pre>";
     // print_r($top1ViewedNews);die;
-    
+
 
     // Lấy danh sách tags phổ biến
     $popularTags = $this->newsModel->getPopularTags(10);
@@ -382,6 +382,118 @@ class HomeController extends BaseController
       'stripePublishableKey' => $stripePublishableKey,
       'paymentMethods' => $paymentMethods
     ]);
+  }
+
+  /**
+   * Xử lý thanh toán lại cho đơn hàng
+   * 
+   * @param int $bookingId ID của đơn đặt tour
+   */
+  public function processPayment($bookingId)
+  {
+    $currentUser = $this->getCurrentUser();
+    if (!$currentUser) {
+      $this->redirect(UrlHelper::route('auth/login') . '?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+      return;
+    }
+
+    // Lấy thông tin booking
+    $booking = $this->bookingModel->getById($bookingId);
+
+    // Kiểm tra quyền truy cập
+    if (!$booking || $booking['user_id'] != $currentUser['id']) {
+      $this->setFlashMessage('error', 'Không tìm thấy thông tin đặt tour');
+      $this->redirect(UrlHelper::route('user/bookings'));
+      return;
+    }
+
+    // Kiểm tra trạng thái thanh toán
+    if ($booking['payment_status'] === 'paid') {
+      $this->setFlashMessage('info', 'Đơn hàng này đã được thanh toán');
+      $this->redirect(UrlHelper::route('user/bookings/detail/' . $bookingId));
+      return;
+    }
+
+    // Lấy thông tin tour và ngày
+    $tour = $this->tourModel->getTourDetails($booking['tour_id']);
+    $tourDate = $this->tourModel->getTourDateById($booking['tour_date_id']);
+
+    // Lấy hoặc tạo thông tin thanh toán
+    $payment = $this->bookingModel->getPaymentByBookingId($bookingId);
+    if (!$payment) {
+      $this->setFlashMessage('error', 'Không tìm thấy thông tin thanh toán');
+      $this->redirect(UrlHelper::route('user/bookings'));
+      return;
+    }
+
+    // Tạo phiên thanh toán Stripe
+    try {
+      // Chuẩn bị dữ liệu cho Stripe
+      $stripeMetadata = [
+        'booking_id' => $booking['id'],
+        'booking_number' => $booking['booking_number'],
+        'user_id' => $booking['user_id'],
+        'tour_id' => $booking['tour_id'],
+        'tour_date_id' => $booking['tour_date_id']
+      ];
+
+      // Tạo thông tin sản phẩm
+      $lineItems = [
+        [
+          'name' => $tour['title'],
+          'description' => "Tour ngày " . date('d/m/Y', strtotime($tourDate['start_date'])) .
+            " - Người lớn: {$booking['adults']}, Trẻ em: {$booking['children']}",
+          'amount' => $booking['total_price'],
+          'currency' => 'vnd',
+          'quantity' => 1
+        ]
+      ];
+
+      // Tạo session Stripe Checkout
+      $checkoutSession = $this->stripeService->createCheckoutSession(
+        $lineItems,
+        $booking['booking_number'],
+        $stripeMetadata,
+        UrlHelper::getFullUrl('payments/stripe/success/' . $bookingId),
+        UrlHelper::getFullUrl('payments/stripe/cancel/' . $bookingId)
+      );
+
+      // Cập nhật payment với session id
+      $this->bookingModel->updatePayment($payment['id'], [
+        'transaction_id' => $checkoutSession->id,
+        'payment_data' => json_encode([
+          'checkout_session_id' => $checkoutSession->id,
+          'checkout_url' => $checkoutSession->url
+        ])
+      ]);
+
+      // Ghi log payment
+      $this->bookingModel->createPaymentLog([
+        'payment_id' => $payment['id'],
+        'booking_id' => $bookingId,
+        'event' => 'checkout_session_created',
+        'status' => 'pending',
+        'message' => 'Đã tạo phiên thanh toán lại qua Stripe',
+        'data' => json_encode([
+          'checkout_session_id' => $checkoutSession->id
+        ])
+      ]);
+
+      // Chuyển hướng đến trang thanh toán Stripe
+      $this->redirect($checkoutSession->url);
+    } catch (\Exception $e) {
+      // Xử lý lỗi
+      $this->setFlashMessage('error', 'Có lỗi xảy ra khi xử lý thanh toán: ' . $e->getMessage());
+      $this->bookingModel->createPaymentLog([
+        'payment_id' => $payment['id'],
+        'booking_id' => $bookingId,
+        'event' => 'payment_error',
+        'status' => 'error',
+        'message' => 'Lỗi tạo phiên thanh toán: ' . $e->getMessage(),
+        'data' => json_encode(['error' => $e->getMessage()])
+      ]);
+      $this->redirect(UrlHelper::route('user/bookings'));
+    }
   }
 
   /**

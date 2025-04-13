@@ -35,9 +35,9 @@ use App\Helpers\UrlHelper;
               class="w-full rounded-lg p-2.5 pl-4 pr-10 border border-gray-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500 focus:ring-opacity-20 shadow-sm text-gray-700 appearance-none transition-colors">
               <option value="">Tất cả vai trò</option>
               <?php foreach ($roles as $role) { ?>
-                <option value="<?= $role['id'] ?>" <?= ($filters['role_id'] == $role['id']) ? 'selected' : '' ?>>
-                  <?= $role['name'] ?>
-                </option>
+              <option value="<?= $role['id'] ?>" <?= ($filters['role_id'] == $role['id']) ? 'selected' : '' ?>>
+                <?= $role['name'] ?>
+              </option>
               <?php } ?>
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
@@ -103,10 +103,10 @@ use App\Helpers\UrlHelper;
               <i class="fas fa-search text-gray-400"></i>
             </div>
             <?php if (!empty($filters['search'])): ?>
-              <button type="button" onclick="document.getElementById('search').value = ''; this.form.submit();"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times"></i>
-              </button>
+            <button type="button" onclick="document.getElementById('search').value = ''; this.form.submit();"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+              <i class="fas fa-times"></i>
+            </button>
             <?php endif; ?>
           </div>
         </div>
@@ -138,11 +138,11 @@ use App\Helpers\UrlHelper;
           ?>
 
           <?php if ($activeFilters > 0): ?>
-            <div class="ml-3 text-sm text-gray-500">
-              <span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                <?= $activeFilters ?> bộ lọc đang áp dụng
-              </span>
-            </div>
+          <div class="ml-3 text-sm text-gray-500">
+            <span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+              <?= $activeFilters ?> bộ lọc đang áp dụng
+            </span>
+          </div>
           <?php endif; ?>
         </div>
 
@@ -190,60 +190,65 @@ use App\Helpers\UrlHelper;
 
           if (!empty($users)):
             foreach ($users as $index => $user): ?>
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $startingIndex + $index ?></td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                      <?php if (!empty($user['avatar'])): ?>
-                        <img class="h-10 w-10 rounded-full" src="<?= $user['avatar'] ?>" alt="Avatar">
-                      <?php else: ?>
-                        <div class="h-10 w-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold">
-                          <?= strtoupper(substr($user['username'], 0, 1)) ?>
-                        </div>
-                      <?php endif; ?>
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900"><?= $user['full_name'] ?? $user['username'] ?></div>
-                      <div class="text-sm text-gray-500"><?= $user['username'] ?></div>
-                    </div>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $startingIndex + $index ?></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <?php if (!empty($user['avatar'])): ?>
+                  <img class="h-10 w-10 rounded-full" src="<?= $user['avatar'] ?>" alt="Avatar">
+                  <?php else: ?>
+                  <div class="h-10 w-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold">
+                    <?= strtoupper(substr($user['username'], 0, 1)) ?>
                   </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $user['email'] ?></td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= getRoleBadgeClass($user['role_name']) ?>">
-                    <?= $user['role_name'] ?>
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= getStatusBadgeClass($user['status']) ?>">
-                    <?= ucfirst($user['status']) ?>
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <?= $user['last_login'] ? date('d/m/Y H:i', strtotime($user['last_login'])) : 'Chưa đăng nhập' ?>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <a href="<?= UrlHelper::route('admin/users/edit/' . $user['id']) ?>">
-                    <button class="edit-user-btn text-indigo-600 hover:text-indigo-900 mr-3" data-id="<?= $user['id'] ?>">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </a>
-                  <?php if ($user['id'] != $_SESSION['user_id']): ?>
-                    <button class="delete-user-btn text-red-600 hover:text-red-900" data-id="<?= $user['id'] ?>"
-                      data-name="<?= $user['username'] ?>">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
                   <?php endif; ?>
-                </td>
-              </tr>
-            <?php endforeach;
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900"><?= $user['full_name'] ?? $user['username'] ?></div>
+                  <div class="text-sm text-gray-500"><?= $user['username'] ?></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $user['email'] ?></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span
+                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= getRoleBadgeClass($user['role_name']) ?>">
+                <?= $user['role_name'] ?>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span
+                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= getStatusBadgeClass($user['status']) ?>">
+                <?= ucfirst($user['status']) ?>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <?= $user['last_login'] ? date('d/m/Y H:i', strtotime($user['last_login'])) : 'Chưa đăng nhập' ?>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <a href="<?= UrlHelper::route('admin/users/detail/' . $user['id']) ?>">
+                <button class="view-user-btn text-teal-600 hover:text-teal-900 mr-3" data-id="<?= $user['id'] ?>">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </a>
+              <a href="<?= UrlHelper::route('admin/users/edit/' . $user['id']) ?>">
+                <button class="edit-user-btn text-indigo-600 hover:text-indigo-900 mr-3" data-id="<?= $user['id'] ?>">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </a>
+              <?php if ($user['id'] != $_SESSION['user_id']): ?>
+              <button class="delete-user-btn text-red-600 hover:text-red-900" data-id="<?= $user['id'] ?>"
+                data-name="<?= $user['username'] ?>">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+              <?php endif; ?>
+            </td>
+          </tr>
+          <?php endforeach;
           else: ?>
-            <tr>
-              <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Không có người dùng nào</td>
-            </tr>
+          <tr>
+            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Không có người dùng nào</td>
+          </tr>
           <?php endif; ?>
         </tbody>
       </table>
@@ -252,41 +257,41 @@ use App\Helpers\UrlHelper;
 
   <!-- Phân trang -->
   <?php if ($pagination['total_pages'] > 1): ?>
-    <div class="bg-white rounded-lg shadow-sm p-4 mt-6">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="flex items-center gap-4">
-          <!-- Results info -->
-          <p class="text-sm text-gray-700 mb-4 md:mb-0">
-            Hiển thị <span class="font-medium"><?= $pagination['from'] ?></span>
-            đến <span class="font-medium"><?= $pagination['to'] ?></span>
-            trong <span class="font-medium"><?= $pagination['total'] ?></span> kết quả
-          </p>
+  <div class="bg-white rounded-lg shadow-sm p-4 mt-6">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <div class="flex items-center gap-4">
+        <!-- Results info -->
+        <p class="text-sm text-gray-700 mb-4 md:mb-0">
+          Hiển thị <span class="font-medium"><?= $pagination['from'] ?></span>
+          đến <span class="font-medium"><?= $pagination['to'] ?></span>
+          trong <span class="font-medium"><?= $pagination['total'] ?></span> kết quả
+        </p>
 
-          <!-- Per page selector -->
-          <div class="flex justify-end">
-            <form action="<?= UrlHelper::route('admin/users/index') ?>" method="GET" class="flex items-center space-x-2">
-              <!-- Preserve existing query parameters -->
-              <?php foreach ($_GET as $key => $value): ?>
-                <?php if ($key !== 'limit' && $key !== 'page'): ?>
-                  <input type="hidden" name="<?= $key ?>" value="<?= htmlspecialchars($value) ?>">
-                <?php endif; ?>
-              <?php endforeach; ?>
+        <!-- Per page selector -->
+        <div class="flex justify-end">
+          <form action="<?= UrlHelper::route('admin/users/index') ?>" method="GET" class="flex items-center space-x-2">
+            <!-- Preserve existing query parameters -->
+            <?php foreach ($_GET as $key => $value): ?>
+            <?php if ($key !== 'limit' && $key !== 'page'): ?>
+            <input type="hidden" name="<?= $key ?>" value="<?= htmlspecialchars($value) ?>">
+            <?php endif; ?>
+            <?php endforeach; ?>
 
-              <label for="limit" class="text-sm text-gray-600">Hiển thị:</label>
-              <select id="limit" name="limit" onchange="this.form.submit()"
-                class="form-select rounded-md border-gray-300 text-sm py-1 pl-2 pr-8 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                <option value="10" <?= ($pagination['per_page'] == 10) ? 'selected' : '' ?>>10</option>
-                <option value="25" <?= ($pagination['per_page'] == 25) ? 'selected' : '' ?>>25</option>
-                <option value="50" <?= ($pagination['per_page'] == 50) ? 'selected' : '' ?>>50</option>
-                <option value="100" <?= ($pagination['per_page'] == 100) ? 'selected' : '' ?>>100</option>
-              </select>
-            </form>
-          </div>
+            <label for="limit" class="text-sm text-gray-600">Hiển thị:</label>
+            <select id="limit" name="limit" onchange="this.form.submit()"
+              class="form-select rounded-md border-gray-300 text-sm py-1 pl-2 pr-8 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+              <option value="10" <?= ($pagination['per_page'] == 10) ? 'selected' : '' ?>>10</option>
+              <option value="25" <?= ($pagination['per_page'] == 25) ? 'selected' : '' ?>>25</option>
+              <option value="50" <?= ($pagination['per_page'] == 50) ? 'selected' : '' ?>>50</option>
+              <option value="100" <?= ($pagination['per_page'] == 100) ? 'selected' : '' ?>>100</option>
+            </select>
+          </form>
         </div>
+      </div>
 
-        <!-- Pagination links -->
-        <div class="flex items-center space-x-1">
-          <?php
+      <!-- Pagination links -->
+      <div class="flex items-center space-x-1">
+        <?php
           // Previous page link
           if ($pagination['has_prev_page']):
             $prevUrl = UrlHelper::route('admin/users/index') . '?' . http_build_query(array_merge(
@@ -294,17 +299,17 @@ use App\Helpers\UrlHelper;
               ['page' => $pagination['current_page'] - 1, 'limit' => $pagination['per_page']]
             ));
           ?>
-            <a href="<?= $prevUrl ?>" class="px-3 py-1 rounded-md text-sm border border-gray-300 hover:bg-gray-50">
-              <i class="fas fa-chevron-left text-xs"></i>
-            </a>
-          <?php else: ?>
-            <span class="px-3 py-1 rounded-md text-sm border border-gray-200 text-gray-400 cursor-not-allowed">
-              <i class="fas fa-chevron-left text-xs"></i>
-            </span>
-          <?php endif; ?>
+        <a href="<?= $prevUrl ?>" class="px-3 py-1 rounded-md text-sm border border-gray-300 hover:bg-gray-50">
+          <i class="fas fa-chevron-left text-xs"></i>
+        </a>
+        <?php else: ?>
+        <span class="px-3 py-1 rounded-md text-sm border border-gray-200 text-gray-400 cursor-not-allowed">
+          <i class="fas fa-chevron-left text-xs"></i>
+        </span>
+        <?php endif; ?>
 
-          <!-- Page number links -->
-          <?php
+        <!-- Page number links -->
+        <?php
           $visiblePages = 5; // Number of page links to show
           $startPage = max(1, min($pagination['current_page'] - floor($visiblePages / 2), $pagination['total_pages'] - $visiblePages + 1));
           $startPage = max(1, $startPage);
@@ -317,118 +322,37 @@ use App\Helpers\UrlHelper;
             ));
             $isCurrentPage = $i === $pagination['current_page'];
           ?>
-            <?php if ($isCurrentPage): ?>
-              <span class="px-3 py-1 rounded-md text-sm bg-teal-500 text-white font-medium">
-                <?= $i ?>
-              </span>
-            <?php else: ?>
-              <a href="<?= $pageUrl ?>" class="px-3 py-1 rounded-md text-sm border border-gray-300 hover:bg-gray-50">
-                <?= $i ?>
-              </a>
-            <?php endif; ?>
-          <?php endfor; ?>
+        <?php if ($isCurrentPage): ?>
+        <span class="px-3 py-1 rounded-md text-sm bg-teal-500 text-white font-medium">
+          <?= $i ?>
+        </span>
+        <?php else: ?>
+        <a href="<?= $pageUrl ?>" class="px-3 py-1 rounded-md text-sm border border-gray-300 hover:bg-gray-50">
+          <?= $i ?>
+        </a>
+        <?php endif; ?>
+        <?php endfor; ?>
 
-          <!-- Next page link -->
-          <?php
+        <!-- Next page link -->
+        <?php
           if ($pagination['has_next_page']):
             $nextUrl = UrlHelper::route('admin/users/index') . '?' . http_build_query(array_merge(
               array_filter($filters),
               ['page' => $pagination['current_page'] + 1, 'limit' => $pagination['per_page']]
             ));
           ?>
-            <a href="<?= $nextUrl ?>" class="px-3 py-1 rounded-md text-sm border border-gray-300 hover:bg-gray-50">
-              <i class="fas fa-chevron-right text-xs"></i>
-            </a>
-          <?php else: ?>
-            <span class="px-3 py-1 rounded-md text-sm border border-gray-200 text-gray-400 cursor-not-allowed">
-              <i class="fas fa-chevron-right text-xs"></i>
-            </span>
-          <?php endif; ?>
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-
-  <!-- Modal thêm người dùng -->
-  <div id="addUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
-      <div class="flex justify-between items-center p-4 border-b">
-        <h3 class="text-lg font-semibold text-gray-900">Thêm người dùng mới</h3>
-        <a href="<? UrlHelper::route('admin/users/create') ?>">
-          <button id="closeAddModal" class="text-gray-400 hover:text-gray-500">
-            <i class="fas fa-times"></i>
-          </button>
+        <a href="<?= $nextUrl ?>" class="px-3 py-1 rounded-md text-sm border border-gray-300 hover:bg-gray-50">
+          <i class="fas fa-chevron-right text-xs"></i>
         </a>
+        <?php else: ?>
+        <span class="px-3 py-1 rounded-md text-sm border border-gray-200 text-gray-400 cursor-not-allowed">
+          <i class="fas fa-chevron-right text-xs"></i>
+        </span>
+        <?php endif; ?>
       </div>
-      <form id="addUserForm" action="<?= UrlHelper::route('admin/users') ?>" method="POST">
-        <div class="p-4">
-          <div class="mb-4">
-            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập <span
-                class="text-red-500">*</span></label>
-            <input type="text" name="username" id="username"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required>
-          </div>
-
-          <div class="mb-4">
-            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email <span
-                class="text-red-500">*</span></label>
-            <input type="email" name="email" id="email"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required>
-          </div>
-
-          <div class="mb-4">
-            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Mật khẩu <span
-                class="text-red-500">*</span></label>
-            <input type="password" name="password" id="password"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required>
-          </div>
-
-          <div class="mb-4">
-            <label for="full_name" class="block text-gray-700 text-sm font-bold mb-2">Họ tên</label>
-            <input type="text" name="full_name" id="full_name"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-          </div>
-
-          <div class="mb-4">
-            <label for="role_id" class="block text-gray-700 text-sm font-bold mb-2">Vai trò <span
-                class="text-red-500">*</span></label>
-            <select name="role_id" id="role_id"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required>
-              <option value="">-- Chọn vai trò --</option>
-              <?php foreach ($roles as $role): ?>
-                <option value="<?= $role['id'] ?>"><?= strtoupper($role['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <div class="mb-4">
-            <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Trạng thái <span
-                class="text-red-500">*</span></label>
-            <select name="status" id="status"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required>
-              <option value="active">Hoạt động</option>
-              <option value="inactive">Không hoạt động</option>
-              <option value="banned">Bị cấm</option>
-            </select>
-          </div>
-        </div>
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 rounded-b-lg">
-          <button type="button" id="cancelAddBtn"
-            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
-            Hủy
-          </button>
-          <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
-            Thêm người dùng
-          </button>
-        </div>
-      </form>
     </div>
   </div>
+  <?php endif; ?>
 
   <!-- Modal xác nhận xóa người dùng -->
   <div id="deleteUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
@@ -486,51 +410,51 @@ function getStatusBadgeClass($status)
 
 <!-- JavaScript cho các modal và chức năng -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Modal thêm người dùng
-    const addUserBtn = document.getElementById('addUserBtn');
-    const addUserModal = document.getElementById('addUserModal');
-    const closeAddModal = document.getElementById('closeAddModal');
-    const cancelAddBtn = document.getElementById('cancelAddBtn');
+document.addEventListener('DOMContentLoaded', function() {
+  // Modal thêm người dùng
+  const addUserBtn = document.getElementById('addUserBtn');
+  const addUserModal = document.getElementById('addUserModal');
+  const closeAddModal = document.getElementById('closeAddModal');
+  const cancelAddBtn = document.getElementById('cancelAddBtn');
 
-    addUserBtn.addEventListener('click', function() {
-      addUserModal.classList.remove('hidden');
-    });
+  addUserBtn.addEventListener('click', function() {
+    addUserModal.classList.remove('hidden');
+  });
 
-    closeAddModal.addEventListener('click', function() {
-      addUserModal.classList.add('hidden');
-    });
+  closeAddModal.addEventListener('click', function() {
+    addUserModal.classList.add('hidden');
+  });
 
-    cancelAddBtn.addEventListener('click', function() {
-      addUserModal.classList.add('hidden');
-    });
+  cancelAddBtn.addEventListener('click', function() {
+    addUserModal.classList.add('hidden');
+  });
 
-    // Modal xóa người dùng
-    const deleteUserBtns = document.querySelectorAll('.delete-user-btn');
-    const deleteUserModal = document.getElementById('deleteUserModal');
-    const closeDeleteModal = document.getElementById('closeDeleteModal');
-    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-    const deleteUserName = document.getElementById('deleteUserName');
+  // Modal xóa người dùng
+  const deleteUserBtns = document.querySelectorAll('.delete-user-btn');
+  const deleteUserModal = document.getElementById('deleteUserModal');
+  const closeDeleteModal = document.getElementById('closeDeleteModal');
+  const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+  const deleteUserName = document.getElementById('deleteUserName');
 
-    deleteUserBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        const userId = this.getAttribute('data-id');
-        const username = this.getAttribute('data-name');
+  deleteUserBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const userId = this.getAttribute('data-id');
+      const username = this.getAttribute('data-name');
 
-        deleteUserName.textContent = username;
-        confirmDeleteBtn.href = `<?= ADMIN_URL ?>/users/${userId}/delete`;
+      deleteUserName.textContent = username;
+      confirmDeleteBtn.href = `<?= ADMIN_URL ?>/users/${userId}/delete`;
 
-        deleteUserModal.classList.remove('hidden');
-      });
-    });
-
-    closeDeleteModal.addEventListener('click', function() {
-      deleteUserModal.classList.add('hidden');
-    });
-
-    cancelDeleteBtn.addEventListener('click', function() {
-      deleteUserModal.classList.add('hidden');
+      deleteUserModal.classList.remove('hidden');
     });
   });
+
+  closeDeleteModal.addEventListener('click', function() {
+    deleteUserModal.classList.add('hidden');
+  });
+
+  cancelDeleteBtn.addEventListener('click', function() {
+    deleteUserModal.classList.add('hidden');
+  });
+});
 </script>

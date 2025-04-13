@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Models\Favorites;
 use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
-
+use App\Models\ActivityLog;
 use Exception;
 
 
@@ -25,6 +25,7 @@ class ToursController extends BaseController
     private $roleModel;
     private $userModel;
     private $favoriteModel;
+    private $activityLogModel;
 
     public function __construct()
     {
@@ -35,6 +36,7 @@ class ToursController extends BaseController
         $this->categoriesModel = new Categories();
         $this->roleModel = new Role();
         $this->favoriteModel = new Favorites();
+        $this->activityLogModel = new ActivityLog();
     }
 
 
@@ -103,6 +105,94 @@ class ToursController extends BaseController
             'booking_history' => $booking['booking_history'],
             'invoice' => $booking['invoice']
         ]);
+    }
+
+    public function updateBookingPayment()
+    {
+        // Get JSON data from request body
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+
+        // Validate required fields
+        if (!isset($data['id']) || !isset($data['status'])) {
+            echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+            return;
+        }
+
+        $bookingId = $data['id'];
+        $status = $data['status'];
+
+        // Validate status value
+        $allowedStatuses = ['paid', 'pending', 'partial', 'refunded', 'cancelled'];
+        if (!in_array($status, $allowedStatuses)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid payment status']);
+            return;
+        }
+
+        // Get the payment record for this booking
+        $payment = $this->bookingModel->getPaymentByBookingId($bookingId);
+        if (!$payment) {
+            echo json_encode(['success' => false, 'message' => 'Không tìm thấy thông tin thanh toán']);
+            return;
+        }
+
+        // Map booking payment status to payment record status
+        $paymentStatusMap = [
+            'paid' => 'completed',
+            'pending' => 'pending',
+            'partial' => 'partial',
+            'refunded' => 'refunded',
+            'cancelled' => 'cancelled'
+        ];
+
+        $paymentStatus = $paymentStatusMap[$status] ?? 'pending';
+
+        // Update the payment record
+        $paymentUpdateResult = $this->bookingModel->updatePayment($payment['id'], [
+            'status' => $paymentStatus,
+            'transaction_id' => 'manual_' . time(), // Manual transaction ID
+            'payment_date' => $status === 'paid' ? date('Y-m-d H:i:s') : null
+        ]);
+
+        // Update the payment status in the booking
+        $bookingUpdateResult = $this->bookingModel->updatePaymentStatus($bookingId, $status);
+
+        // Return JSON response
+        if ($bookingUpdateResult && $paymentUpdateResult) {
+            // Get current user information
+            $currentUser = $this->getCurrentUser();
+            $userId = $currentUser['id'] ?? null;
+            $userName = $currentUser['name'] ?? 'Admin';
+
+            // Create payment history record
+            $this->bookingModel->createPaymentLog([
+                'payment_id' => $payment['id'],
+                'booking_id' => $bookingId,
+                'event' => 'payment_status_updated',
+                'status' => $status,
+                'message' => "Trạng thái thanh toán được cập nhật thành '{$status}' bởi {$userName}",
+                'data' => json_encode([
+                    'updated_by' => $userId,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'previous_status' => $payment['status'] ?? 'pending',
+                    'method' => 'manual'
+                ])
+            ]);
+
+            // Log activity
+            $description = "Cập nhật trạng thái thanh toán đơn hàng #{$bookingId} thành '{$status}'";
+            $this->activityLogModel->log(
+                'booking',
+                $bookingId,
+                $description,
+                $userId,
+                'update'
+            );
+
+            echo json_encode(['success' => true, 'message' => 'Cập nhật trạng thái thanh toán thành công']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Không thể cập nhật trạng thái thanh toán']);
+        }
     }
 
 

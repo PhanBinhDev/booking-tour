@@ -1093,4 +1093,87 @@ class Booking extends BaseModel
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Lấy booking hoàn thành theo tour và người dùng
+     * 
+     * @param int $tourId ID của tour
+     * @param int $userId ID của người dùng
+     * @return array|false Thông tin booking hoặc false nếu không tìm thấy
+     */
+    public function getCompletedBookingByTourAndUser($tourId, $userId)
+    {
+        $sql = "SELECT * FROM {$this->table} 
+            WHERE tour_id = :tour_id 
+            AND user_id = :user_id 
+            AND status = 'completed' 
+            LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':tour_id', $tourId, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Đếm tổng số booking của một người dùng
+     * 
+     * @param int $userId ID của người dùng
+     * @return int Số lượng booking
+     */
+    public function countUserBookings($userId)
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE user_id = :user_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
+     * Đếm số lượng booking của một người dùng theo trạng thái
+     * 
+     * @param int $userId ID của người dùng
+     * @param string $status Trạng thái booking (completed, pending, cancelled, etc.)
+     * @return int Số lượng booking có trạng thái tương ứng
+     */
+    public function countUserBookingsByStatus($userId, $status)
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE user_id = :user_id AND status = :status";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
+     * Lấy danh sách booking gần đây của người dùng
+     * 
+     * @param int $userId ID của người dùng
+     * @param int $limit Số lượng kết quả tối đa
+     * @return array Danh sách các booking
+     */
+    public function getRecentUserBookings($userId, $limit = 5)
+    {
+        $sql = "SELECT b.*, t.title as tour_title, t.slug as tour_slug, i.file_path as thumbnail
+            FROM {$this->table} b 
+            JOIN tours t ON b.tour_id = t.id 
+            JOIN tour_images ti ON t.id = ti.tour_id AND ti.is_featured = 1
+            JOIN images i ON ti.image_id = i.id
+            WHERE b.user_id = :user_id 
+            ORDER BY b.created_at DESC 
+            LIMIT :limit";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

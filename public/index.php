@@ -75,7 +75,7 @@ $router->post('/home/bookings/process', 'HomeController@process');
 // Payment handling routes
 $router->get('/payments/stripe/success/{bookingId}', 'HomeController@stripeSuccess');
 $router->get('/payments/stripe/cancel/{bookingId}', 'HomeController@stripeCancel');
-
+$router->get('/payment/process/{bookingId}', 'HomeController@processPayment');
 // Webhook to receive Stripe events
 $router->post('/webhook/stripe', 'WebhookController@handle');
 
@@ -93,7 +93,9 @@ $router->get('/user/reviews', 'UserController@reviews');
 $router->get('/user/change-password', 'UserController@changePassword');
 $router->post('/user/change-password', 'UserController@changePassword');
 $router->get('/user/deleteReview/{id}', 'UserController@deleteReview');
-
+// Review routes
+$router->get('/user/review/tour/{id}', 'UserController@reviewTour');
+$router->post('/user/review/tour/{id}', 'UserController@submitReview');
 
 // AUTH
 $router->get('/auth/login', 'AuthController@login');
@@ -117,6 +119,7 @@ $router->get('/admin/users/create', 'Admin\UserController@create'); // Admin\Use
 $router->post('/admin/users/create', 'Admin\UserController@create'); // Admin\UserController
 $router->get('/admin/users/edit/{id}', 'Admin\UserController@edit');
 $router->post('/admin/users/edit/{id}', 'Admin\UserController@edit');
+$router->get('/admin/users/detail/{id}', 'Admin\UserController@detail');
 
 // ADMIN/ROLES
 $router->get('/admin/roles', 'Admin\RoleController@index');
@@ -181,6 +184,7 @@ $router->get('/admin/bookings', 'Admin\ToursController@bookings');
 $router->get('/admin/bookings/{id}', 'Admin\ToursController@bookingDetails');
 $router->get('/admin/bookings/updateBooking/{id}', 'Admin\ToursController@updateBooking');
 $router->post('/admin/bookings/updateStatus/{id}', 'Admin\ToursController@updateStatus');
+$router->post('/admin/bookings/updatePaymentStatus', 'Admin\ToursController@updateBookingPayment');
 
 
 // ADMIN/LOCATIONS

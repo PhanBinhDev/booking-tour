@@ -31,8 +31,8 @@ use App\Helpers\UrlHelper;
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <link rel="stylesheet" href="<?= UrlHelper::css('swiper.css') ?>">
   <script>
-    const toggleFavoriteUrl = '<?= UrlHelper::route('user/toggle') ?>';
-    const homepageUrl = '<?= UrlHelper::route('home/index') ?>';
+  const toggleFavoriteUrl = '<?= UrlHelper::route('user/toggle') ?>';
+  const homepageUrl = '<?= UrlHelper::route('home/index') ?>';
   </script>
 </head>
 
@@ -83,7 +83,7 @@ use App\Helpers\UrlHelper;
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
               <?php if (isset($_SESSION['notification_count']) && $_SESSION['notification_count'] > 0): ?>
-                <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+              <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
               <?php endif; ?>
             </button>
           </div>
@@ -96,12 +96,12 @@ use App\Helpers\UrlHelper;
                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <?php if (isset($_SESSION['user_avatar']) && $_SESSION['user_avatar']): ?>
-                  <img class="h-8 w-8 rounded-full object-cover" src="<?= $_SESSION['user_avatar'] ?>"
-                    alt="<?= $_SESSION['username'] ?>">
+                <img class="h-8 w-8 rounded-full object-cover" src="<?= $_SESSION['user_avatar'] ?>"
+                  alt="<?= $_SESSION['username'] ?>">
                 <?php else: ?>
-                  <div class="h-8 w-8 rounded-full bg-teal-600 flex items-center justify-center text-white font-medium">
-                    <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 1)) ?>
-                  </div>
+                <div class="h-8 w-8 rounded-full bg-teal-600 flex items-center justify-center text-white font-medium">
+                  <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 1)) ?>
+                </div>
                 <?php endif; ?>
                 <span class="ml-2 text-gray-700 hidden md:block"><?= $_SESSION['username'] ?? 'User' ?></span>
                 <svg class="ml-1 h-5 w-5 text-gray-400 hidden md:block" xmlns="http://www.w3.org/2000/svg"
@@ -190,11 +190,11 @@ use App\Helpers\UrlHelper;
             Đánh giá của tôi
           </a>
           <?php if (isset($_SESSION['role_id']) && $_SESSION['role_id'] <= 3): ?>
-            <div class="border-t border-gray-200 my-2"></div>
-            <a href="<?= UrlHelper::route('admin') ?>"
-              class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
-              Quản trị hệ thống
-            </a>
+          <div class="border-t border-gray-200 my-2"></div>
+          <a href="<?= UrlHelper::route('admin') ?>"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+            Quản trị hệ thống
+          </a>
           <?php endif; ?>
           <div class="border-t border-gray-200 my-2"></div>
           <a href="<?= UrlHelper::route('auth/logout') ?>"
@@ -207,16 +207,106 @@ use App\Helpers\UrlHelper;
   </header>
 
   <main class=" flex-grow flex flex-col">
-    <!-- Flash messages -->
-    <?php if (isset($_SESSION['flash_message'])): ?>
-      <?php if (!empty($_SESSION['flash']) && isset($_SESSION['flash']['message'])): ?>
-        <div
-          class="mb-6 p-4 rounded-md <?= ($_SESSION['flash']['type'] ?? '') === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
-          <?= $_SESSION['flash']['message'] ?>
+    <?php
+    // Check if flash message exists AND has the required keys
+    if (
+      isset($_SESSION['flash_message']) &&
+      isset($_SESSION['flash_message']['message']) &&
+      isset($_SESSION['flash_message']['type'])
+    ):
+      $type = $_SESSION['flash_message']['type'];
+      $message = $_SESSION['flash_message']['message'];
+      $bgColor = ($type === 'error') ? 'bg-red-100' : 'bg-green-100';
+      $borderColor = ($type === 'error') ? 'border-red-400' : 'border-green-400';
+      $textColor = ($type === 'error') ? 'text-red-700' : 'text-green-700';
+      $iconColor = ($type === 'error') ? 'text-red-500' : 'text-green-500';
+      $icon = ($type === 'error') ? 'fa-circle-exclamation' : 'fa-circle-check';
+    ?>
+    <div id="flash-message"
+      class="fixed z-[100] top-4 right-4 w-80 rounded-lg border <?= $borderColor ?> <?= $bgColor ?> p-4 shadow-lg animate-fade-in flex items-start">
+      <div class="flex-shrink-0 mr-3">
+        <i class="fas <?= $icon ?> <?= $iconColor ?>"></i>
+      </div>
+      <div class="flex-grow <?= $textColor ?>">
+        <?= $message ?>
+      </div>
+      <button type="button" onclick="closeFlashMessage()"
+        class="ml-2 -mt-1 flex-shrink-0 <?= $textColor ?> hover:<?= $textColor ?> focus:outline-none">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <!-- Progress bar -->
+      <div class="absolute bottom-0 left-0 h-1 bg-gray-300 w-full rounded-b-lg">
+        <div id="flash-progress" class="h-1 <?= ($type === 'error') ? 'bg-red-500' : 'bg-green-500' ?> rounded-b-lg">
         </div>
-      <?php endif; ?>
-      <?php unset($_SESSION['flash_message']['message'], $_SESSION['flash_message']['type']); ?>
-    <?php endif; ?>
+      </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const flashMessage = document.getElementById('flash-message');
+      const progressBar = document.getElementById('flash-progress');
+
+      if (flashMessage) {
+        // Animate progress bar
+        let width = 100;
+        const duration = 5000; // 5 seconds before auto-dismiss
+        const interval = 50; // Update every 50ms
+        const step = 100 / (duration / interval);
+
+        const timer = setInterval(() => {
+          width -= step;
+          progressBar.style.width = width + '%';
+
+          if (width <= 0) {
+            clearInterval(timer);
+            closeFlashMessage();
+          }
+        }, interval);
+
+        // Allow hovering to pause the timer
+        flashMessage.addEventListener('mouseenter', () => {
+          clearInterval(timer);
+        });
+
+        flashMessage.addEventListener('mouseleave', () => {
+          // Restart timer with remaining time
+          const remainingPercentage = parseFloat(progressBar.style.width) || 100;
+          const remainingTime = (remainingPercentage / 100) * duration;
+
+          width = remainingPercentage;
+          const newTimer = setInterval(() => {
+            width -= step;
+            progressBar.style.width = width + '%';
+
+            if (width <= 0) {
+              clearInterval(newTimer);
+              closeFlashMessage();
+            }
+          }, interval);
+        });
+      }
+    });
+
+    function closeFlashMessage() {
+      const flashMessage = document.getElementById('flash-message');
+
+      if (flashMessage) {
+        // Add slide-out animation
+        flashMessage.classList.add('animate-slide-out-right');
+
+        // Remove element after animation completes
+        setTimeout(() => {
+          flashMessage.remove();
+        }, 500); // 500ms matches animation duration
+      }
+    }
+    </script>
+    <?php
+      // Unset the entire flash message array
+      unset($_SESSION['flash_message']);
+    endif;
+    ?>
 
     <!-- Content will be inserted here -->
     <?php if (isset($content)) echo $content; ?>
@@ -453,18 +543,18 @@ use App\Helpers\UrlHelper;
 
   <!-- JavaScript for mobile menu toggle -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
 
-      if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', function() {
-          const expanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', !expanded);
-          mobileMenu.classList.toggle('hidden');
-        });
-      }
-    });
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !expanded);
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
   </script>
 </body>
 

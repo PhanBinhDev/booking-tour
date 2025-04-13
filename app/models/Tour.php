@@ -790,4 +790,35 @@ class Tour extends BaseModel
     {
         return $this->getTours(['featured' => 1], 'default', $onlySalePrice, $limit);
     }
+
+    /**
+     * Cập nhật điểm đánh giá trung bình cho tour
+     * 
+     * @param int $tourId ID của tour
+     * @return bool Kết quả cập nhật
+     */
+    public function updateAverageRating($tourId)
+    {
+        // Lấy reviewsModel để tính điểm trung bình
+        $reviewsModel = new Reviews();
+        $avgRating = $reviewsModel->getAverageRating($tourId);
+        $reviewCount = $reviewsModel->countByTour($tourId);
+
+        $sql = "UPDATE {$this->table} 
+            SET average_rating = :avg_rating, 
+                review_count = :review_count 
+            WHERE id = :tour_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':avg_rating', $avgRating, PDO::PARAM_STR);
+        $stmt->bindValue(':review_count', $reviewCount, PDO::PARAM_INT);
+        $stmt->bindValue(':tour_id', $tourId, PDO::PARAM_INT);
+
+        try {
+            return $stmt->execute();
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
 }

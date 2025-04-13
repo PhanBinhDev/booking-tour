@@ -282,4 +282,141 @@ class UserController extends BaseController
             exit;
         }
     }
+
+    /**
+     * Hiển thị form đánh giá tour
+     * 
+     * @param int $id ID của tour cần đánh giá
+     */
+    public function reviewTour($id)
+    {
+        // Kiểm tra đăng nhập
+        if (!$this->isAuthenticated()) {
+            $this->redirect(UrlHelper::route('auth/login'));
+            return;
+        }
+
+        $currentUser = $this->getCurrentUser();
+        $userId = $currentUser['id'];
+
+        // Lấy thông tin tour
+        $tour = $this->tourModel->getTourDetails($id);
+        if (!$tour) {
+            $this->setFlashMessage('error', 'Không tìm thấy thông tin tour');
+            $this->redirect(UrlHelper::route('user/bookings'));
+            return;
+        }
+
+        // Kiểm tra người dùng đã từng đặt và hoàn thành tour này chưa
+        $completedBooking = $this->bookingModel->getCompletedBookingByTourAndUser($id, $userId);
+        if (!$completedBooking) {
+            $this->setFlashMessage('error', 'Bạn chỉ có thể đánh giá các tour đã hoàn thành');
+            $this->redirect(UrlHelper::route('user/bookings'));
+            return;
+        }
+
+        // Kiểm tra xem đã đánh giá chưa
+        $existingReview = $this->reviewsModel->getByTourAndUser($id, $userId);
+
+        $this->view('user/review-form', [
+            'tour' => $tour,
+            'booking' => $completedBooking,
+            'existingReview' => $existingReview
+        ]);
+    }
+
+    public function submitReview($id)
+    {
+        // Kiểm tra đăng nhập
+        if (!$this->isAuthenticated()) {
+            $this->redirect(UrlHelper::route('auth/login'));
+            return;
+        }
+
+        $currentUser = $this->getCurrentUser();
+        $userId = $currentUser['id'];
+
+        // Lấy thông tin tour
+        $tour = $this->tourModel->getTourDetails($id);
+        if (!$tour) {
+            $this->setFlashMessage('error', 'Không tìm thấy thông tin tour');
+            $this->redirect(UrlHelper::route('user/bookings'));
+            return;
+        }
+
+        // Kiểm tra người dùng đã từng đặt và hoàn thành tour này chưa
+        $completedBooking = $this->bookingModel->getCompletedBookingByTourAndUser($id, $userId);
+        if (!$completedBooking) {
+            $this->setFlashMessage('error', 'Bạn chỉ có thể đánh giá các tour đã hoàn thành');
+            $this->redirect(UrlHelper::route('user/bookings'));
+            return;
+        }
+
+        // Xử lý form đánh giá
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect(UrlHelper::route('user/review/tour/' . $id));
+            return;
+        }
+
+        // Validate form data
+        $rating = isset($_POST['rating']) ? (int)$_POST['rating'] : 0;
+        $review = trim($_POST['review'] ?? '');
+        $title = trim($_POST['title'] ?? 'Đánh giá tour ' . $tour['title']);
+
+        if ($rating < 1 || $rating > 5) {
+            $this->setFlashMessage('error', 'Vui lòng chọn đánh giá từ 1-5 sao');
+            $this->redirect(UrlHelper::route('user/review/tour/' . $id));
+            return;
+        }
+
+        if (strlen($review) < 10) {
+            $this->setFlashMessage('error', 'Vui lòng viết nhận xét ít nhất 10 ký tự');
+            $this->redirect(UrlHelper::route('user/review/tour/' . $id));
+            return;
+        }
+
+        // Kiểm tra xem đã đánh giá chưa
+        $existingReview = $this->reviewsModel->getByTourAndUser($id, $userId);
+
+        if ($existingReview) {
+            // Cập nhật đánh giá hiện có
+            $updateData = [
+                'rating' => $rating,
+                'title' => $title,
+                'review' => $review,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
+            $result = $this->reviewsModel->update($existingReview['id'], $updateData);
+            $message = 'Cập nhật đánh giá thành công!';
+        } else {
+            // Tạo đánh giá mới
+            $reviewData = [
+                'user_id' => $userId,
+                'tour_id' => $id,
+                'booking_id' => $completedBooking['id'],
+                'rating' => $rating,
+                'title' => $title,
+                'review' => $review,
+                'status' => 'pending',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
+            $result = $this->reviewsModel->create($reviewData);
+            $message = 'Đã gửi đánh giá thành công!';
+        }
+
+
+        if ($result) {
+            // Cập nhật điểm đánh giá trung bình cho tour
+            // $this->tourModel->updateAverageRating($id);
+
+            $this->setFlashMessage('success', $message);
+            $this->redirect(UrlHelper::route('home/tour-details/' . $id));
+        } else {
+            $this->setFlashMessage('error', 'Có lỗi xảy ra khi lưu đánh giá');
+            $this->redirect(UrlHelper::route('user/review/tour/' . $id));
+        }
+    }
 }

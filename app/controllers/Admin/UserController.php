@@ -5,13 +5,19 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Helpers\UrlHelper;
+use App\Models\Booking;
+use App\Models\Reviews;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Tour;
 
 class UserController extends BaseController
 {
     private $userModel;
     private $roleModel;
+    private $bookingModel;
+    private $reviewModel;
+    private $tourModel;
 
 
     public function __construct()
@@ -27,6 +33,9 @@ class UserController extends BaseController
 
         $this->userModel = new User();
         $this->roleModel = new Role();
+        $this->bookingModel = new Booking();
+        $this->reviewModel = new Reviews();
+        $this->tourModel = new Tour();
     }
 
 
@@ -260,5 +269,52 @@ class UserController extends BaseController
                 'deleteUser' => $user
             ]);
         }
+    }
+
+    /**
+     * Hiển thị chi tiết người dùng
+     * 
+     * @param int $id ID của người dùng
+     * @return void
+     */
+    public function detail($id)
+    {
+        // Kiểm tra quyền admin
+        // if (!$this->checkAdminRole()) {
+        //     $this->redirect(UrlHelper::route('auth/login'));
+        //     return;
+        // }
+
+        // Lấy thông tin chi tiết người dùng
+        $user = $this->userModel->getUserWithRole($id);
+
+        if (!$user) {
+            $this->setFlashMessage('error', 'Không tìm thấy thông tin người dùng');
+            $this->redirect(UrlHelper::route('admin/users'));
+            return;
+        }
+
+        // Lấy thêm các thông tin thống kê
+        $stats = [
+            'total_bookings' => $this->bookingModel->countUserBookings($id),
+            'completed_bookings' => $this->bookingModel->countUserBookingsByStatus($id, 'completed'),
+            'review_count' => $this->reviewModel->countUserReviews($id),
+            'average_rating' => $this->reviewModel->getUserAverageRating($id)
+        ];
+
+        // Lấy đơn đặt tour gần đây
+        $recentBookings = $this->bookingModel->getRecentUserBookings($id, 5);
+
+        // Lấy đánh giá gần đây
+        $recentReviews = $this->reviewModel->getRecentUserReviews($id, 5);
+
+        $user['stats'] = $stats;
+        $user['recent_bookings'] = $recentBookings;
+        $user['recent_reviews'] = $recentReviews;
+
+        // Hiển thị trang chi tiết
+        $this->view('admin/users/details', [
+            'user' => $user
+        ]);
     }
 }
