@@ -13,7 +13,7 @@ $activePage = 'login';
       <!-- Logo -->
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-teal-600">Booking Tour</h1>
-        <p class="text-gray-500 mt-2">Sign in to access your account</p>
+        <p class="text-gray-500 mt-2">Đăng nhập để truy cập tài khoản của bạn</p>
       </div>
 
       <!-- Form Card -->
@@ -26,7 +26,7 @@ $activePage = 'login';
 
         <form action="<?= UrlHelper::route('auth/login') ?>" method="POST" class="space-y-6">
           <div>
-            <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
+            <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
@@ -43,10 +43,10 @@ $activePage = 'login';
 
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label for="password" class="block text-gray-700 text-sm font-medium">Password</label>
+              <label for="password" class="block text-gray-700 text-sm font-medium">Mật khẩu</label>
               <a href="<?= UrlHelper::route('auth/forgot-password') ?>"
                 class="text-xs text-teal-500 hover:text-teal-600 transition-colors">
-                Forgot password?
+                Quên mật khẩu?
               </a>
             </div>
             <div class="relative">
@@ -64,21 +64,21 @@ $activePage = 'login';
             </div>
           </div>
 
+
           <!-- <div class="flex items-center">
             <input type="checkbox" name="remember" id="remember"
               class="w-4 h-4 text-teal-500 bg-blue-50 border-0 rounded focus:ring-teal-500">
             <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
           </div> -->
-
           <button type="submit"
             class="w-full bg-teal-500 hover:bg-teal-600 focus:ring-4 focus:ring-teal-300 text-white font-medium rounded-md text-sm px-5 py-3 text-center transition-all shadow-md hover:shadow-lg">
-            Sign In
+            Đăng nhập
           </button>
 
           <div class="text-center mt-4">
             <p class="text-sm text-gray-600">
-              Don't have an account? <a href="<?= UrlHelper::route('auth/register') ?>"
-                class="text-teal-500 hover:underline font-medium">Create an account</a>
+              Bạn chưa có tài khoản? <a href="<?= UrlHelper::route('auth/register') ?>"
+                class="text-teal-500 hover:underline font-medium">Tạo tài khoản</a>
             </p>
           </div>
         </form>

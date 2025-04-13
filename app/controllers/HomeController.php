@@ -144,9 +144,13 @@ class HomeController extends BaseController
     if ($page == 1 && empty($categoryId) && empty($tag) && empty($search)) {
       $featuredNews = $this->newsModel->getFeaturedNews();
     }
-
+    
     // Lấy bài viết xem nhiều nhất
     $topViewedNews = $this->newsModel->getTopViewedNews(5);
+    $top1ViewedNews = $this->newsModel->getTopViewedNews(1);
+    // echo "<pre>";
+    // print_r($top1ViewedNews);die;
+    
 
     // Lấy danh sách tags phổ biến
     $popularTags = $this->newsModel->getPopularTags(10);
@@ -160,7 +164,8 @@ class HomeController extends BaseController
       'currentCategoryName' => $currentCategoryName,
       'totalNewsCount' => $totalNewsCount,
       'currentPage' => $page,
-      'totalPages' => $totalPages
+      'totalPages' => $totalPages,
+      'top1ViewedNews' => $top1ViewedNews,
     ]);
   }
 

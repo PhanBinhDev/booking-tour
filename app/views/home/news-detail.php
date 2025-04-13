@@ -9,7 +9,7 @@ use App\Helpers\FormatHelper;
     <!-- Hero section với ảnh nền blur -->
     <div class="relative bg-gradient-to-r from-teal-600 to-blue-600 text-white py-12">
         <div class="absolute inset-0 overflow-hidden opacity-20">
-            <img id="bg-blur-image" src="<?= $news['featured_image'] ?>" alt=""
+            <img id="bg-blur-image" 
                 class="w-full h-full object-cover filter blur-md scale-105" onerror="this.style.display='none';">
         </div>
         <div class="container mx-auto px-4 relative z-10">
