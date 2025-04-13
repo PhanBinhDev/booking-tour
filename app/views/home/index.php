@@ -172,6 +172,7 @@ $title = 'Trang chủ - Di Travel';
                   </svg>
                 </div>
 
+
                 <!-- Ảnh chính -->
                 <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
                   class="w-full h-full object-cover transition-all duration-300 ease-in-out hover:scale-105"
@@ -181,6 +182,7 @@ $title = 'Trang chủ - Di Travel';
               </div>
 
               <!-- Discount Badge -->
+
 
               <?= $tour['sale_price'] ?
                 ' <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">' .
@@ -323,6 +325,7 @@ $title = 'Trang chủ - Di Travel';
                   </svg>
                 </div>
 
+
                 <!-- Ảnh chính -->
                 <img src="<?= $tour['cloudinary_url'] ?>" alt="<?= $tour['title'] ?>"
                   class="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
@@ -330,6 +333,7 @@ $title = 'Trang chủ - Di Travel';
                   onerror="this.onerror=null; this.style.display='none'; showErrorPlaceholder('placeholder-offer-<?= $tour['id'] ?>', '<?= htmlspecialchars($tour['title'], ENT_QUOTES) ?>');"
                   style="opacity: 0;">
               </div>
+
 
               <!-- Discount Badge -->
               <?= $tour['sale_price'] ?
@@ -531,7 +535,9 @@ $title = 'Trang chủ - Di Travel';
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
+
                   <?= FormatHelper::formatDate($item["created_at"]) ?>
+
                 </div>
 
                 <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>">

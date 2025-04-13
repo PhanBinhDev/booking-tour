@@ -252,6 +252,16 @@ class HomeController extends BaseController
 
     $allTours = $this->tourModel->getTours($filters, $sort_option, false);
 
+    $currentUser = $this->getCurrentUser();
+    $userFavorites = [];
+
+    if ($currentUser) {
+      $userId = $currentUser['id'];
+      if ($userId) {
+        $userFavorites = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
+      }
+    }
+
     $this->view('home/tours', [
       'allTours' => $allTours,
       'categories' => $categories,
@@ -259,7 +269,8 @@ class HomeController extends BaseController
       'selectedSort' => $sort_option,
       'selectedPriceRanges' => $price_ranges,
       'selectedDurations' => $durations,
-      'selectedRatings' => $ratings
+      'selectedRatings' => $ratings,
+      'userFavorites' => $userFavorites
     ]);
   }
 
