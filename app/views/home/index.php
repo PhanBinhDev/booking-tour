@@ -1,6 +1,8 @@
 <?php
 
 use App\Helpers\UrlHelper;
+use App\Helpers\FormatHelper;
+
 
 $title = 'Trang chủ - Di Travel';
 
@@ -529,7 +531,7 @@ $title = 'Trang chủ - Di Travel';
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <?= $item['created_at'] ?>
+                  <?= FormatHelper::formatDate($item["created_at"]) ?>
                 </div>
 
                 <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>">
