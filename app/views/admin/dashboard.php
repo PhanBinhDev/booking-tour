@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\SessionHelper;
 use App\Helpers\UrlHelper;
 use App\Helpers\FormatHelper;
@@ -25,7 +26,7 @@ use App\Helpers\FormatHelper;
   </div>
 
   <!-- Stats Overview -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
     <!-- Users Stats -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <div class="p-5">
@@ -117,12 +118,35 @@ use App\Helpers\FormatHelper;
       </div>
       <div class="bg-gradient-to-r from-amber-500 to-amber-600 h-1"></div>
     </div>
+
+    <!-- News Stats -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 p-3 rounded-full bg-teal-100 text-teal-500">
+            <i class="fas fa-newspaper text-xl"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Tin tức</h3>
+            <p class="text-2xl font-semibold text-gray-800"><?= number_format($newsCount) ?></p>
+          </div>
+        </div>
+        <div class="mt-4">
+          <a href="<?= UrlHelper::route('admin/news') ?>"
+            class="text-sm text-teal-600 hover:text-teal-800 flex items-center">
+            <span>Quản lý tin tức</span>
+            <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      </div>
+      <div class="bg-gradient-to-r from-teal-500 to-teal-600 h-1"></div>
+    </div>
   </div>
 
   <!-- Charts & Data Section -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Booking Status Chart -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+    <div class="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Trạng thái đặt tour</h3>
         <div class="flex items-center mt-2 sm:mt-0">
@@ -132,7 +156,7 @@ use App\Helpers\FormatHelper;
               class="border border-gray-300 rounded-md text-sm py-1 px-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
               onchange="this.form.submit()">
               <?php foreach ($years as $year): ?>
-              <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>><?= $year ?></option>
+                <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>><?= $year ?></option>
               <?php endforeach; ?>
             </select>
           </form>
@@ -145,7 +169,7 @@ use App\Helpers\FormatHelper;
     </div>
 
     <!-- Revenue Chart -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+    <div class="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Doanh thu theo tháng</h3>
         <div class="flex items-center mt-2 sm:mt-0">
@@ -157,6 +181,59 @@ use App\Helpers\FormatHelper;
       <div class="h-64">
         <canvas id="revenueChart"></canvas>
       </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="lg:col-span-1 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Lượt xem tin tức</h3>
+        <div class="flex items-center mt-2 sm:mt-0">
+          <span class="text-sm text-gray-500">Năm: <?= $selectedYear ?></span>
+          <span class="ml-4 text-sm text-gray-500">Tổng: <?= number_format(array_sum($newsViewsData)) ?></span>
+        </div>
+      </div>
+      <div class="h-64">
+        <canvas id="newsViewsChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Popular Locations -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Địa điểm phổ biến</h3>
+        <a href="<?= UrlHelper::route('admin/locations') ?>" class="text-sm text-teal-600 hover:text-teal-800">Xem tất
+          cả</a>
+      </div>
+
+      <?php if (empty($popularLocations)): ?>
+        <div class="text-center py-8 text-gray-500">
+          <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
+          <p>Chưa có dữ liệu địa điểm</p>
+        </div>
+      <?php else: ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <?php foreach ($popularLocations as $location): ?>
+            <div class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+              <div class="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+                <?php if (!empty($location['image'])): ?>
+                  <img src="<?= $location['image'] ?>" alt="<?= $location['name'] ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                  <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <i class="fas fa-map"></i>
+                  </div>
+                <?php endif; ?>
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-gray-800"><?= $location['name'] ?></h4>
+                <div class="flex items-center mt-1 text-xs text-gray-500">
+                  <i class="fas fa-route mr-1"></i>
+                  <span><?= $location['tour_count'] ?> tour</span>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -171,39 +248,39 @@ use App\Helpers\FormatHelper;
       </div>
 
       <?php if (empty($recentBookings)): ?>
-      <div class="text-center py-8 text-gray-500">
-        <i class="fas fa-calendar-times text-3xl mb-2"></i>
-        <p>Chưa có đơn đặt tour nào</p>
-      </div>
+        <div class="text-center py-8 text-gray-500">
+          <i class="fas fa-calendar-times text-3xl mb-2"></i>
+          <p>Chưa có đơn đặt tour nào</p>
+        </div>
       <?php else: ?>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-left text-gray-500 border-b">
-              <th class="pb-3 font-medium">Mã đặt tour</th>
-              <th class="pb-3 font-medium">Khách hàng</th>
-              <th class="pb-3 font-medium">Tour</th>
-              <th class="pb-3 font-medium">Trạng thái</th>
-              <th class="pb-3 font-medium">Ngày đặt</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($recentBookings as $booking): ?>
-            <tr class="border-b border-gray-100 hover:bg-gray-50">
-              <td class="py-3 font-medium"><?= $booking['booking_number'] ?></td>
-              <td class="py-3"><?= $booking['customer_name'] ?></td>
-              <td class="py-3 max-w-[200px] truncate"><?= $booking['tour_title'] ?></td>
-              <td class="py-3">
-                <span class="px-2 py-1 text-xs rounded-full <?= getStatusClass($booking['status']) ?>">
-                  <?= getStatusLabel($booking['status']) ?>
-                </span>
-              </td>
-              <td class="py-3"><?= date('d/m/Y', strtotime($booking['created_at'])) ?></td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-gray-500 border-b">
+                <th class="pb-3 font-medium">Mã đặt tour</th>
+                <th class="pb-3 font-medium">Khách hàng</th>
+                <th class="pb-3 font-medium">Tour</th>
+                <th class="pb-3 font-medium">Trạng thái</th>
+                <th class="pb-3 font-medium">Ngày đặt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($recentBookings as $booking): ?>
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                  <td class="py-3 font-medium"><?= $booking['booking_number'] ?></td>
+                  <td class="py-3"><?= $booking['customer_name'] ?></td>
+                  <td class="py-3 max-w-[200px] truncate"><?= $booking['tour_title'] ?></td>
+                  <td class="py-3">
+                    <span class="px-2 py-1 text-xs rounded-full <?= getStatusClass($booking['status']) ?>">
+                      <?= getStatusLabel($booking['status']) ?>
+                    </span>
+                  </td>
+                  <td class="py-3"><?= date('d/m/Y', strtotime($booking['created_at'])) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       <?php endif; ?>
     </div>
 
@@ -233,6 +310,17 @@ use App\Helpers\FormatHelper;
           <div class="ml-3">
             <h4 class="text-sm font-medium text-gray-800">Địa điểm</h4>
             <p class="text-xs text-gray-500">Quản lý địa điểm du lịch</p>
+          </div>
+        </a>
+
+        <a href="<?= UrlHelper::route('admin/news/create') ?>"
+          class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <div class="p-2 rounded-md bg-teal-100 text-teal-600">
+            <i class="fas fa-newspaper"></i>
+          </div>
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-gray-800">Tạo bài viết mới</h4>
+            <p class="text-xs text-gray-500">Viết và đăng bài viết mới</p>
           </div>
         </a>
 
@@ -274,130 +362,142 @@ use App\Helpers\FormatHelper;
       </div>
 
       <?php if (empty($popularTours)): ?>
-      <div class="text-center py-8 text-gray-500">
-        <i class="fas fa-route text-3xl mb-2"></i>
-        <p>Chưa có dữ liệu tour</p>
-      </div>
-      <?php else: ?>
-      <div class="space-y-4">
-        <?php foreach ($popularTours as $tour): ?>
-        <div class="flex items-center border-b border-gray-100 pb-4">
-          <div class="w-16 h-16 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
-            <?php if (!empty($tour['image'])): ?>
-            <img src="<?= $tour['image'] ?>" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover">
-            <?php else: ?>
-            <div class="w-full h-full flex items-center justify-center text-gray-400">
-              <i class="fas fa-image"></i>
-            </div>
-            <?php endif; ?>
-          </div>
-          <div class="ml-4 flex-grow">
-            <h4 class="text-sm font-medium text-gray-800"><?= $tour['title'] ?></h4>
-            <div class="flex items-center mt-1">
-              <div class="flex items-center text-amber-500 text-xs">
-                <?php for ($i = 1; $i <= 5; $i++): ?>
-                <?php if ($i <= round($tour['rating'])): ?>
-                <i class="fas fa-star"></i>
-                <?php else: ?>
-                <i class="far fa-star"></i>
-                <?php endif; ?>
-                <?php endfor; ?>
-                <span class="ml-1 text-gray-500">(<?= $tour['reviews'] ?>)</span>
-              </div>
-              <span class="mx-2 text-gray-300">|</span>
-              <span class="text-xs text-gray-500"><?= $tour['bookings'] ?> đặt tour</span>
-            </div>
-          </div>
-          <div class="text-right">
-            <div class="text-sm font-semibold text-gray-800"><?= FormatHelper::formatCurrency($tour['price']) ?></div>
-            <div class="text-xs text-gray-500"><?= $tour['duration'] ?></div>
-          </div>
+        <div class="text-center py-8 text-gray-500">
+          <i class="fas fa-route text-3xl mb-2"></i>
+          <p>Chưa có dữ liệu tour</p>
         </div>
-        <?php endforeach; ?>
-      </div>
+      <?php else: ?>
+        <div class="space-y-4">
+          <?php foreach ($popularTours as $tour): ?>
+            <div class="flex items-center border-b border-gray-100 pb-4">
+              <div class="w-16 h-16 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+                <?php if (!empty($tour['image'])): ?>
+                  <img src="<?= $tour['image'] ?>" alt="<?= $tour['title'] ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                  <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <i class="fas fa-image"></i>
+                  </div>
+                <?php endif; ?>
+              </div>
+              <div class="ml-4 flex-grow">
+                <h4 class="text-sm font-medium text-gray-800"><?= $tour['title'] ?></h4>
+                <div class="flex items-center mt-1">
+                  <div class="flex items-center text-amber-500 text-xs">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                      <?php if ($i <= round($tour['rating'])): ?>
+                        <i class="fas fa-star"></i>
+                      <?php else: ?>
+                        <i class="far fa-star"></i>
+                      <?php endif; ?>
+                    <?php endfor; ?>
+                    <span class="ml-1 text-gray-500">(<?= $tour['reviews'] ?>)</span>
+                  </div>
+                  <span class="mx-2 text-gray-300">|</span>
+                  <span class="text-xs text-gray-500"><?= $tour['bookings'] ?> đặt tour</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm font-semibold text-gray-800"><?= FormatHelper::formatCurrency($tour['price']) ?></div>
+                <div class="text-xs text-gray-500"><?= $tour['duration'] ?></div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
       <?php endif; ?>
     </div>
 
-    <!-- Popular Locations -->
+    <!-- Recent News Articles - Phần mới -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-800">Địa điểm phổ biến</h3>
-        <a href="<?= UrlHelper::route('admin/locations') ?>" class="text-sm text-teal-600 hover:text-teal-800">Xem tất
-          cả</a>
+        <h3 class="text-lg font-semibold text-gray-800">Tin tức gần đây</h3>
+        <a href="<?= UrlHelper::route('admin/news') ?>" class="text-sm text-teal-600 hover:text-teal-800">Xem tất cả</a>
       </div>
 
-      <?php if (empty($popularLocations)): ?>
-      <div class="text-center py-8 text-gray-500">
-        <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
-        <p>Chưa có dữ liệu địa điểm</p>
-      </div>
-      <?php else: ?>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <?php foreach ($popularLocations as $location): ?>
-        <div class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-          <div class="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
-            <?php if (!empty($location['image'])): ?>
-            <img src="<?= $location['image'] ?>" alt="<?= $location['name'] ?>" class="w-full h-full object-cover">
-            <?php else: ?>
-            <div class="w-full h-full flex items-center justify-center text-gray-400">
-              <i class="fas fa-map"></i>
-            </div>
-            <?php endif; ?>
-          </div>
-          <div class="ml-3">
-            <h4 class="text-sm font-medium text-gray-800"><?= $location['name'] ?></h4>
-            <div class="flex items-center mt-1 text-xs text-gray-500">
-              <i class="fas fa-route mr-1"></i>
-              <span><?= $location['tour_count'] ?> tour</span>
-            </div>
-          </div>
+      <?php if (empty($recentNews)): ?>
+        <div class="text-center py-8 text-gray-500">
+          <i class="fas fa-newspaper text-3xl mb-2"></i>
+          <p>Chưa có bài viết nào</p>
         </div>
-        <?php endforeach; ?>
-      </div>
+      <?php else: ?>
+        <div class="space-y-4">
+          <?php foreach ($recentNews as $article): ?>
+            <div class="flex items-center border-b border-gray-100 pb-4">
+              <div class="w-16 h-16 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
+                <?php if (!empty($article['featured_image'])): ?>
+                  <img src="<?= $article['featured_image'] ?>" alt="<?= $article['title'] ?>"
+                    class="w-full h-full object-cover">
+                <?php else: ?>
+                  <div class="w-full h-full flex items-center justify-center text-gray-400">
+                    <i class="fas fa-image"></i>
+                  </div>
+                <?php endif; ?>
+              </div>
+              <div class="ml-4 flex-grow">
+                <h4 class="text-sm font-medium text-gray-800"><?= $article['title'] ?></h4>
+                <div class="flex items-center mt-1 text-xs text-gray-500">
+                  <span><i class="far fa-calendar mr-1"></i><?= date('d/m/Y', strtotime($article['published_at'])) ?></span>
+                  <span class="mx-2">•</span>
+                  <span><i class="far fa-eye mr-1"></i><?= number_format($article['views']) ?> lượt xem</span>
+                </div>
+              </div>
+              <div
+                class="text-xs px-2 py-1 rounded-full <?= $article['status'] == 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' ?>">
+                <?= $article['status'] == 'published' ? 'Đã xuất bản' : 'Bản nháp' ?>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
       <?php endif; ?>
     </div>
+
+
   </div>
 </div>
 
 <?php
 // Helper functions for status labels and classes
-function getStatusLabel($status) {
+function getStatusLabel($status)
+{
   $labels = [
-      'pending' => 'Chờ xác nhận',
-      'confirmed' => 'Đã xác nhận',
-      'paid' => 'Đã thanh toán',
-      'cancelled' => 'Đã hủy',
-      'completed' => 'Hoàn thành'
+    'pending' => 'Chờ xác nhận',
+    'confirmed' => 'Đã xác nhận',
+    'paid' => 'Đã thanh toán',
+    'cancelled' => 'Đã hủy',
+    'completed' => 'Hoàn thành'
   ];
-  
+
   return $labels[$status] ?? $status;
 }
 
-function getStatusClass($status) {
+function getStatusClass($status)
+{
   $classes = [
-      'pending' => 'bg-yellow-100 text-yellow-800',
-      'confirmed' => 'bg-blue-100 text-blue-800',
-      'paid' => 'bg-green-100 text-green-800',
-      'cancelled' => 'bg-red-100 text-red-800',
-      'completed' => 'bg-purple-100 text-purple-800'
+    'pending' => 'bg-yellow-100 text-yellow-800',
+    'confirmed' => 'bg-blue-100 text-blue-800',
+    'paid' => 'bg-green-100 text-green-800',
+    'cancelled' => 'bg-red-100 text-red-800',
+    'completed' => 'bg-purple-100 text-purple-800'
   ];
-  
+
   return $classes[$status] ?? 'bg-gray-100 text-gray-800';
 }
 ?>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <!-- Truyền dữ liệu từ PHP sang JavaScript -->
 <script>
-// Truyền dữ liệu từ PHP sang JavaScript
-const dashboardData = {
-  bookingStatusLabels: <?= json_encode(array_keys($bookingStatusData)) ?>,
-  bookingStatusValues: <?= json_encode(array_values($bookingStatusData)) ?>,
-  monthlyRevenueLabels: <?= json_encode(array_keys($monthlyRevenueData)) ?>,
-  monthlyRevenueValues: <?= json_encode(array_values($monthlyRevenueData)) ?>
-};
+  // Truyền dữ liệu từ PHP sang JavaScript
+  const dashboardData = {
+    bookingStatusLabels: <?= json_encode(array_keys($bookingStatusData)) ?>,
+    bookingStatusValues: <?= json_encode(array_values($bookingStatusData)) ?>,
+    monthlyRevenueLabels: <?= json_encode(array_keys($monthlyRevenueData)) ?>,
+    monthlyRevenueValues: <?= json_encode(array_values($monthlyRevenueData)) ?>,
+    newsViewsLabels: <?= json_encode(array_keys($newsViewsData)) ?>,
+    newsViewsValues: <?= json_encode(array_values($newsViewsData)) ?>
+  };
+
+  console.log({
+    dashboardData
+  })
 </script>
 
 <!-- Dashboard JS -->

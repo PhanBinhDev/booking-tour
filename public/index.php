@@ -120,6 +120,7 @@ $router->post('/admin/users/create', 'Admin\UserController@create'); // Admin\Us
 $router->get('/admin/users/edit/{id}', 'Admin\UserController@edit');
 $router->post('/admin/users/edit/{id}', 'Admin\UserController@edit');
 $router->get('/admin/users/detail/{id}', 'Admin\UserController@detail');
+$router->post('/admin/users/updateStatus', 'Admin\UserController@updateStatus');
 
 // ADMIN/ROLES
 $router->get('/admin/roles', 'Admin\RoleController@index');

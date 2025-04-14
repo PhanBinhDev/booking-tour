@@ -227,21 +227,53 @@ class HomeController extends BaseController
     $this->view('home/activities');
   }
 
+  /**
+   * Display the tours page with filters and pagination
+   * 
+   * @return void
+   */
   public function tours()
   {
+    // Get categories and locations
     $categories = $this->categoriesModel->getAll();
+    $locations = $this->locationModel->getAll();
 
-    // Lấy tham số lọc từ URL
-    $category_id = isset($_GET['category']) && $_GET['category'] !== 'Tất cả danh mục' ?
-      filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT) : null;
-    $location_id = isset($_GET['location']) && $_GET['location'] !== 'Tất cả địa điểm' ?
-      filter_input(INPUT_GET, 'location', FILTER_VALIDATE_INT) : null;
-    $sort_option = isset($_GET['sort']) ? $_GET['sort'] : 'popular';
-    $price_ranges = isset($_GET['price_range']) ? $_GET['price_range'] : [];
-    $durations = isset($_GET['duration']) ? $_GET['duration'] : [];
-    $ratings = isset($_GET['rating']) ? $_GET['rating'] : [];
+    // Get pagination parameters
+    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
+    $perPage = 9; // Number of tours per page
 
-    // Chuẩn bị các tham số lọc
+    // Get filter parameters from URL
+    $category_id = filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT) ?: null;
+    $location_id = filter_input(INPUT_GET, 'location', FILTER_VALIDATE_INT) ?: null;
+
+    // Validate sort option
+    $validSortOptions = ['popular', 'price_asc', 'price_desc', 'rating', 'newest'];
+    $sort_option = isset($_GET['sort']) && in_array($_GET['sort'], $validSortOptions)
+      ? $_GET['sort']
+      : 'popular';
+
+    // Process array-type filters
+    $price_ranges = [];
+    if (isset($_GET['price_range'])) {
+      if (is_array($_GET['price_range'])) {
+        $price_ranges = $_GET['price_range'];
+      } else if ($_GET['price_range'] !== 'all') {
+        // Nếu price_range là giá trị đơn (từ radio button) và không phải "all"
+        $price_ranges = [$_GET['price_range']];  // Chuyển đổi thành mảng
+      }
+    }
+
+    $durations = [];
+    if (isset($_GET['duration']) && is_array($_GET['duration'])) {
+      $durations = $_GET['duration'];
+    }
+
+    $ratings = [];
+    if (isset($_GET['rating']) && is_array($_GET['rating'])) {
+      $ratings = $_GET['rating'];
+    }
+
+    // Build filters array
     $filters = [
       'category_id' => $category_id,
       'location_id' => $location_id,
@@ -250,27 +282,48 @@ class HomeController extends BaseController
       'ratings' => $ratings
     ];
 
-    $allTours = $this->tourModel->getTours($filters, $sort_option, false);
+    // Add keyword search if provided
+    if (!empty($_GET['keyword'])) {
+      $filters['keyword'] = trim($_GET['keyword']);
+    }
 
+    // Get paginated tours
+    $toursData = $this->tourModel->getToursWithPagination(
+      $filters,
+      $sort_option,
+      false,  // onlySalePrice
+      $page,
+      $perPage
+    );
+
+    // Get favorite tours for the current user
     $currentUser = $this->getCurrentUser();
     $userFavorites = [];
 
     if ($currentUser) {
       $userId = $currentUser['id'];
-      if ($userId) {
-        $userFavorites = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
-      }
+      $userFavorites = $this->favoriteModel->getFavoriteTourIdsByUser($userId);
     }
 
+    $categoryCounts = [];
+    foreach ($categories as $category) {
+      $categoryCounts[$category['id']] = $this->tourModel->countToursByCategory($category['id']);
+    }
+
+    // Pass all necessary data to the view
     $this->view('home/tours', [
-      'allTours' => $allTours,
+      'allTours' => $toursData['items'],
+      'pagination' => $toursData['pagination'],
       'categories' => $categories,
+      'categoryCounts' => $categoryCounts,
+      'locations' => $locations,
       'currentCategory' => $category_id,
       'selectedSort' => $sort_option,
       'selectedPriceRanges' => $price_ranges,
       'selectedDurations' => $durations,
       'selectedRatings' => $ratings,
-      'userFavorites' => $userFavorites
+      'userFavorites' => $userFavorites,
+      'keyword' => $filters['keyword'] ?? ''
     ]);
   }
 

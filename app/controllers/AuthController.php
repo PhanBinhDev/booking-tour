@@ -42,50 +42,84 @@ class AuthController extends BaseController
             }
 
             if (empty($errors)) {
-                $user = $this->userModel->authenticate($email, $password);
+                // Đầu tiên kiểm tra email tồn tại không, trước khi xác thực mật khẩu
+                $existingUser = $this->userModel->findByEmail($email);
 
-                if ($user) {
-                    // Kiểm tra xác thực email nếu cần
-                    if (REQUIRE_EMAIL_VERIFICATION && !$user['email_verified']) {
-                        $errors['login'] = 'Vui lòng xác thực email trước khi đăng nhập';
-
-                        // Gửi lại email xác thực
-                        $token = $this->userModel->createVerificationToken($user['id']);
-                        if ($token) {
-                            EmailHelper::sendVerificationEmail($user['email'], $user['username'], $token);
-                            $errors['login'] .= '. Chúng tôi đã gửi lại email xác thực.';
+                if (!$existingUser) {
+                    $errors['login'] = 'Tài khoản không tồn tại';
+                } else {
+                    // Kiểm tra trạng thái tài khoản
+                    if ($existingUser['status'] !== 'active') {
+                        switch ($existingUser['status']) {
+                            case 'inactive':
+                                $errors['login'] = 'Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.';
+                                break;
+                            case 'banned':
+                                $errors['login'] = 'Tài khoản của bạn đã bị cấm. Vui lòng liên hệ quản trị viên để biết thêm thông tin.';
+                                break;
+                            default:
+                                $errors['login'] = 'Tài khoản không khả dụng.';
+                                break;
                         }
                     } else {
-                        // Đăng nhập thành công
-                        SessionHelper::set('user_id', $user['id']);
-                        SessionHelper::set('username', $user['username']);
-                        SessionHelper::set('role', $user['role']['name']);
-                        SessionHelper::set('role_id', $user['role_id']);
-                        SessionHelper::set('permissions', $user['permissions']);
+                        // Nếu trạng thái active, tiến hành xác thực mật khẩu
+                        $user = $this->userModel->authenticate($email, $password);
 
-                        // Lưu cookie nếu chọn "Ghi nhớ đăng nhập"
-                        if ($remember) {
-                            $token = bin2hex(random_bytes(32));
-                            $expires = time() + (30 * 24 * 60 * 60); // 30 ngày
+                        if ($user) {
+                            // Kiểm tra xác thực email nếu cần
+                            if (REQUIRE_EMAIL_VERIFICATION && !$user['email_verified']) {
+                                $errors['login'] = 'Vui lòng xác thực email trước khi đăng nhập';
 
-                            // Lưu token vào cơ sở dữ liệu
-                            // $this->userModel->update($user['id'], [
-                            //     'remember_token' => $token
-                            // ]);
+                                // Gửi lại email xác thực
+                                $token = $this->userModel->createVerificationToken($user['id']);
+                                if ($token) {
+                                    EmailHelper::sendVerificationEmail($user['email'], $user['username'], $token);
+                                    $errors['login'] .= '. Chúng tôi đã gửi lại email xác thực.';
+                                }
+                            } else {
+                                // Cập nhật thời gian đăng nhập cuối
+                                $this->userModel->update($user['id'], [
+                                    'last_login' => date('Y-m-d H:i:s')
+                                ]);
 
-                            // Đặt cookie
-                            setcookie('remember_token', $token, $expires, '/', '', false, true);
-                            setcookie('user_id', $user['id'], $expires, '/', '', false, true);
+                                // Đăng nhập thành công
+                                SessionHelper::set('user_id', $user['id']);
+                                SessionHelper::set('username', $user['username']);
+                                SessionHelper::set('role', $user['role']['name']);
+                                SessionHelper::set('role_id', $user['role_id']);
+                                SessionHelper::set('permissions', $user['permissions']);
+
+                                // Lưu cookie nếu chọn "Ghi nhớ đăng nhập"
+                                if ($remember) {
+                                    $token = bin2hex(random_bytes(32));
+                                    $expires = time() + (30 * 24 * 60 * 60); // 30 ngày
+
+                                    // Lưu token vào cơ sở dữ liệu
+                                    $this->userModel->saveRememberToken($user['id'], $token);
+
+                                    // Đặt cookie
+                                    setcookie('remember_token', $token, $expires, '/', '', false, true);
+                                    setcookie('user_id', $user['id'], $expires, '/', '', false, true);
+                                }
+
+                                // Chuyển hướng đến trang chủ hoặc trang được yêu cầu trước đó
+                                $redirect = SessionHelper::get('redirect_url') ?? UrlHelper::route('');
+
+                                // Chuyển hướng admin đến dashboard
+                                if ($user['role']['name'] === 'admin') {
+                                    $redirect = UrlHelper::route('admin/dashboard');
+                                } else if ($user['role']['name'] === 'moderator') {
+                                    $redirect = UrlHelper::route('moderator/dashboard');
+                                }
+
+                                unset($_SESSION['redirect_url']);
+
+                                $this->redirect($redirect);
+                            }
+                        } else {
+                            $errors['login'] = 'Mật khẩu không đúng';
                         }
-
-                        // Chuyển hướng đến trang chủ hoặc trang được yêu cầu trước đó
-                        $redirect = SessionHelper::get('redirect_url') ?? UrlHelper::route('admin/dashboard');
-                        unset($_SESSION['redirect_url']);
-
-                        $this->redirect($redirect);
                     }
-                } else {
-                    $errors['login'] = 'Email hoặc mật khẩu không đúng';
                 }
             }
 

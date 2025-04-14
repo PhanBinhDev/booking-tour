@@ -236,12 +236,6 @@ use App\Helpers\UrlHelper;
                   <i class="fas fa-edit"></i>
                 </button>
               </a>
-              <?php if ($user['id'] != $_SESSION['user_id']): ?>
-              <button class="delete-user-btn text-red-600 hover:text-red-900" data-id="<?= $user['id'] ?>"
-                data-name="<?= $user['username'] ?>">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-              <?php endif; ?>
             </td>
           </tr>
           <?php endforeach;

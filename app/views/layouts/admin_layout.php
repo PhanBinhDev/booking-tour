@@ -28,6 +28,7 @@ ob_start();
   <link rel="stylesheet"
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
   <link rel="stylesheet" href="<?= UrlHelper::css('mapbox.css') ?>">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.26.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.7.0/dist/bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.9.0/dist/bundle.min.js"></script>

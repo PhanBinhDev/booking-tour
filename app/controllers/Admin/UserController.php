@@ -4,12 +4,14 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Helpers\CloudinaryHelper;
 use App\Helpers\UrlHelper;
 use App\Models\Booking;
 use App\Models\Reviews;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Tour;
+use Exception;
 
 class UserController extends BaseController
 {
@@ -179,7 +181,6 @@ class UserController extends BaseController
             $phone = trim($_POST['phone']);
             $role_id = intval($_POST['role_id']);
             $status = trim($_POST['status']);
-            $bio = trim($_POST['bio']);
             $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_BCRYPT) : null;
 
             $errors = [];
@@ -203,6 +204,24 @@ class UserController extends BaseController
                 $errors['password_confirm'] = 'Mật khẩu xác nhận không khớp';
             }
 
+            // Xử lý upload avatar
+            $avatar = $currentUser['avatar'] ?? '';
+
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                try {
+                    // Upload ảnh lên Cloudinary và lưu thông tin
+                    $uploadResult = CloudinaryHelper::upload($_FILES['avatar']['tmp_name'], 'users');
+
+                    if (!isset($uploadResult['secure_url'])) {
+                        throw new Exception('Lỗi khi upload ảnh');
+                    }
+
+                    $avatar = $uploadResult['secure_url'];
+                } catch (Exception $e) {
+                    $errors['avatar'] = 'Lỗi khi upload ảnh: ' . $e->getMessage();
+                }
+            }
+
             if (empty($errors)) {
                 $data = [
                     'username' => $username,
@@ -211,14 +230,21 @@ class UserController extends BaseController
                     'phone' => $phone,
                     'role_id' => $role_id,
                     'status' => $status,
-                    'bio' => $bio,
+                    'updated_at' => date('Y-m-d H:i:s')
                 ];
+
+                if (!empty($avatar)) {
+                    $data['avatar'] = $avatar;
+                }
 
                 if ($password) {
                     $data['password'] = $password;
                 }
 
-                if ($this->userModel->update($id, $data)) {
+                // Cập nhật người dùng
+                $res = $this->userModel->update($id, $data);
+
+                if ($res) {
                     $this->setFlashMessage('success', 'Cập nhật người dùng thành công');
                     $this->redirect(UrlHelper::route('/admin/users/index'));
                     return;
@@ -316,5 +342,67 @@ class UserController extends BaseController
         $this->view('admin/users/details', [
             'user' => $user
         ]);
+    }
+
+    /**
+     * Cập nhật trạng thái người dùng
+     * 
+     * @return void
+     */
+    public function updateStatus()
+    {
+        // Kiểm tra quyền admin
+        if (!$this->isAdmin()) {
+            $this->json(['success' => false, 'message' => 'Không có quyền truy cập'], 403);
+            return;
+        }
+
+        // Kiểm tra phương thức request
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->json(['success' => false, 'message' => 'Phương thức không được hỗ trợ'], 405);
+            return;
+        }
+
+        // Lấy dữ liệu
+        $userId = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+        $status = isset($_POST['status']) ? $_POST['status'] : '';
+
+        // Kiểm tra dữ liệu
+        if ($userId <= 0) {
+            $this->json(['success' => false, 'message' => 'ID người dùng không hợp lệ'], 400);
+            return;
+        }
+
+        // Kiểm tra trạng thái hợp lệ
+        $validStatuses = ['active', 'inactive', 'banned'];
+        if (!in_array($status, $validStatuses)) {
+            $this->json(['success' => false, 'message' => 'Trạng thái không hợp lệ'], 400);
+            return;
+        }
+
+        // Kiểm tra người dùng tồn tại
+        $user = $this->userModel->findById($userId);
+        if (!$user) {
+            $this->json(['success' => false, 'message' => 'Không tìm thấy người dùng'], 404);
+            return;
+        }
+
+        // Không thể thay đổi trạng thái của chính mình
+        if ($userId == $_SESSION['user_id']) {
+            $this->json(['success' => false, 'message' => 'Bạn không thể thay đổi trạng thái của chính mình'], 403);
+            return;
+        }
+
+        // Cập nhật trạng thái
+        $result = $this->userModel->update($userId, [
+            'status' => $status,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        if ($result) {
+            $this->json(['success' => true, 'message' => 'Cập nhật trạng thái người dùng thành công']);
+        } else {
+            $this->json(['success' => false, 'message' => 'Đã xảy ra lỗi khi cập nhật trạng thái người dùng'], 500);
+        }
     }
 }

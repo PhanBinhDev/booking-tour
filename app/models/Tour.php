@@ -660,7 +660,7 @@ class Tour extends BaseModel
         ];
 
         // Các cột mặc định cần lấy
-        $columns = "tours.id, tours.description, 
+        $columns = "tours.id, tours.description, tours.category_id,
         tour_images.tour_id, tour_images.image_id,
         images.cloudinary_url,
         tr.avg_rating, 
@@ -786,6 +786,393 @@ class Tour extends BaseModel
         );
     }
 
+    /**
+     * Get tours with pagination and filtering
+     * 
+     * @param array $filters Filtering options (category_id, location_id, price_ranges, etc.)
+     * @param string $sortOption Sorting option ('popular', 'price_asc', 'price_desc', 'rating', 'newest')
+     * @param bool $onlySalePrice Whether to show only tours with sale price
+     * @param int $page Current page number
+     * @param int $perPage Items per page
+     * @return array Paginated list of tours with pagination metadata
+     */
+    public function getToursWithPagination($filters = [], $sortOption = 'popular', $onlySalePrice = false, $page = 1, $perPage = 9)
+    {
+        $currentDate = date('Y-m-d');
+
+        // Define table alias
+        $tableAlias = 't';
+
+        // Define the columns to select
+        $columns = "{$tableAlias}.id, {$tableAlias}.title, {$tableAlias}.description, {$tableAlias}.category_id, 
+            {$tableAlias}.duration, {$tableAlias}.price, {$tableAlias}.sale_price,
+            ti.tour_id, ti.image_id, i.cloudinary_url,
+            tr.avg_rating, tr.review_count,
+            MIN(CASE WHEN td.start_date >= '{$currentDate}' THEN td.start_date ELSE NULL END) as next_start_date,
+            MIN(CASE WHEN td.end_date >= '{$currentDate}' THEN td.end_date ELSE NULL END) as next_end_date,
+            COUNT(DISTINCT td.id) as date_count,
+            GROUP_CONCAT(DISTINCT CONCAT(td.start_date, '|', td.end_date) ORDER BY td.start_date) as all_dates,
+            tc.name AS category_name, 
+            l.name AS location_name";
+
+        // Define the joins
+        $joins = [
+            "LEFT JOIN tour_categories tc ON tc.id = {$tableAlias}.category_id",
+            "LEFT JOIN locations l ON l.id = {$tableAlias}.location_id",
+            "LEFT JOIN (
+            SELECT tour_id, AVG(rating) as avg_rating, COUNT(*) as review_count 
+            FROM tour_reviews 
+            GROUP BY tour_id
+        ) as tr ON tr.tour_id = {$tableAlias}.id",
+            "LEFT JOIN tour_dates td ON td.tour_id = {$tableAlias}.id",
+            "LEFT JOIN (SELECT tour_id, image_id FROM tour_images WHERE is_featured = 1) AS ti ON ti.tour_id = {$tableAlias}.id",
+            "LEFT JOIN images i ON ti.image_id = i.id"
+        ];
+
+        // Define filter conditions
+        $filterConditions = [
+            "{$tableAlias}.status" => "active"
+        ];
+
+        // Add condition if only sale price tours are requested
+        if ($onlySalePrice) {
+            $filterConditions["{$tableAlias}.sale_price"] = "> 0";
+        }
+
+        // Add category filter
+        if (!empty($filters['category_id'])) {
+            $filterConditions["{$tableAlias}.category_id"] = $filters['category_id'];
+        }
+
+        // Add location filter
+        if (!empty($filters['location_id'])) {
+            $filterConditions["{$tableAlias}.location_id"] = $filters['location_id'];
+        }
+
+        // Add featured filter
+        if (!empty($filters['featured'])) {
+            $filterConditions["{$tableAlias}.featured"] = $filters['featured'];
+        }
+
+        // Add keyword search
+        $searchTerm = '';
+        $searchFields = [];
+        if (!empty($filters['keyword'])) {
+            $searchTerm = '%' . $filters['keyword'] . '%';
+            $searchFields = ["{$tableAlias}.title", "{$tableAlias}.description", "l.name", "tc.name"];
+        }
+
+        // Add GROUP BY clause
+        $groupBy = "{$tableAlias}.id, ti.tour_id, ti.image_id, i.cloudinary_url, tr.avg_rating, tr.review_count, tc.name, l.name";
+
+        // Add additional WHERE for complex filters that can't be handled by key-value pairs
+        $additionalWhere = '';
+
+        // Add having clauses for price ranges, durations, and ratings
+        $havingClauses = [];
+
+        // Price ranges filter
+        if (!empty($filters['price_ranges']) && is_array($filters['price_ranges'])) {
+            $priceConditions = [];
+            foreach ($filters['price_ranges'] as $range) {
+                if (strpos($range, '-') !== false) {
+                    list($min, $max) = explode('-', $range);
+                    if ($max === 'max') {
+                        $priceConditions[] = "(CASE WHEN " . $tableAlias . ".sale_price > 0 THEN " . $tableAlias . ".sale_price ELSE " . $tableAlias . ".price END >= " . $min . ")";
+                    } else {
+                        $priceConditions[] = "(CASE WHEN " . $tableAlias . ".sale_price > 0 THEN " . $tableAlias . ".sale_price ELSE " . $tableAlias . ".price END BETWEEN " . $min . " AND " . $max . ")";
+                    }
+                }
+            }
+            if (!empty($priceConditions)) {
+                $havingClauses[] = "(" . implode(" OR ", $priceConditions) . ")";
+            }
+        }
+
+        // Duration ranges filter
+        if (!empty($filters['durations']) && is_array($filters['durations'])) {
+            $durationConditions = [];
+            foreach ($filters['durations'] as $duration) {
+                if (strpos($duration, '-') !== false) {
+                    list($min, $max) = explode('-', $duration);
+                    if ($max === 'max') {
+                        $durationConditions[] = "(" . $tableAlias . ".duration >= " . $min . ")";
+                    } else {
+                        $durationConditions[] = "(" . $tableAlias . ".duration BETWEEN " . $min . " AND " . $max . ")";
+                    }
+                }
+            }
+            if (!empty($durationConditions)) {
+                $havingClauses[] = "(" . implode(" OR ", $durationConditions) . ")";
+            }
+        }
+
+        // Ratings filter
+        if (!empty($filters['ratings']) && is_array($filters['ratings'])) {
+            $ratingConditions = [];
+            foreach ($filters['ratings'] as $rating) {
+                $ratingConditions[] = "(tr.avg_rating >= {$rating})";
+            }
+            if (!empty($ratingConditions)) {
+                $havingClauses[] = "(" . implode(" OR ", $ratingConditions) . ")";
+            }
+        }
+
+        // Combine having clauses
+        $having = !empty($havingClauses) ? implode(" AND ", $havingClauses) : "";
+
+        // Set sorting based on sort option
+        $sort = '';
+        $direction = 'DESC';
+
+        switch ($sortOption) {
+            case 'popular':
+                $sort = 'tr.review_count';
+                break;
+            case 'price_asc':
+                $sort = 'CASE WHEN ' . $tableAlias . '.sale_price > 0 THEN ' . $tableAlias . '.sale_price ELSE ' . $tableAlias . '.price END';
+                $direction = 'ASC';
+                break;
+            case 'price_desc':
+                $sort = 'CASE WHEN ' . $tableAlias . '.sale_price > 0 THEN ' . $tableAlias . '.sale_price ELSE ' . $tableAlias . '.price END';
+                break;
+            case 'rating':
+                $sort = 'tr.avg_rating';
+                break;
+            case 'newest':
+                $sort = $tableAlias . '.created_at';
+                break;
+            default:
+                $sort = $tableAlias . '.id';
+                break;
+        }
+
+        // ----------- CUSTOM COUNT QUERY TO FIX PAGINATION -------------
+
+        // Create a count query that accurately counts tours with all filters applied
+        $countSql = "SELECT COUNT(*) FROM (
+            SELECT {$tableAlias}.id, {$tableAlias}.sale_price, {$tableAlias}.price
+            FROM {$this->table} {$tableAlias}";
+
+        // Add joins for count query
+        foreach ($joins as $join) {
+            $countSql .= " " . $join;
+        }
+
+        // Add WHERE conditions
+        $countSql .= " WHERE 1=1";
+
+        // Parameters for count query
+        $countParams = [];
+
+        // Add filter conditions
+        foreach ($filterConditions as $key => $value) {
+            if ($value !== null && $value !== '') {
+                if (strpos($value, '>') === 0 || strpos($value, '<') === 0 || strpos($value, '=') === 0) {
+                    // For operators like "> 0"
+                    $countSql .= " AND {$key} {$value}";
+                } else {
+                    $paramName = ':count_' . str_replace(['.', '>', '<', '='], '_', $key);
+                    $countSql .= " AND {$key} = {$paramName}";
+                    $countParams[$paramName] = $value;
+                }
+            }
+        }
+
+        // Add search conditions if search term is provided
+        if (!empty($searchTerm)) {
+            $searchClauses = [];
+            foreach ($searchFields as $field) {
+                $searchClauses[] = "{$field} LIKE :count_search_term";
+            }
+
+            if (!empty($searchClauses)) {
+                $countSql .= " AND (" . implode(' OR ', $searchClauses) . ")";
+                $countParams[':count_search_term'] = $searchTerm;
+            }
+        }
+
+        // Add additional where conditions
+        if (!empty($additionalWhere)) {
+            $countSql .= " " . $additionalWhere;
+        }
+
+        // Add GROUP BY and HAVING for accurate count with these conditions
+        if (!empty($having)) {
+            $countSql .= " GROUP BY {$tableAlias}.id HAVING " . $having;
+        }
+
+        $countSql .= ") AS count_table";
+
+        error_log("DEBUG SQL COUNT QUERY: " . $countSql);
+        error_log("DEBUG SQL PARAMS: " . print_r($countParams, true));
+        // Execute count query to get total
+        $countStmt = $this->db->prepare($countSql);
+        foreach ($countParams as $key => $value) {
+            $paramType = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+            $countStmt->bindValue($key, $value, $paramType);
+        }
+        $countStmt->execute();
+
+        // Get count of records
+        $total = (int)$countStmt->fetchColumn();
+        // if (!empty($having)) {
+        //     // If we have HAVING clauses, count the number of rows returned
+        //     $total = $countStmt->rowCount();
+        // } else {
+        //     // Otherwise, use the COUNT result
+        // }
+
+        // Calculate total pages for pagination
+        $totalPages = ceil($total / $perPage);
+
+        // ----------- END CUSTOM COUNT QUERY -------------
+
+        // Build the options array for getPaginatedCustom
+        $options = [
+            'columns' => $columns,
+            'joins' => $joins,
+            'filters' => $filterConditions,
+            'sort' => $sort,
+            'direction' => $direction,
+            'page' => $page,
+            'limit' => $perPage,
+            'additional_where' => $additionalWhere,
+            'group_by' => $groupBy,
+            'search_term' => $searchTerm,
+            'search_fields' => $searchFields,
+            'table_alias' => $tableAlias,
+            'having' => $having
+        ];
+
+        // Use the BaseModel's getPaginatedCustom method for data
+        $sql = "SELECT {$columns} FROM {$this->table} {$tableAlias}";
+
+        // Add joins
+        foreach ($joins as $join) {
+            $sql .= " " . $join;
+        }
+
+        // Add WHERE conditions
+        $sql .= " WHERE 1=1";
+
+        // Parameters for query
+        $params = [];
+
+        // Add filter conditions
+        foreach ($filterConditions as $key => $value) {
+            if ($value !== null && $value !== '') {
+                if (strpos($value, '>') === 0 || strpos($value, '<') === 0 || strpos($value, '=') === 0) {
+                    $sql .= " AND {$key} {$value}";
+                } else {
+                    $paramName = ':param_' . str_replace(['.', '>', '<', '='], '_', $key);
+                    $sql .= " AND {$key} = {$paramName}";
+                    $params[$paramName] = $value;
+                }
+            }
+        }
+
+        // Add search conditions if search term is provided
+        if (!empty($searchTerm)) {
+            $searchClauses = [];
+            foreach ($searchFields as $field) {
+                $searchClauses[] = "{$field} LIKE :search_term";
+            }
+
+            if (!empty($searchClauses)) {
+                $sql .= " AND (" . implode(' OR ', $searchClauses) . ")";
+                $params[':search_term'] = $searchTerm;
+            }
+        }
+
+        // Add additional where conditions
+        if (!empty($additionalWhere)) {
+            $sql .= " " . $additionalWhere;
+        }
+
+        // Add GROUP BY
+        $sql .= " GROUP BY {$groupBy}";
+
+        // Add HAVING - This is what was missing in the original implementation
+        if (!empty($having)) {
+            $sql .= " HAVING {$having}";
+        }
+
+        // Add ORDER BY
+        $sql .= " ORDER BY {$sort} {$direction}";
+
+        // Add LIMIT and OFFSET
+        $offset = ($page - 1) * $perPage;
+        $sql .= " LIMIT {$perPage} OFFSET {$offset}";
+
+        // Debug the SQL query
+        error_log("MAIN QUERY: " . $sql);
+
+        // Execute the query
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $key => $value) {
+            $paramType = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+            $stmt->bindValue($key, $value, $paramType);
+        }
+        $stmt->execute();
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Create result array with our accurate pagination
+        $result = [
+            'items' => $items,
+            'pagination' => [
+                'total' => $total,
+                'per_page' => $perPage,
+                'current_page' => $page,
+                'total_pages' => $totalPages,
+                'has_next_page' => $page < $totalPages,
+                'has_prev_page' => $page > 1,
+                'from' => $total > 0 ? ($page - 1) * $perPage + 1 : 0,
+                'to' => min($page * $perPage, $total)
+            ]
+        ];
+
+        // Override pagination data with our accurate count
+        $result['pagination']['total'] = $total;
+        $result['pagination']['total_pages'] = $totalPages;
+        $result['pagination']['has_next_page'] = $page < $totalPages;
+        $result['pagination']['has_prev_page'] = $page > 1;
+        $result['pagination']['from'] = $total > 0 ? ($page - 1) * $perPage + 1 : 0;
+        $result['pagination']['to'] = min($page * $perPage, $total);
+
+        // Process the results to add calculated fields
+        if (!empty($result['items'])) {
+            foreach ($result['items'] as &$item) {
+                // Format dates for display
+                if (!empty($item['next_start_date'])) {
+                    $item['formatted_start_date'] = date('d/m/Y', strtotime($item['next_start_date']));
+                }
+
+                // Parse date pairs into structured data
+                if (!empty($item['all_dates'])) {
+                    $datesPairs = explode(',', $item['all_dates']);
+                    $item['parsed_dates'] = [];
+
+                    foreach ($datesPairs as $datePair) {
+                        list($start, $end) = explode('|', $datePair);
+                        $item['parsed_dates'][] = [
+                            'start' => $start,
+                            'end' => $end
+                        ];
+                    }
+                }
+
+                // Calculate discount percentage
+                if (!empty($item['sale_price']) && $item['price'] > 0) {
+                    $item['discount_percent'] = round((($item['price'] - $item['sale_price']) / $item['price']) * 100);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+
     public function getFeaturedTours($limit = 3, $onlySalePrice = false)
     {
         return $this->getTours(['featured' => 1], 'default', $onlySalePrice, $limit);
@@ -820,5 +1207,20 @@ class Tour extends BaseModel
             error_log($e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Đếm số lượng tour trong một danh mục cụ thể
+     * 
+     * @param int $categoryId ID của danh mục
+     * @return int Tổng số tour trong danh mục
+     */
+    public function countToursByCategory($categoryId)
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE category_id = :category_id AND status = 'active'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':category_id', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
     }
 }

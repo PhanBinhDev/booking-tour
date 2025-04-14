@@ -96,11 +96,36 @@ $statusBadgeClass = getStatusBadgeClass($user['status']);
         <i class="fas fa-edit mr-2"></i> Chỉnh sửa
       </a>
 
+      <!-- Thay thế nút xóa hiện tại (dòng 90-95) bằng các nút quản lý trạng thái -->
       <?php if ($user['id'] != $_SESSION['user_id']): ?>
-      <button id="deleteUserBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        data-id="<?= $user['id'] ?>" data-name="<?= $user['username'] ?>">
-        <i class="fas fa-trash-alt mr-2"></i> Xóa
+      <?php if ($user['status'] === 'active'): ?>
+      <div class="flex space-x-2">
+        <button id="deactivateUserBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+          data-id="<?= $user['id'] ?>" data-name="<?= $user['username'] ?>" data-action="inactive">
+          <i class="fas fa-user-slash mr-2"></i> Vô hiệu hóa
+        </button>
+        <button id="banUserBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          data-id="<?= $user['id'] ?>" data-name="<?= $user['username'] ?>" data-action="banned">
+          <i class="fas fa-ban mr-2"></i> Cấm tài khoản
+        </button>
+      </div>
+      <?php elseif ($user['status'] === 'inactive'): ?>
+      <div class="flex space-x-2">
+        <button id="activateUserBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+          data-id="<?= $user['id'] ?>" data-name="<?= $user['username'] ?>" data-action="active">
+          <i class="fas fa-user-check mr-2"></i> Kích hoạt lại
+        </button>
+        <button id="banUserBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          data-id="<?= $user['id'] ?>" data-name="<?= $user['username'] ?>" data-action="banned">
+          <i class="fas fa-ban mr-2"></i> Cấm tài khoản
+        </button>
+      </div>
+      <?php elseif ($user['status'] === 'banned'): ?>
+      <button id="unbanUserBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+        data-id="<?= $user['id'] ?>" data-name="<?= $user['username'] ?>" data-action="active">
+        <i class="fas fa-user-check mr-2"></i> Gỡ cấm
       </button>
+      <?php endif; ?>
       <?php endif; ?>
     </div>
   </div>
@@ -312,8 +337,6 @@ $statusBadgeClass = getStatusBadgeClass($user['status']);
             Xem tất cả <i class="fas fa-chevron-right ml-1"></i>
           </a>
         </div>
-
-        <!-- TODO: Hiển thị đánh giá gần đây -->
         <div class="space-y-4">
           <?php if (!empty($user['recent_reviews'])): ?>
           <?php foreach ($user['recent_reviews'] as $review): ?>
@@ -410,53 +433,112 @@ $statusBadgeClass = getStatusBadgeClass($user['status']);
 
 <!-- Modal xác nhận xóa người dùng -->
 <?php if ($user['id'] != $_SESSION['user_id']): ?>
-<div id="deleteUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
+<div id="userStatusModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
     <div class="flex justify-between items-center p-4 border-b">
-      <h3 class="text-lg font-semibold text-gray-900">Xác nhận xóa</h3>
-      <button id="closeDeleteModal" class="text-gray-400 hover:text-gray-500">
+      <h3 class="text-lg font-semibold text-gray-900">Xác nhận thay đổi trạng thái</h3>
+      <button id="closeStatusModal" class="text-gray-400 hover:text-gray-500">
         <i class="fas fa-times"></i>
       </button>
     </div>
     <div class="p-4">
-      <p class="text-gray-700">Bạn có chắc chắn muốn xóa người dùng <span id="deleteUserName"
-          class="font-bold"><?= $user['username'] ?></span>?</p>
-      <p class="text-gray-500 text-sm mt-2">Hành động này không thể hoàn tác.</p>
+      <p class="text-gray-700">Bạn có chắc chắn muốn <span id="actionText" class="font-bold"></span> người dùng <span
+          id="statusUserName" class="font-bold"><?= $user['username'] ?></span>?</p>
+      <p id="statusWarningText" class="text-gray-500 text-sm mt-2"></p>
     </div>
     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 rounded-b-lg">
-      <button type="button" id="cancelDeleteBtn"
+      <button type="button" id="cancelStatusBtn"
         class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
         Hủy
       </button>
-      <a id="confirmDeleteBtn" href="<?= UrlHelper::route('admin/users/delete/' . $user['id']) ?>"
-        class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-        Xóa
-      </a>
+      <button id="confirmStatusBtn"
+        class="inline-block bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
+        Xác nhận
+      </button>
     </div>
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Modal xóa người dùng
-  const deleteUserBtn = document.getElementById('deleteUserBtn');
-  const deleteUserModal = document.getElementById('deleteUserModal');
-  const closeDeleteModal = document.getElementById('closeDeleteModal');
-  const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+  // Status modal elements
+  const userStatusModal = document.getElementById('userStatusModal');
+  const closeStatusModal = document.getElementById('closeStatusModal');
+  const cancelStatusBtn = document.getElementById('cancelStatusBtn');
+  const confirmStatusBtn = document.getElementById('confirmStatusBtn');
+  const actionText = document.getElementById('actionText');
+  const statusWarningText = document.getElementById('statusWarningText');
 
-  deleteUserBtn.addEventListener('click', function() {
-    deleteUserModal.classList.remove('hidden');
-    deleteUserModal.classList.add('flex');
+  // Status button elements
+  const statusButtons = document.querySelectorAll('[data-action]');
+  let currentAction = '';
+  let userId = '';
+
+  // Add click event for all status buttons
+  statusButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      userId = this.getAttribute('data-id');
+      currentAction = this.getAttribute('data-action');
+      const username = this.getAttribute('data-name');
+
+      // Set appropriate text based on action
+      switch (currentAction) {
+        case 'active':
+          actionText.textContent = 'kích hoạt';
+          statusWarningText.textContent =
+            'Người dùng sẽ có thể đăng nhập và sử dụng tài khoản sau khi được kích hoạt.';
+          break;
+        case 'inactive':
+          actionText.textContent = 'vô hiệu hóa';
+          statusWarningText.textContent =
+            'Người dùng sẽ không thể đăng nhập cho đến khi tài khoản được kích hoạt lại.';
+          break;
+        case 'banned':
+          actionText.textContent = 'cấm';
+          statusWarningText.textContent =
+            'Người dùng sẽ không thể đăng nhập và sử dụng tài khoản cho đến khi được gỡ cấm.';
+          break;
+      }
+
+      userStatusModal.classList.remove('hidden');
+      userStatusModal.classList.add('flex');
+    });
   });
 
-  closeDeleteModal.addEventListener('click', function() {
-    deleteUserModal.classList.add('hidden');
-    deleteUserModal.classList.remove('flex');
+  // Close modal events
+  [closeStatusModal, cancelStatusBtn].forEach(el => {
+    el.addEventListener('click', function() {
+      userStatusModal.classList.add('hidden');
+      userStatusModal.classList.remove('flex');
+    });
   });
 
-  cancelDeleteBtn.addEventListener('click', function() {
-    deleteUserModal.classList.add('hidden');
-    deleteUserModal.classList.remove('flex');
+  // Confirm status change
+  confirmStatusBtn.addEventListener('click', function() {
+    // Send AJAX request to update user status
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?= UrlHelper::route('admin/users/updateStatus') ?>', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          try {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+              // Redirect to refresh the page
+              window.location.reload();
+            } else {
+              alert('Lỗi: ' + response.message);
+            }
+          } catch (e) {
+            alert('Đã xảy ra lỗi khi xử lý phản hồi từ máy chủ');
+          }
+        } else {
+          alert('Đã xảy ra lỗi khi gửi yêu cầu');
+        }
+      }
+    };
+    xhr.send(`user_id=${userId}&status=${currentAction}`);
   });
 });
 

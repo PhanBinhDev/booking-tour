@@ -8,6 +8,35 @@ use App\Helpers\UrlHelper;
 
 class BaseController
 {
+
+    public function __construct()
+    {
+        // Kiểm tra và điều hướng admin nếu cần
+        if ($this->isAdmin()) {
+            $requestPath = $_SERVER['REQUEST_URI'];
+            $basePath = parse_url($requestPath, PHP_URL_PATH);
+
+            // Kiểm tra nếu đường dẫn không bắt đầu bằng /admin và không phải là route logout
+            if (strpos($basePath, "/admin") !== 0 && strpos($basePath, "/auth/logout") !== 0) {
+                $this->redirect(UrlHelper::route('admin/dashboard'));
+            }
+        }
+    }
+
+    /**
+     * Build a pagination URL preserving all current query parameters
+     * 
+     * @param int $page The page number to link to
+     * @return string The URL with page parameter and all other current query parameters
+     */
+    protected function buildPaginationUrl($page)
+    {
+        $params = $_GET;
+        $params['page'] = $page;
+
+        $currentUrl = strtok($_SERVER['REQUEST_URI'], '?');
+        return $currentUrl . '?' . http_build_query($params);
+    }
     /**
      * Tạo CSRF token và lưu vào session
      * 
@@ -59,6 +88,7 @@ class BaseController
 
     public function view($view, $data = [], $layoutBase = null)
     {
+
         // Thiết lập layout mặc định nếu không được chỉ định
         if (!$layoutBase) {
             $layout = LayoutHelper::getLayoutByRole();
@@ -93,6 +123,10 @@ class BaseController
         exit;
     }
 
+    public function isAdmin()
+    {
+        return $this->isAuthenticated() && $this->getRole() === 'admin';
+    }
     public function redirectByRole()
     {
         $redirectUrl = $this->getRouteByRole();

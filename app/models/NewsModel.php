@@ -745,4 +745,116 @@ class NewsModel extends BaseModel
             return [];
         }
     }
+
+    /**
+     * Lấy dữ liệu lượt xem tin tức theo tháng cho một năm cụ thể
+     * 
+     * @param int $year Năm cần lấy dữ liệu (mặc định là năm hiện tại)
+     * @return array Mảng dữ liệu với key là tên tháng và value là tổng lượt xem
+     */
+    public function getMonthlyViewsData($year = null)
+    {
+        // Nếu không có năm được chỉ định, sử dụng năm hiện tại
+        if ($year === null) {
+            $year = date('Y');
+        }
+
+        try {
+            // Lấy dữ liệu lượt xem theo tháng từ CSDL
+            $sql = "SELECT 
+                    MONTH(created_at) AS month,
+                    SUM(views) AS total_views
+                FROM 
+                    {$this->table}
+                WHERE 
+                    YEAR(created_at) = :year
+                GROUP BY 
+                    MONTH(created_at)
+                ORDER BY 
+                    month ASC";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':year', $year, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            $monthlyData = $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
+
+            // Khởi tạo mảng với đủ 12 tháng, giá trị mặc định là 0
+            $result = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $monthName = 'Tháng ' . $i;
+                $result[$monthName] = 0;
+            }
+
+            // Cập nhật giá trị cho các tháng có dữ liệu
+            foreach ($monthlyData as $month => $views) {
+                $monthName = 'Tháng ' . $month;
+                $result[$monthName] = (int)$views;
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy dữ liệu lượt xem theo tháng: " . $e->getMessage());
+            return []; // Trả về mảng rỗng nếu có lỗi
+        }
+    }
+
+    /**
+     * Lấy danh sách các tin tức gần đây
+     * 
+     * @param int $limit Số lượng tin tức cần lấy
+     * @param string|array|null $status Trạng thái của tin tức cần lấy (null để lấy tất cả)
+     * @return array Danh sách tin tức gần đây
+     */
+    public function getRecentNews($limit = 5, $status = null)
+    {
+        try {
+            // Chuẩn bị câu lệnh SQL cơ bản
+            $sql = "SELECT 
+                    n.id, n.title, n.slug, n.summary, n.featured_image, 
+                    n.status, n.views, n.created_at, n.published_at,
+                    u.username as author_name
+                FROM 
+                    {$this->table} n
+                LEFT JOIN 
+                    users u ON n.created_by = u.id";
+
+            $params = [];
+
+            // Thêm điều kiện lọc theo trạng thái nếu được chỉ định
+            if ($status !== null) {
+                if (is_array($status)) {
+                    // Nếu $status là mảng, sử dụng IN
+                    $placeholders = implode(',', array_fill(0, count($status), '?'));
+                    $sql .= " WHERE n.status IN ({$placeholders})";
+                    $params = array_merge($params, $status);
+                } else {
+                    // Nếu $status là chuỗi đơn
+                    $sql .= " WHERE n.status = ?";
+                    $params[] = $status;
+                }
+            }
+
+            // Sắp xếp theo thời gian tạo giảm dần (mới nhất trước)
+            $sql .= " ORDER BY n.created_at DESC";
+
+            // Giới hạn số lượng kết quả
+            $sql .= " LIMIT ?";
+            $params[] = $limit;
+
+            $stmt = $this->db->prepare($sql);
+
+            // Bind các tham số
+            foreach ($params as $i => $param) {
+                $paramType = is_int($param) ? \PDO::PARAM_INT : \PDO::PARAM_STR;
+                $stmt->bindValue($i + 1, $param, $paramType);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("Lỗi khi lấy tin tức gần đây: " . $e->getMessage());
+            return []; // Trả về mảng rỗng nếu có lỗi
+        }
+    }
 }

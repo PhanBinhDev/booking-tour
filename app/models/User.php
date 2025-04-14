@@ -493,4 +493,19 @@ class User extends BaseModel
 
         return $stmt->execute();
     }
+
+    /**
+     * Lưu token ghi nhớ đăng nhập
+     * 
+     * @param int $userId ID người dùng
+     * @param string $token Token ghi nhớ
+     * @return bool Kết quả thành công
+     */
+    public function saveRememberToken($userId, $token)
+    {
+        return $this->update($userId, [
+            'remember_token' => $token,
+            'token_expires_at' => date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)) // 30 ngày
+        ]);
+    }
 }
