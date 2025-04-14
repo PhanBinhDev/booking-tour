@@ -501,4 +501,3 @@ function getStatusClass($status)
 </script>
 
 <!-- Dashboard JS -->
-<script src="<?= UrlHelper::js('admin/dashboard.js') ?>"></script>
