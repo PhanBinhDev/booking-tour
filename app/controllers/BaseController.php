@@ -17,9 +17,9 @@ class BaseController
             $basePath = parse_url($requestPath, PHP_URL_PATH);
 
             // Kiểm tra nếu đường dẫn không bắt đầu bằng /admin và không phải là route logout
-            if (strpos($basePath, "/admin") !== 0 && strpos($basePath, "/auth/logout") !== 0) {
-                $this->redirect(UrlHelper::route('admin/dashboard'));
-            }
+            // if (strpos($basePath, "/admin") !== 0 && strpos($basePath, "/auth/logout") !== 0) {
+            //     $this->redirect(UrlHelper::route('admin/dashboard'));
+            // }
         }
     }
 

@@ -34,7 +34,71 @@ $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
   <!-- News Content Section -->
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+    <!-- Filter Bar -->
+    <div class=" bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+      <?php foreach ($top1ViewedNews as $item) { ?>
+        <div class="flex flex-col">
+          <!-- Featured Image -->
+          <div class="relative w-full ">
+            <img src="<?= $item['featured_image'] ?>"
+              alt="<?= htmlspecialchars($item['title']) ?>"
+              class="object-cover w-full">
+            <div class="absolute top-3 left-3 bg-teal-600 text-white px-3 py-1 text-sm font-medium rounded-md shadow-sm">
+              Nổi bật
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class=" p-6 md:p-8">
+            <!-- Category and Date -->
+            <div class="flex items-center justify-between mb-4">
+              <span class="bg-teal-50 text-teal-700 text-xs font-medium px-3 py-1.5 rounded-full"><?= $item['category_name'] ?></span>
+              <div class="flex items-center text-gray-500 text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <?= FormatHelper::formatDate($item["created_at"]) ?>
+              </div>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3 line-clamp-2">
+              <?= $item['title'] ?>
+            </h3>
+
+            <!-- Excerpt -->
+            <p class="text-gray-600 mb-6 line-clamp-3">
+              <?= $item['content'] ?>
+            </p>
+
+
+            <!-- Stats and Read More -->
+            <div class="flex items-center justify-between mt-auto">
+              <div class="flex items-center space-x-4 text-sm text-gray-500">
+                <!-- Views -->
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <span><?= $item['views'] ?> lượt xem</span>
+                </div>
+              </div>
+
+              <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>"
+                class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium rounded-md transition-colors">
+                Đọc tiếp
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
+    </div>
     <div class="flex flex-col lg:flex-row gap-8">
+
       <!-- Main News Content -->
       <div class="lg:w-2/3">
         <!-- Featured News -->
@@ -104,72 +168,7 @@ $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
           </div>
         <?php endif; ?>
 
-        <!-- Filter Bar -->
 
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-gray-800">
-            Tin Tức Nổi Bật
-          </h2>
-        </div>
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-          <?php foreach ($top1ViewedNews as $item) { ?>
-            <div class="md:flex">
-              <!-- Featured Image -->
-              <div class="md:w-2/5 relative">
-                <img src="<?= $item['featured_image'] ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="w-full h-64 md:h-full object-cover">
-                <div class="absolute top-3 left-3 bg-teal-600 text-white px-3 py-1 text-sm font-medium rounded-md shadow-sm">
-                  Nổi bật
-                </div>
-              </div>
-
-              <!-- Content -->
-              <div class="md:w-3/5 p-6 md:p-8">
-                <!-- Category and Date -->
-                <div class="flex items-center justify-between mb-4">
-                  <span class="bg-teal-50 text-teal-700 text-xs font-medium px-3 py-1.5 rounded-full"><?= $item['category_name'] ?></span>
-                  <div class="flex items-center text-gray-500 text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <?= FormatHelper::formatDate($item["created_at"]) ?>
-                  </div>
-                </div>
-
-                <!-- Title -->
-                <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-3 line-clamp-2">
-                  <?= $item['title'] ?>
-                </h3>
-
-                <!-- Excerpt -->
-                <p class="text-gray-600 mb-6 line-clamp-3">
-                  <?= $item['content'] ?>
-                </p>
-
-
-                <!-- Stats and Read More -->
-                <div class="flex items-center justify-between mt-auto">
-                  <div class="flex items-center space-x-4 text-sm text-gray-500">
-                    <!-- Views -->
-                    <div class="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <span><?= $item['views'] ?> lượt xem</span>
-                    </div>
-                  </div>
-
-                  <a href="<?= UrlHelper::route('home/news-detail/' . $item['id']) ?>" class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium rounded-md transition-colors">
-                    Đọc tiếp
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          <?php } ?>
-        </div>
 
         <!-- News List -->
         <div>
@@ -386,8 +385,7 @@ $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
       </div>
 
       <!-- Sidebar -->
-      <div class="lg:w-1/3">
-       
+      <div class="lg:w-1/3 mt-10">
         <div class="bg-white p-6 rounded-xl shadow-sm mb-8 border border-gray-100">
           <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-teal-500" fill="none" viewBox="0 0 24 24"
